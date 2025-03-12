@@ -76,9 +76,7 @@ export const Main = () => {
       <div>
         <BottomNavigation />
       </div>
-      <div>
-        <LoginSlider />
-      </div>
+      <div></div>
     </div>
   );
 };
