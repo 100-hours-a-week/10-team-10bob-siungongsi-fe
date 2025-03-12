@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <Main></Main>
-      <GongsiSearch />
+      {/* <GongsiSearch /> */}
     </div>
   );
 }
