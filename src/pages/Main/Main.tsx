@@ -14,7 +14,7 @@ export const Main = () => {
   }
   return (
     <div>
-      <Header></Header>
+      <Header isLogin={true}></Header>
 
       <div className="my-4">
         <SectionTitle>오늘의 핫이슈</SectionTitle>

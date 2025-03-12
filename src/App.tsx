@@ -1,10 +1,12 @@
 import "./App.css";
-import { Main } from "./pages/Main/Main";
+import { Regist } from "./pages/Regist/Regist";
+// import { Main } from './pages/Main/Main';
 
 function App() {
   return (
     <div>
-      <Main></Main>
+      {/* <Main></Main> */}
+      <Regist />
     </div>
   );
 }
