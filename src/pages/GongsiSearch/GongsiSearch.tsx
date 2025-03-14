@@ -8,7 +8,7 @@ import { Modal } from "../../components/Modal";
 export const GongsiSearch = () => {
   return (
     <div>
-      <SearchBar searchList={corpList} />
+      <SearchBar />
       <DateRangePicker />
       <LoadingSpinner />
       <Modal
