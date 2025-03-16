@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 
-type Company = {
+export type Company = {
   id: number;
   name: string;
   filter: string[];
@@ -14,6 +14,10 @@ const companyList: Company[] = [
   { id: 4, name: "현대자동차", filter: ["ㅎ", "혀"] },
   { id: 5, name: "네이버", filter: ["ㄴ", "네"] },
 ];
+type SearchBarProps = {
+  onSelect: (selected: Company | null) => void;
+  isDisabled: boolean;
+};
 
 // 🔹 사용자 입력값을 기준으로 필터링 규칙을 정의
 const customFilter = (option: any, inputValue: string) => {
@@ -28,9 +32,7 @@ const customFilter = (option: any, inputValue: string) => {
   );
 };
 
-export const SearchBar = () => {
-  const [selectedOption, setSelectedOption] = useState<Company | null>(null);
-
+export const SearchBar = ({ onSelect, isDisabled }: SearchBarProps) => {
   return (
     <Select
       options={companyList.map((c) => ({
@@ -38,13 +40,8 @@ export const SearchBar = () => {
         label: c.name,
         filter: c.filter,
       }))}
-      value={
-        selectedOption
-          ? { value: selectedOption.id, label: selectedOption.name }
-          : null
-      }
       onChange={(selected) =>
-        setSelectedOption(
+        onSelect(
           selected
             ? companyList.find((c) => c.id === selected.value) || null
             : null,
@@ -52,6 +49,7 @@ export const SearchBar = () => {
       }
       placeholder="기업을 검색하세요"
       filterOption={customFilter} // 🔥 커스텀 필터링 적용
+      isDisabled={isDisabled}
     />
   );
 };

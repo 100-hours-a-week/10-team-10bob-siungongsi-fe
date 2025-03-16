@@ -1,14 +1,15 @@
 import React from "react";
-import { SearchBar } from "../../components/SearchBar";
+
 import { corpList } from "./dummyCorp";
 import DateRangePicker from "../../components/Calendar";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { Modal } from "../../components/Modal";
+import { SearchBar } from "../../components/SearchExample";
 
 export const GongsiSearch = () => {
   return (
     <div>
-      <SearchBar />
+      {/* <SearchBar /> */}
       <DateRangePicker />
       <LoadingSpinner />
       <Modal

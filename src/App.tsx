@@ -9,7 +9,7 @@ function App() {
     <div>
       {/* <Main></Main> */}
       {/* <Regist /> */}
-      {/* <Regist_02 /> */}
+      <Regist_02 />
     </div>
   );
 }
