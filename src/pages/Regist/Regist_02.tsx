@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { motion } from "framer-motion";
 import { SectionTitle } from "../../components/SectionTitle";
-import { Company, SearchBar } from "../../components/SearchExample";
+import { Company, SearchBar } from "./SearchExample";
 import { Badge } from "./Badge";
 import { corpList } from "../GongsiSearch/dummyCorp";
 import { CorpCard } from "./CorpCard";

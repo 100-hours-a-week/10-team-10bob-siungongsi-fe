@@ -18,7 +18,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         initial={{ y: "100vh", opacity: 0 }}
         animate={{ y: 0, opacity: 1 }} //이거 만약 모바일로 옮기면 수치 수정해야겠음
         exit={{ y: "100vh", opacity: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()} // 모달 내부 클릭시 닫히지 않도록
       >
         <div className="flex justify-between mb-4">

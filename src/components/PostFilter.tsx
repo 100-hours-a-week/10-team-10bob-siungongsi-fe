@@ -1,0 +1,36 @@
+import React, { useState } from "react";
+
+export const PostFilter = () => {
+  const filterMenu: string[] = ["최신순", "조회순", "오래된순"];
+  const [filterlingConditions, setFilterlingConditions] =
+    useState<string>("최신순");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const selectFilterCondition = (value: string) => {
+    setFilterlingConditions(value);
+    setIsOpen(false);
+  };
+
+  return (
+    <div>
+      <div
+        className="flex gap-1 text-sm text-gray-400 cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div>아</div>
+        <div>{filterlingConditions}</div>
+      </div>
+      {isOpen && (
+        <div className="flex flex-col rounded-lg gap-2 border text-sm text-gray-400 p-2 shadow-md">
+          {filterMenu.map((menu) => (
+            <div
+              className="cursor-pointer"
+              onClick={() => selectFilterCondition(menu)}
+            >
+              {menu}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};

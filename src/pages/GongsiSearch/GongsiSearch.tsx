@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { corpList } from "./dummyCorp";
+import { Header } from "../../components/Header";
+import { SearchBar } from "./SearchExample";
+import { PostFilter } from "../../components/PostFilter";
 import DateRangePicker from "../../components/Calendar";
-import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { Modal } from "../../components/Modal";
-import { SearchBar } from "../../components/SearchExample";
 
 export const GongsiSearch = () => {
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [isCalendarModalOn, setIsCalendarModalOn] = useState<boolean>(false);
+
   return (
     <div>
-      {/* <SearchBar /> */}
-      <DateRangePicker />
-      <LoadingSpinner />
-      <Modal
-        titleMessage="로그인하시겠습니까?"
-        submitMessage="로그인"
-        helperText="회원탈퇴는 되돌릴 수 없습니다"
-      />
+      <Header isLogin={true} />
+      <SearchBar onSelect={() => null} isDisabled={false} />
+      <div className="flex p-2 justify-between">
+        <PostFilter />
+        <div onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}>
+          캘린더버튼
+        </div>
+        <div>{isCalendarModalOn && <DateRangePicker />}</div>
+      </div>
     </div>
   );
 };

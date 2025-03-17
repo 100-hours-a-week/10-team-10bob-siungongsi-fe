@@ -1,4 +1,5 @@
 import "./App.css";
+import { GongsiSearch } from "./pages/GongsiSearch/GongsiSearch";
 
 import { Regist } from "./pages/Regist/Regist_01";
 import { Regist_02 } from "./pages/Regist/Regist_02";
@@ -9,7 +10,8 @@ function App() {
     <div>
       {/* <Main></Main> */}
       {/* <Regist /> */}
-      <Regist_02 />
+      {/* <Regist_02 /> */}
+      <GongsiSearch />
     </div>
   );
 }

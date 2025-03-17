@@ -15,7 +15,7 @@ const companyList: Company[] = [
   { id: 5, name: "네이버", filter: ["ㄴ", "네"] },
 ];
 type SearchBarProps = {
-  onSelect: (selected: Company | null) => void;
+  onSelect: (selected: Company | null) => void | null;
   isDisabled: boolean;
 };
 
