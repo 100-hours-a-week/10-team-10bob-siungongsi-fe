@@ -6,6 +6,7 @@ import NewsSlider from "../../components/Slider";
 import { gongsiTitleList } from "./dummyTitle";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { LoginSlider } from "../../components/LoginSlider";
+import { GongsiList } from "../../components/GongsiList";
 
 export const Main = () => {
   function getCurrentTime(): string {
@@ -43,19 +44,14 @@ export const Main = () => {
           <SectionTitle>오늘 올라온 공시</SectionTitle>
         </div>
         {gongsiTitleList.length > 0 ? (
-          gongsiTitleList.map((gongsiTitle) => (
-            <div
-              key={gongsiTitle.id}
-              className="flex max-h-[70px] flex-col gap-2 border-t border-b p-2"
-            >
-              <div className="w-full text-md font-bold overflow-hidden text-ellipsis whitespace-nowrap">
-                {gongsiTitle.title}
-              </div>
-              <div className="w-full text-sm overflow-hidden text-ellipsis text-gray-400 whitespace-nowrap">
-                {gongsiTitle.company}
-              </div>
-            </div>
-          ))
+          gongsiTitleList
+            .slice(0, 5)
+            .map((gongsiTitle) => (
+              <GongsiList
+                gongsiTitle={gongsiTitle.title}
+                gongsiCompany={gongsiTitle.company}
+              />
+            ))
         ) : (
           <div className="flex items-center w-full h-[300px] border-t border-b">
             <p className="w-full text-center">오늘 올라온 공시가 없습니다.</p>

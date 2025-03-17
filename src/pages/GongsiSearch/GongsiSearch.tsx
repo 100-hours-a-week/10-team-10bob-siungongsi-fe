@@ -5,6 +5,9 @@ import { SearchBar } from "./SearchExample";
 import { PostFilter } from "../../components/PostFilter";
 import DatePicker from "react-datepicker";
 import Calendar from "../../components/Calendar";
+import { gongsiTitleList } from "../Main/dummyTitle";
+import { GongsiList } from "../../components/GongsiList";
+import { GongsiPagination } from "./GongsiPagination";
 
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -42,7 +45,7 @@ export const GongsiSearch = () => {
     <div>
       <Header isLogin={true} />
       <SearchBar onSelect={() => null} isDisabled={false} />
-      <div className="flex p-2 justify-between">
+      <div className="flex p-2 justify-between items-center">
         <PostFilter />
         <div className="flex flex-col items-end">
           <div
@@ -67,6 +70,10 @@ export const GongsiSearch = () => {
             )}
           </div>
         </div>
+      </div>
+      {/* 공시목록 */}
+      <div>
+        <GongsiPagination />
       </div>
       <div className="flex justify-center">
         {isCalendarModalOn && (
