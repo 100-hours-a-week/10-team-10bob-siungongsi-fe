@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 interface Props {
   isOpen: boolean;
   onClose: any;
 }
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
+  useEffect(() => {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
+    }
+  }, []);
+
+  const loginWithKakao = () => {
+    window.Kakao.Auth.login({
+      success: (authObj: any) => {
+        console.log("로그인 성공", authObj);
+        alert(`토큰: ${authObj.access_token}`);
+      },
+      fail: (err: any) => {
+        console.error("로그인 실패", err);
+      },
+    });
+  };
+
   if (!isOpen) return null;
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
@@ -28,7 +53,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           </button>
         </div>
         <div className="flex flex-col p-8 items-center gap-8">
-          <button className="bg-yellow-400">카카오로 로그인</button>
+          <img onClick={loginWithKakao} src="./images/kakao_login.png" alt="" />
           <button className="text-gray-300 font-normal">
             회원가입 하시겠습니까?
           </button>
