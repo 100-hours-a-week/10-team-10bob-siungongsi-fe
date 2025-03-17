@@ -21,7 +21,7 @@ export const PostFilter = () => {
         <div>{filterlingConditions}</div>
       </div>
       {isOpen && (
-        <div className="flex flex-col rounded-lg gap-2 border text-sm text-gray-400 p-2 shadow-md">
+        <div className="flex absolute flex-col rounded-lg gap-2 border text-sm text-gray-400 p-2 shadow-md bg-white z-[1000]">
           {filterMenu.map((menu) => (
             <div
               className="cursor-pointer"
