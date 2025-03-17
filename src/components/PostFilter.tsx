@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ReactComponent as Swap } from "../assets/swap-alt-svgrepo-com.svg";
 
 export const PostFilter = () => {
   const filterMenu: string[] = ["최신순", "조회순", "오래된순"];
@@ -16,7 +17,7 @@ export const PostFilter = () => {
         className="flex gap-1 text-sm text-gray-400 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div>아</div>
+        <Swap />
         <div>{filterlingConditions}</div>
       </div>
       {isOpen && (
