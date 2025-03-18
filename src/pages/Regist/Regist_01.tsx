@@ -5,8 +5,11 @@ import { ScrollDown } from "../../components/Icons/ScrollDown";
 import { RegistContent } from "./RegistContent";
 import { ReactComponent as Close } from "../../assets/close-svgrepo-com.svg";
 import { registInfo } from "./RegistContentDummy";
+import { BottomNavigation } from "../../components/BottomNavigation";
+import { useNavigate } from "react-router-dom";
 
 export const Regist = () => {
+  const navigate = useNavigate();
   const [allChecked, setAllChecked] = useState(false);
   const [checks, setChecks] = useState([false, false]);
 
@@ -25,7 +28,7 @@ export const Regist = () => {
   return (
     <div>
       <Header isLogin={false} />
-      <div className="flex  flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 p-4">
         <div className="flex justify-between">
           <div className="text-2xl font-bold">약관동의</div>
           <div>
@@ -50,10 +53,12 @@ export const Regist = () => {
         ))}
       </div>
       <div
+        onClick={() => allChecked && navigate("/regist_02")}
         className={`m-12 p-4 rounded-xl text-center text-white transition ease-in-out ${allChecked ? "bg-primary cursor-pointer" : "bg-gray-300"}  `}
       >
         다음으로
       </div>
+      <BottomNavigation />
     </div>
   );
 };

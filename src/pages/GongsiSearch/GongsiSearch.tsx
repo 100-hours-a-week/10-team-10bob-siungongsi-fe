@@ -3,11 +3,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Header } from "../../components/Header";
 import { SearchBar } from "./SearchExample";
 import { PostFilter } from "../../components/PostFilter";
-import DatePicker from "react-datepicker";
+
 import Calendar from "../../components/Calendar";
-import { gongsiTitleList } from "../Main/dummyTitle";
-import { GongsiList } from "../../components/GongsiList";
+
 import { GongsiPagination } from "./GongsiPagination";
+import { BottomNavigation } from "../../components/BottomNavigation";
 
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -84,6 +84,7 @@ export const GongsiSearch = () => {
           />
         )}
       </div>
+      <BottomNavigation />
     </div>
   );
 };

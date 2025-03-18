@@ -5,14 +5,12 @@ import { SectionTitle } from "../../components/SectionTitle";
 import NewsSlider from "../../components/Slider";
 import { gongsiTitleList } from "./dummyTitle";
 import { BottomNavigation } from "../../components/BottomNavigation";
-import { LoginSlider } from "../../components/LoginSlider";
+
 import { GongsiList } from "../../components/GongsiList";
+import { useNavigate } from "react-router-dom";
 
 export const Main = () => {
-  function getCurrentTime(): string {
-    const now = new Date();
-    return now.toLocaleTimeString();
-  }
+  const navigate = useNavigate();
   return (
     <div>
       <Header isLogin={true}></Header>
@@ -58,21 +56,22 @@ export const Main = () => {
           </div>
         )}
 
-        <div className="text-right text-gray-400 text-sm mt-2 cursor-pointer">
+        <div
+          onClick={() => navigate("/search")}
+          className="text-right text-gray-400 text-sm mt-2 cursor-pointer"
+        >
           더보기 &gt;&gt;
         </div>
       </section>
       <section>
         <SectionTitle>이런 서비스는 어때요?</SectionTitle>
         <article className="flex m-2">
-          <div className="w-[50%] border">로그인 하고 알림받기</div>
-          <div className="w-[50%] border">사전 이용하기 </div>
+          <div className="w-[50%] h-[300px] border">로그인 하고 알림받기</div>
+          <div className="w-[50%] h-[300px] border">사전 이용하기 </div>
         </article>
       </section>
-      <div>
-        <BottomNavigation />
-      </div>
-      <div></div>
+
+      <BottomNavigation />
     </div>
   );
 };

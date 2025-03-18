@@ -53,7 +53,12 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           </button>
         </div>
         <div className="flex flex-col p-8 items-center gap-8">
-          <img onClick={loginWithKakao} src="./images/kakao_login.png" alt="" />
+          <img
+            className="cursor-pointer"
+            onClick={loginWithKakao}
+            src="./images/kakao_login.png"
+            alt=""
+          />
           <button className="text-gray-300 font-normal">
             회원가입 하시겠습니까?
           </button>

@@ -7,6 +7,7 @@ import { Company, SearchBar } from "./SearchExample";
 import { Badge } from "./Badge";
 import { corpList } from "../GongsiSearch/dummyCorp";
 import { CorpCard } from "./CorpCard";
+import { BottomNavigation } from "../../components/BottomNavigation";
 
 export const Regist_02 = () => {
   const [isVibrating, setIsVibrating] = useState(false);
@@ -94,6 +95,7 @@ export const Regist_02 = () => {
           ))}
         </div>
       </div>
+      <BottomNavigation />
     </div>
   );
 };
