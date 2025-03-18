@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Header } from "../../components/Header";
 
 import { SectionTitle } from "../../components/SectionTitle";
@@ -8,9 +8,11 @@ import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { GongsiList } from "../../components/GongsiList";
 import { useNavigate } from "react-router-dom";
+import { PushNotification } from "../../components/PushNotification";
 
 export const Main = () => {
   const navigate = useNavigate();
+
   return (
     <div>
       <Header isLogin={true}></Header>

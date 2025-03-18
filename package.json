@@ -27,6 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "downshift": "^9.0.8",
+    "firebase": "^11.4.0",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.5.0",
