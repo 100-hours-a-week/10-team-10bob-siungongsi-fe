@@ -21,9 +21,8 @@ export const Regist = () => {
   useEffect(() => {
     const getTermsofUse = async () => {
       try {
-        // const data = await fetchTermsOfUse();
-        // console.log(data);
-        console.log(apiKey);
+        const data = await fetchTermsOfUse();
+        console.log(data);
       } catch (error) {
         console.error(error);
       }
