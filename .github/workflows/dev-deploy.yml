@@ -5,6 +5,7 @@ on:
     branches:
       - deploy  # develop 브랜치 푸시 시 실행
 
+      
 jobs:
   build-and-push-frontend:
     name: Build and Push Frontend Docker Image
