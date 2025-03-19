@@ -8,7 +8,7 @@ import { registInfo } from "./RegistContentDummy";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { fetchTermsOfUse } from "../../services/userService";
+import { fetchTermsOfUse } from "../../services/authService";
 
 const apiKey = process.env.REACT_APP_API_URL;
 
