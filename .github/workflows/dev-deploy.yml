@@ -76,5 +76,5 @@ jobs:
                 docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
                 docker stop frontend || true
                 docker rm frontend || true
-                docker run -d --name frontend -p 81:80 --restart always \
+                docker run -d --name frontend -p 80:80 --restart always \
                     ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
