@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAsiclSA9rvBi34_OMPMwWYn-bNKvYi_n8",
-  authDomain: "bob-8a8f9.firebaseapp.com",
-  projectId: "bob-8a8f9",
-  storageBucket: "bob-8a8f9.firebasestorage.app",
-  messagingSenderId: "370304423066",
-  appId: "1:370304423066:web:38f53ffa33b108383cfb23",
-  measurementId: "G-K2C7C3YG0R",
+  apiKey: process.env.REACT_APP_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,7 +23,7 @@ export const getPushToken = async () => {
     );
 
     const token = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      vapidKey: process.env.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: registration, // ✅ 명확하게 Service Worker 전달
     });
 

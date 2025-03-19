@@ -8,6 +8,7 @@ import Calendar from "../../components/Calendar";
 
 import { GongsiPagination } from "./GongsiPagination";
 import { BottomNavigation } from "../../components/BottomNavigation";
+import { HeaderLogin } from "../../components/HeaderLogin";
 
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
@@ -43,9 +44,11 @@ export const GongsiSearch = () => {
   };
   return (
     <div>
-      <Header isLogin={true} />
-      <SearchBar onSelect={() => null} isDisabled={false} />
-      <div className="flex p-2 justify-between items-center">
+      <HeaderLogin isLogin={false} />
+      <div className="mt-4 p-2">
+        <SearchBar onSelect={() => null} isDisabled={false} />
+      </div>
+      <div className="flex py-2 justify-between items-center border-b">
         <PostFilter />
         <div className="flex flex-col items-end">
           <div

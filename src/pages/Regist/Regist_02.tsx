@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Header } from "../../components/Header";
 import { motion } from "framer-motion";
-import { SectionTitle } from "../../components/SectionTitle";
+
 import { Company, SearchBar } from "./SearchExample";
 import { Badge } from "./Badge";
 import { corpList } from "../GongsiSearch/dummyCorp";
@@ -47,7 +47,7 @@ export const Regist_02 = () => {
   };
   return (
     <div>
-      <Header isLogin={false} />
+      <Header />
       <div className="p-2">
         <div className="font-bold text-xl mb-4">알림연결</div>
         <div className={`transition`}>

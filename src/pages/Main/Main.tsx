@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { Header } from "../../components/Header";
-
 import { SectionTitle } from "../../components/SectionTitle";
 import NewsSlider from "../../components/Slider";
 import { gongsiTitleList } from "./dummyTitle";
@@ -8,14 +5,15 @@ import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { GongsiList } from "../../components/GongsiList";
 import { useNavigate } from "react-router-dom";
-import { PushNotification } from "../../components/PushNotification";
+
+import { HeaderLogin } from "../../components/HeaderLogin";
 
 export const Main = () => {
   const navigate = useNavigate();
 
   return (
     <div>
-      <Header isLogin={true}></Header>
+      <HeaderLogin isLogin={false} />
 
       <div className="my-4">
         <SectionTitle>오늘의 핫이슈</SectionTitle>

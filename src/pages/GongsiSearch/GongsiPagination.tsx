@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { gongsiTitleList } from "../Main/dummyTitle";
 import { GongsiList } from "../../components/GongsiList";
+import { useNavigate } from "react-router-dom";
 
 export const GongsiPagination = () => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 9;
 
@@ -17,7 +19,11 @@ export const GongsiPagination = () => {
       <ul className="border-b border-gray-300 divide-y">
         {currentPosts ? (
           currentPosts.map((post) => (
-            <li key={post.id} className="p-3">
+            <li
+              onClick={() => navigate("/detail")}
+              key={post.id}
+              className="p-3"
+            >
               <div className="font-bold truncate">{post.title}</div>
               <div className="text-gray-500 text-sm">{post.company}</div>
             </li>

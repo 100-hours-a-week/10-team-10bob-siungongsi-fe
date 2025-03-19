@@ -3,12 +3,21 @@ import { Header } from "../../components/Header";
 import { getPushToken } from "../../firebase";
 import { Regist_02 } from "../Regist/Regist_02";
 import { AlarmSelect } from "./AlarmSelect";
+import { HeaderLogin } from "../../components/HeaderLogin";
+import { Modal } from "../../components/Modal";
+import { BottomNavigation } from "../../components/BottomNavigation";
 
 export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission | null>(
     null,
   );
+  const [isModalOn, setIsModalOn] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState({
+    titleMessage: "",
+    submitMessage: "",
+    helperText: null as string | null,
+  });
   useEffect(() => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
@@ -37,10 +46,25 @@ export const SettingPage = () => {
       setIsNotificationEnabled(true);
     }
   };
+  const onModal = (
+    titleMessage: string,
+    submitMessage: string,
+    helperText: string | null,
+  ) => {
+    setModalContent({
+      titleMessage: titleMessage,
+      submitMessage: submitMessage,
+      helperText: helperText,
+    });
+    setIsModalOn(true);
+  };
+  const closeModal = () => {
+    setIsModalOn(false);
+  };
 
   return (
     <div>
-      <Header isLogin={true} />
+      <HeaderLogin isLogin={true} />
       <div className="max-w-md mx-auto p-4 bg-white">
         {/* 알림 허용 토글 */}
         <div className="border-b">
@@ -64,16 +88,37 @@ export const SettingPage = () => {
 
         <div className="flex flex-col ">
           {/* 로그아웃 버튼 */}
-          <div className="text-red-500 text-lg font-semibold py-4 border-b">
+          <div
+            onClick={() => onModal("로그아웃 하시겠습니까?", "확인", null)}
+            className="text-red-500 text-lg font-semibold py-4 border-b"
+          >
             로그아웃
           </div>
 
           {/* 회원 탈퇴 (비활성화) */}
-          <div className="text-gray-400 text-lg font-medium py-4">
+          <div
+            onClick={() =>
+              onModal(
+                "회원탈퇴 하시겠습니까?",
+                "확인",
+                "회원탈퇴는 되돌릴 수 없습니다.",
+              )
+            }
+            className="text-gray-400 text-lg font-medium py-4"
+          >
             회원 탈퇴
           </div>
         </div>
       </div>
+      {isModalOn && (
+        <Modal
+          titleMessage={modalContent.titleMessage}
+          submitMessage={modalContent.submitMessage}
+          helperText={modalContent.helperText}
+          closeModal={closeModal}
+        />
+      )}
+      <BottomNavigation />
     </div>
   );
 };
