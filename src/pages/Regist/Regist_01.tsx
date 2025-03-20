@@ -4,25 +4,23 @@ import { RadioButton } from "../../components/RadioButton";
 import { ScrollDown } from "../../components/Icons/ScrollDown";
 import { RegistContent } from "./RegistContent";
 import { ReactComponent as Close } from "../../assets/close-svgrepo-com.svg";
-import { registInfo } from "./RegistContentDummy";
+
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { fetchTermsOfUse } from "../../services/authService";
-
-const apiKey = process.env.REACT_APP_API_URL;
-
+import { termsOfUse } from "../../services/authService";
 export const Regist = () => {
   const navigate = useNavigate();
   const [allChecked, setAllChecked] = useState(false);
   const [checks, setChecks] = useState([false, false]);
-  const [termsOfUse, setTermsOfUse] = useState();
+  const [termsOfUse, setTermsOfUse] = useState<termsOfUse[]>([]);
 
   useEffect(() => {
     const getTermsofUse = async () => {
       try {
         const data = await fetchTermsOfUse();
-        console.log(data);
+        setTermsOfUse(data.data);
       } catch (error) {
         console.error(error);
       }
@@ -60,10 +58,10 @@ export const Regist = () => {
           </div>
           <div>약관에 전체 동의합니다</div>
         </div>
-        {registInfo.map((info, index) => (
+        {termsOfUse.map((tou, index) => (
           <RegistContent
-            title={info.title}
-            termsOfUse={info.termsOfUse}
+            title={tou.termsTitle}
+            termsOfUse={tou.termsContent}
             checks={checks}
             handleSingleClick={handleSingleClick}
             index={index}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ReactComponent as Swap } from "../assets/swap-alt-svgrepo-com.svg";
+import { ReactComponent as Swap } from "../../assets/swap-alt-svgrepo-com.svg";
 
 export const PostFilter = () => {
   const filterMenu: string[] = ["최신순", "조회순", "오래된순"];

@@ -1,20 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { Header } from "../../components/Header";
-import { SearchBar } from "./SearchExample";
-import { PostFilter } from "../../components/PostFilter";
+
+import { SearchBar } from "./SearchBar";
+import { PostFilter } from "./PostFilter";
 
 import Calendar from "../../components/Calendar";
 
 import { GongsiPagination } from "./GongsiPagination";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { HeaderLogin } from "../../components/HeaderLogin";
+import {
+  Companies,
+  fetchCompanyNameList,
+} from "../../services/companiesService";
 
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [isCalendarModalOn, setIsCalendarModalOn] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [companies, setCompanies] = useState<Companies>();
+  const [keyword, setKeyword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  useEffect(() => {
+    const getCompaniesName = async () => {
+      try {
+        const response = await fetchCompanyNameList(keyword);
+        setCompanies(response.data);
+        setIsLoading(true);
+      } catch (error) {
+        console.error("검색자동완성 에러 : ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getCompaniesName();
+  }, [keyword]);
+
+  const onChangeKeyword = (value: string) => {
+    setKeyword(value);
+  };
 
   const clearModal = () => {
     setIsCalendarModalOn(false);
@@ -46,7 +71,13 @@ export const GongsiSearch = () => {
     <div>
       <HeaderLogin isLogin={false} />
       <div className="mt-4 p-2">
-        <SearchBar onSelect={() => null} isDisabled={false} />
+        {/* <SearchBar onSelect={() => null} isDisabled={false} /> */}
+        <SearchBar
+          keyword={keyword}
+          onChangeKeyword={onChangeKeyword}
+          companies={companies?.companyNameList}
+          isLoading={isLoading}
+        />
       </div>
       <div className="flex py-2 justify-between items-center border-b">
         <PostFilter />
