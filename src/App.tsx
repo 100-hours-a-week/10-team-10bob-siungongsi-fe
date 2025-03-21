@@ -9,6 +9,7 @@ import { Regist_02 } from "./pages/Regist/Regist_02";
 import { Main } from "./pages/Main/Main";
 import { SettingPage } from "./pages/SettingPage/Setting";
 import { GongsiDetail } from "./pages/GongsiDetail/GongsiDetail";
+import SentryTest from "./components/SentryTest";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/sentry-test" element={<SentryTest />} />
           <Route path="/search" element={<GongsiSearch />} />
           <Route path="/regist" element={<Regist />} />
           <Route path="/regist_02" element={<Regist_02 />} />
