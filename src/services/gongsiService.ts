@@ -21,17 +21,41 @@ interface pagination {
   totalPages: number;
   totalResults: number;
 }
+
+interface APIDataDetail {
+  code: number;
+  message: string;
+  data: GongsiInfo;
+}
+export interface GongsiInfo {
+  gongsi: GongsiContent;
+  company: CompanyInfo;
+}
+interface GongsiContent {
+  id: number;
+  title: string;
+  date: string;
+  viewCount: number;
+  content: string;
+  originalUrl: string;
+}
+interface CompanyInfo {
+  id: number;
+  name: string;
+  prdyCtr: number;
+  isSubscribed: false;
+}
 const apiKey = process.env.REACT_APP_API_URL;
 
 // 공시목록 불러오기
 export const fetchGongsiList = async (
-  companyId: number | null,
+  companyId: number | undefined,
   sortCondition: string | null,
   contentVisible: boolean | null,
   page: number | null,
   size: number | null,
-  startDate: Date | null,
-  endDate: Date | null,
+  startDate: string | undefined,
+  endDate: string | undefined,
 ): Promise<APIData> => {
   try {
     const response = await api.get<APIData>(
@@ -40,6 +64,20 @@ export const fetchGongsiList = async (
     return response.data;
   } catch (error) {
     console.error("공시목록 불러오기 에러: ", error);
+    throw error;
+  }
+};
+
+export const fetchGongsiDetail = async (
+  gongsiId: number,
+): Promise<APIDataDetail> => {
+  try {
+    const response = await api.get<APIDataDetail>(
+      `${apiKey}gongsi/${gongsiId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("공시 상세보기 에러 : ", error);
     throw error;
   }
 };

@@ -62,7 +62,9 @@ export const Calendar = ({
       setStartDate(date);
       setEndDate(null);
     } else {
-      if (date > startDate) {
+      if (isSameDay(date, startDate)) {
+        setEndDate(date);
+      } else if (date > startDate) {
         setEndDate(date);
       } else {
         setStartDate(date);

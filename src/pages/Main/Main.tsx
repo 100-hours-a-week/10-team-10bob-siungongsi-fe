@@ -1,15 +1,38 @@
 import { SectionTitle } from "../../components/SectionTitle";
 import NewsSlider from "../../components/Slider";
-import { gongsiTitleList } from "./dummyTitle";
+
 import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { GongsiList } from "../../components/GongsiList";
 import { useNavigate } from "react-router-dom";
 
 import { HeaderLogin } from "../../components/HeaderLogin";
+import { useEffect, useState } from "react";
+import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 
 export const Main = () => {
+  const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
+  useEffect(() => {
+    try {
+      const popularGongsi = async () => {
+        const response = await fetchGongsiList(
+          undefined,
+          "views",
+          true,
+          1,
+          8,
+          undefined,
+          undefined,
+        );
+        setPopularGongsiList(response.data);
+      };
+      popularGongsi();
+    } catch (error) {
+      console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
+    }
+  }, []);
   const navigate = useNavigate();
+  const length = popularGongsiList?.gongsiList?.length || 0;
 
   return (
     <div>
@@ -19,7 +42,7 @@ export const Main = () => {
         <SectionTitle>오늘의 핫이슈</SectionTitle>
       </div>
       <section className="mb-12">
-        <NewsSlider />
+        <NewsSlider GongsiData={popularGongsiList} />
       </section>
 
       <section className="mb-12">
@@ -41,13 +64,13 @@ export const Main = () => {
           </svg>
           <SectionTitle>오늘 올라온 공시</SectionTitle>
         </div>
-        {gongsiTitleList.length > 0 ? (
-          gongsiTitleList
+        {length > 0 ? (
+          popularGongsiList?.gongsiList
             .slice(0, 5)
             .map((gongsiTitle) => (
               <GongsiList
-                gongsiTitle={gongsiTitle.title}
-                gongsiCompany={gongsiTitle.company}
+                gongsiTitle={gongsiTitle.gongsiTitle}
+                gongsiCompany={gongsiTitle.companyName}
               />
             ))
         ) : (

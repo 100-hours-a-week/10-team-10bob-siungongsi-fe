@@ -18,7 +18,7 @@ function App() {
         <Route path="/regist" element={<Regist />} />
         <Route path="/regist_02" element={<Regist_02 />} />
         <Route path="/setting" element={<SettingPage />} />
-        <Route path="/detail" element={<GongsiDetail />} />
+        <Route path="/detail/:id" element={<GongsiDetail />} />
       </Routes>
     </Router>
   );

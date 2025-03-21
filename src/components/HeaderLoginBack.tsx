@@ -7,7 +7,9 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
-      <div>{"<"}</div>
+      <div onClick={() => window.history.back()} className="cursor-pointer">
+        {"<"}
+      </div>
       <h1 className="text-2xl">Siun</h1>
       {isLogin ? (
         <button className="bg-white p-2 rounded-lg text-primary">

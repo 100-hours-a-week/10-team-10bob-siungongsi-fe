@@ -15,15 +15,18 @@ import {
 } from "../../services/companiesService";
 
 export const GongsiSearch = () => {
-  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState<number>();
   const [isCalendarModalOn, setIsCalendarModalOn] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [companies, setCompanies] = useState<Companies>();
   const [keyword, setKeyword] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [filterMenu, setFilterMenu] = useState<string>("latest");
+  const [isSearchBarOn, setIsSearchBarON] = useState<boolean>(true);
   useEffect(() => {
     const getCompaniesName = async () => {
+      setIsLoading(true);
       try {
         const response = await fetchCompanyNameList(keyword);
         setCompanies(response.data);
@@ -39,8 +42,10 @@ export const GongsiSearch = () => {
 
   const onChangeKeyword = (value: string) => {
     setKeyword(value);
+    setIsSearchBarON(true);
   };
 
+  //달력 관련
   const clearModal = () => {
     setIsCalendarModalOn(false);
   };
@@ -53,6 +58,17 @@ export const GongsiSearch = () => {
     setStartDate(null);
     setEndDate(null);
     setIsCalendarModalOn(false);
+  };
+
+  //필터 상태 변경
+  const onChangeFilterCondition = (condition: string) => {
+    setFilterMenu(condition);
+  };
+
+  //선택된 기업 불러오기
+  const onSelectCompany = (company: number | undefined) => {
+    setSelectedCompany(company);
+    setIsSearchBarON(false);
   };
 
   const formatDate = (date: Date | null) => {
@@ -77,10 +93,12 @@ export const GongsiSearch = () => {
           onChangeKeyword={onChangeKeyword}
           companies={companies?.companyNameList}
           isLoading={isLoading}
+          onSelectCompany={onSelectCompany}
+          isSearchBarOn={isSearchBarOn}
         />
       </div>
       <div className="flex py-2 justify-between items-center border-b">
-        <PostFilter />
+        <PostFilter onChangeFilterCondition={onChangeFilterCondition} />
         <div className="flex flex-col items-end">
           <div
             className="border border-primary rounded-xl p-1 text-sm text-primary cursor-pointer"
@@ -107,7 +125,12 @@ export const GongsiSearch = () => {
       </div>
       {/* 공시목록 */}
       <div>
-        <GongsiPagination />
+        <GongsiPagination
+          filterMenu={filterMenu}
+          startDate={formatDate(startDate)?.toString()}
+          endDate={formatDate(endDate)?.toString()}
+          selectedCompany={selectedCompany}
+        />
       </div>
       <div className="flex justify-center">
         {isCalendarModalOn && (

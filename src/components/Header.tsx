@@ -6,10 +6,6 @@ export const Header = () => {
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <h1 className="text-2xl">Siun</h1>
-
-      {isOpen && (
-        <LoginSlider isOpen={isOpen} onClose={() => setIsOpen(false)} />
-      )}
     </div>
   );
 };
