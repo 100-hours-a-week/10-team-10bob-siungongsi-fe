@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - main  # main 브랜치 푸시 시 실행
+      - deploy  # main 브랜치 푸시 시 실행
 
 jobs:
   build-and-push-frontend:
@@ -75,5 +75,5 @@ jobs:
                 docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
                 docker stop frontend || true
                 docker rm frontend || true
-                docker run -d --name frontend -p 80:80 --restart always \
+                docker run -d --name frontend -p 3000:3000 --restart always \
                     ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
