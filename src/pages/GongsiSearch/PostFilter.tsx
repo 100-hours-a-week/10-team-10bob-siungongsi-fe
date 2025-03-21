@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import { ReactComponent as Swap } from "../../assets/swap-alt-svgrepo-com.svg";
 
-export const PostFilter = () => {
-  const filterMenu: string[] = ["최신순", "조회순", "오래된순"];
+interface PostFilterProps {
+  onChangeFilterCondition: (condition: string) => void;
+}
+
+export const PostFilter = ({ onChangeFilterCondition }: PostFilterProps) => {
+  const filterMenu = [
+    { label: "최신순", name: "latest" },
+    { label: "인기순", name: "views" },
+    { label: "오래된순", name: "oldest" },
+  ];
   const [filterlingConditions, setFilterlingConditions] =
     useState<string>("최신순");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const selectFilterCondition = (value: string) => {
-    setFilterlingConditions(value);
+  const selectFilterCondition = (label: string, name: string) => {
+    setFilterlingConditions(label);
+    onChangeFilterCondition(name);
     setIsOpen(false);
   };
 
@@ -25,9 +34,9 @@ export const PostFilter = () => {
           {filterMenu.map((menu) => (
             <div
               className="cursor-pointer"
-              onClick={() => selectFilterCondition(menu)}
+              onClick={() => selectFilterCondition(menu.label, menu.name)}
             >
-              {menu}
+              {menu.label}
             </div>
           ))}
         </div>
