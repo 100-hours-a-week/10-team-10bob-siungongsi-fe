@@ -13,6 +13,7 @@ import {
   Companies,
   fetchCompanyNameList,
 } from "../../services/companiesService";
+import { useSearchParams } from "react-router-dom";
 
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState<number>();
@@ -22,7 +23,15 @@ export const GongsiSearch = () => {
   const [companies, setCompanies] = useState<Companies>();
   const [keyword, setKeyword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [filterMenu, setFilterMenu] = useState<string>("latest");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initalFilter = searchParams.get("sort") || "latest";
+  const [filterMenu, setFilterMenu] = useState<string>(initalFilter);
+  useEffect(() => {
+    // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
+    setSearchParams({ sort: filterMenu });
+  }, [filterMenu]);
+
   const [isSearchBarOn, setIsSearchBarON] = useState<boolean>(true);
   useEffect(() => {
     const getCompaniesName = async () => {

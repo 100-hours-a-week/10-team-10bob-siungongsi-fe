@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ReactComponent as Swap } from "../../assets/swap-alt-svgrepo-com.svg";
+import { useSearchParams } from "react-router-dom";
 
 interface PostFilterProps {
   onChangeFilterCondition: (condition: string) => void;
@@ -11,6 +12,7 @@ export const PostFilter = ({ onChangeFilterCondition }: PostFilterProps) => {
     { label: "인기순", name: "views" },
     { label: "오래된순", name: "oldest" },
   ];
+
   const [filterlingConditions, setFilterlingConditions] =
     useState<string>("최신순");
   const [isOpen, setIsOpen] = useState<boolean>(false);

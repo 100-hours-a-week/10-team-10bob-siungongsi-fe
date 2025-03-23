@@ -20,7 +20,7 @@ export const Main = () => {
           "views",
           true,
           1,
-          8,
+          5,
           undefined,
           undefined,
         );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { gongsiTitleList } from "../Main/dummyTitle";
 import { GongsiList } from "../../components/GongsiList";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 
@@ -19,7 +19,15 @@ export const GongsiPagination = ({
   selectedCompany,
 }: GongsiPaginationProps) => {
   const [isLoading, setIsLoading] = useState<boolean>();
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initalPage = parseInt(searchParams.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState<number>(initalPage);
+  const [prevFilterKey, setPrevFilterKey] = useState("");
+  useEffect(() => {
+    // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
+    setSearchParams({ page: currentPage.toString(), sort: filterMenu });
+  }, [currentPage, filterMenu]);
   useEffect(() => {
     const getGongsiList = async () => {
       try {
@@ -30,7 +38,7 @@ export const GongsiPagination = ({
           filterMenu,
           false,
           currentPage,
-          8,
+          null,
           startDate,
           endDate,
         );
@@ -46,7 +54,12 @@ export const GongsiPagination = ({
     getGongsiList();
   }, [currentPage, filterMenu, startDate, endDate, selectedCompany]);
   useEffect(() => {
-    setCurrentPage(1);
+    const newFilterKey = `${filterMenu}_${startDate}_${endDate}_${selectedCompany}`;
+    if (prevFilterKey && prevFilterKey !== newFilterKey) {
+      setCurrentPage(1);
+      setSearchParams({ page: "1" });
+    }
+    setPrevFilterKey(newFilterKey);
   }, [filterMenu, startDate, endDate, selectedCompany]);
   const [gongsiData, setGongsiData] = useState<GongsiData>();
   const navigate = useNavigate();
@@ -65,25 +78,32 @@ export const GongsiPagination = ({
   return (
     <div className="w-full max-w-xl mx-auto">
       {/* 게시글 목록 */}
+
       <ul className="flex flex-col max-h-content">
         {!isLoading ? (
-          gongsiData?.gongsiList.map((gongsi) => (
-            <li
-              onClick={() => navigate(`/detail/${gongsi.gongsiId}`)}
-              key={gongsi.gongsiId}
-              className="border-b border-gray-300 p-3 cursor-pointer"
-            >
-              <div className="font-bold truncate">{gongsi.gongsiTitle}</div>
-              <div className="flex justify-between">
-                <div className="text-gray-500 text-sm">
-                  {gongsi.companyName}
+          gongsiData?.gongsiListSize !== 0 ? (
+            gongsiData?.gongsiList.map((gongsi) => (
+              <li
+                onClick={() => navigate(`/detail/${gongsi.gongsiId}`)}
+                key={gongsi.gongsiId}
+                className="border-b border-gray-300 p-3 cursor-pointer"
+              >
+                <div className="font-bold truncate">{gongsi.gongsiTitle}</div>
+                <div className="flex justify-between">
+                  <div className="text-gray-500 text-sm">
+                    {gongsi.companyName}
+                  </div>
+                  <div className="text-gray-500 text-sm">
+                    {gongsi.publishedDatetime.toString()}
+                  </div>
                 </div>
-                <div className="text-gray-500 text-sm">
-                  {gongsi.publishedDatetime.toString()}
-                </div>
-              </div>
-            </li>
-          ))
+              </li>
+            ))
+          ) : (
+            <div className="flex h-[545px] items-center justify-center">
+              해당하는 공시가 없습니다.
+            </div>
+          )
         ) : (
           <div className="flex h-[545px] items-center justify-center">
             <LoadingSpinner />
@@ -94,7 +114,7 @@ export const GongsiPagination = ({
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1 || isLoading}
-          className={`px-3 py-1 ${currentPage === 1 || isLoading ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"}`}
+          className={`px-3 py-1 ${currentPage === 1 || isLoading ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
         >
           {"<"}
         </button>
@@ -121,8 +141,12 @@ export const GongsiPagination = ({
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages ?? 1))
           }
-          disabled={currentPage === totalPages || isLoading}
-          className={`px-3 py-1 ${currentPage === totalPages || isLoading ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"}`}
+          disabled={
+            currentPage === totalPages ||
+            isLoading ||
+            gongsiData?.gongsiListSize === 0
+          }
+          className={`px-3 py-1 ${currentPage === totalPages || isLoading || gongsiData?.gongsiListSize === 0 ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
         >
           {">"}
         </button>

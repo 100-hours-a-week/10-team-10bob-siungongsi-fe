@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import kakao from "../assets/kakao_login.png";
 
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   isOpen: boolean;
@@ -14,6 +16,7 @@ declare global {
 }
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
+  const navigate = useNavigate();
   useEffect(() => {
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
@@ -57,10 +60,13 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           <img
             className="cursor-pointer"
             onClick={loginWithKakao}
-            src="./images/kakao_login.png"
+            src={kakao}
             alt=""
           />
-          <button className="text-gray-300 font-normal">
+          <button
+            className="text-gray-300 font-normal"
+            onClick={() => navigate("/regist")}
+          >
             회원가입 하시겠습니까?
           </button>
         </div>
