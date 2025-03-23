@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import { Header } from "../../components/Header";
+
 import { getPushToken } from "../../firebase";
-import { Regist_02 } from "../Regist/Regist_02";
-import { AlarmSelect } from "./AlarmSelect";
+
 import { HeaderLogin } from "../../components/HeaderLogin";
 import { Modal } from "../../components/Modal";
 import { BottomNavigation } from "../../components/BottomNavigation";
-import {
-  Companies,
-  fetchCompanyNameList,
-} from "../../services/companiesService";
-import { motion } from "framer-motion";
-import { SearchBar } from "../Regist/SearchBarRegist";
+import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 
 export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
@@ -24,30 +18,6 @@ export const SettingPage = () => {
     submitMessage: "",
     helperText: null as string | null,
   });
-
-  const [isVibrating, setIsVibrating] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [companies, setCompanies] = useState<Companies>();
-  const [keyword, setKeyword] = useState<string>("");
-  const [isSearchBarOn, setIsSearchBarOn] = useState<boolean>(false);
-  const [selectedCompany, setSelectedCompany] = useState<string[]>([]);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [addVibratingTrigger, setAddVibratingTrigger] =
-    useState<boolean>(false);
-
-  useEffect(() => {
-    if (selectedCompany.length >= 10) {
-      console.log(selectedCompany.length);
-      setIsVibrating(true);
-      setIsDisabled(true);
-      setAddVibratingTrigger(true);
-      setTimeout(() => setIsVibrating(false), 300);
-    } else {
-      setIsDisabled(false);
-      setAddVibratingTrigger(false);
-    }
-  }, [selectedCompany]);
-
   useEffect(() => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
@@ -91,20 +61,6 @@ export const SettingPage = () => {
   const closeModal = () => {
     setIsModalOn(false);
   };
-  const triggerVibration = () => {
-    setIsVibrating(true);
-    setTimeout(() => setIsVibrating(false), 300); // 0.3초 후 효과 제거
-  };
-  const onChangeKeyword = (value: string) => {
-    setKeyword(value);
-    setIsSearchBarOn(true);
-  };
-  const onSelectCompany = (company: string) => {
-    setSelectedCompany((prev) => [...new Set([...prev, company])]);
-
-    setIsSearchBarOn(false);
-    setKeyword("");
-  };
 
   return (
     <div>
@@ -127,52 +83,7 @@ export const SettingPage = () => {
               />
             </button>
           </div>
-          {isNotificationEnabled && (
-            <div>
-              <motion.div
-                className="font-bold flex gap-2"
-                animate={
-                  isVibrating
-                    ? {
-                        x: [-2, -2, 2, -2, 2, -2],
-                        y: [-2, 2, -2, 2, -2, 0],
-                      }
-                    : {}
-                }
-                transition={{ duration: 0.2 }}
-              >
-                <div>알림받고 싶은 기업을 선택해주세요</div>
-                <div
-                  className={`${selectedCompany.length >= 10 && "text-primary"}`}
-                >
-                  ({selectedCompany.length}/10)
-                </div>
-              </motion.div>
-              {addVibratingTrigger ? (
-                <div onClick={triggerVibration}>
-                  <SearchBar
-                    keyword={keyword}
-                    companies={companies?.companyNameList}
-                    onChangeKeyword={onChangeKeyword}
-                    isLoading={isLoading}
-                    onSelectCompany={onSelectCompany}
-                    isSearchBarOn={isSearchBarOn}
-                    isDisabled={isDisabled}
-                  />
-                </div>
-              ) : (
-                <SearchBar
-                  keyword={keyword}
-                  companies={companies?.companyNameList}
-                  onChangeKeyword={onChangeKeyword}
-                  isLoading={isLoading}
-                  onSelectCompany={onSelectCompany}
-                  isSearchBarOn={isSearchBarOn}
-                  isDisabled={isDisabled}
-                />
-              )}
-            </div>
-          )}
+          {isNotificationEnabled && <SelectAlarm />}
         </div>
 
         <div className="flex flex-col ">
