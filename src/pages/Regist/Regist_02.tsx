@@ -4,7 +4,7 @@ import { Header } from "../../components/Header";
 import { motion } from "framer-motion";
 
 import { Badge } from "./Badge";
-import { corpList } from "../GongsiSearch/dummyCorp";
+
 import { CorpCard } from "./CorpCard";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import {
@@ -136,9 +136,6 @@ export const Regist_02 = () => {
         {/* 이런기업은 어떄요 */}
         <div>
           <div>이런 기업은 어때요?</div>
-          {corpList.slice(0, 5).map((corp, idx) => (
-            <CorpCard key={idx} name={corp.company} />
-          ))}
         </div>
       </div>
       <BottomNavigation />
