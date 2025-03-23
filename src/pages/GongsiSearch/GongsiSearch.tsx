@@ -70,7 +70,7 @@ export const GongsiSearch = () => {
   };
 
   //필터 상태 변경
-  const onChangeFilterCondition = (condition: string) => {
+  const onChangeFilter = (condition: string) => {
     setFilterMenu(condition);
   };
 
@@ -107,7 +107,7 @@ export const GongsiSearch = () => {
         />
       </div>
       <div className="flex py-2 justify-between items-center border-b">
-        <PostFilter onChangeFilterCondition={onChangeFilterCondition} />
+        <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
         <div className="flex flex-col items-end">
           <div
             className="border border-primary rounded-xl p-1 text-sm text-primary cursor-pointer"
