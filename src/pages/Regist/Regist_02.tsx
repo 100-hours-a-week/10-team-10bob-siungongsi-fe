@@ -20,7 +20,7 @@ export const Regist_02 = () => {
   const [companies, setCompanies] = useState<Companies>();
   const [keyword, setKeyword] = useState<string>("");
   const [isSearchBarOn, setIsSearchBarOn] = useState<boolean>(false);
-  const [selectedCompany, setSelectedCompany] = useState<number[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState<string[]>([]);
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [addVibratingTrigger, setAddVibratingTrigger] =
@@ -64,17 +64,17 @@ export const Regist_02 = () => {
     setTimeout(() => setIsVibrating(false), 300); // 0.3초 후 효과 제거
   };
 
-  const onSelectCompany = (company: number) => {
-    setSelectedCompany((prev) => [...prev, company]);
+  const onSelectCompany = (company: string) => {
+    setSelectedCompany((prev) => [...new Set([...prev, company])]);
+
     setIsSearchBarOn(false);
+    setKeyword("");
   };
-  // const onDeleteBadge = (index: number) => {
-  //   setSelectedCompany(
-  //     selectedCompany.filter(
-  //       (company) => company !== selectedCompany[index].id
-  //     )
-  //   );
-  // };
+  const onDeleteBadge = (index: number) => {
+    setSelectedCompany(
+      selectedCompany.filter((company) => company !== selectedCompany[index]),
+    );
+  };
   return (
     <div>
       <Header />
@@ -95,7 +95,11 @@ export const Regist_02 = () => {
             transition={{ duration: 0.2 }}
           >
             <div>알림받고 싶은 기업을 선택해주세요</div>
-            <div className="text-primary">(10/10)</div>
+            <div
+              className={`${selectedCompany.length >= 10 && "text-primary"}`}
+            >
+              ({selectedCompany.length}/10)
+            </div>
           </motion.div>
         </div>
         {addVibratingTrigger ? (
@@ -123,16 +127,16 @@ export const Regist_02 = () => {
         )}
 
         {/* 배지추가되는부분 */}
-        {/* <div className='flex my-2 gap-2 flex-wrap'>
+        <div className="flex my-2 gap-2 flex-wrap">
           {selectedCompany.map((company, idx) => (
             <Badge
               key={idx}
-              name={company.name}
+              name={company}
               index={idx}
               onDeleteBadge={onDeleteBadge}
             />
           ))}
-        </div> */}
+        </div>
         {/* 이런기업은 어떄요 */}
         <div>
           <div>이런 기업은 어때요?</div>
