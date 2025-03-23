@@ -53,6 +53,7 @@ jobs:
               --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
               --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
               --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+              --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
               -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend .
 
       - name: Push Frontend Docker Image
@@ -75,5 +76,5 @@ jobs:
                 docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
                 docker stop frontend || true
                 docker rm frontend || true
-                docker run -d --name frontend -p 80:80 --restart always \
+                docker run -d --name frontend -p 3000:80 --restart always \
                     ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
