@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - deploy
+      - deploy  # main 브랜치 푸시 시 실행
 
 jobs:
   build-and-push-frontend:
@@ -39,7 +39,8 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+          | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
       - name: Set Version Tag
         id: set-version
@@ -83,6 +84,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             VERSION_TAG=${{ needs.build-and-push-frontend.outputs.version_tag }}
+
+            echo "Logging into ECR..."
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+              | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+
             echo "Pulling new image..."
             docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
 
