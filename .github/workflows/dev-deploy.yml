@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - main  # main 브랜치 푸시 시 실행
+      - deploy  # main 브랜치 푸시 시 실행
 
 jobs:
   build-and-push-frontend:
@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Frontend Docker Image
         run: |
-            docker build \
+            docker build --no-cache \
               --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
               --build-arg REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
               --build-arg REACT_APP_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID }} \
