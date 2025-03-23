@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { GongsiData } from "../services/gongsiService";
+import { useSwipeable } from "react-swipeable";
 
 interface NewsSliderProps {
   GongsiData: GongsiData | undefined;
@@ -29,11 +30,20 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   const setIndicator = (index: number) => {
     setCurrentIndex(index);
   };
+  const handlers = useSwipeable({
+    onSwipedLeft: () => nextSlide(),
+    onSwipedRight: () => prevSlide(),
+    preventScrollOnSwipe: true,
+    trackMouse: true, // 마우스 드래그도 인식
+  });
 
   return (
     <div>
       {GongsiData?.gongsiListSize !== 0 ? (
-        <div className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg">
+        <div
+          {...handlers}
+          className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg"
+        >
           {/* 기사 내용 */}
           <h2 className="text-lg font-bold mb-1">
             {GongsiData?.gongsiList[currentIndex].gongsiTitle}
