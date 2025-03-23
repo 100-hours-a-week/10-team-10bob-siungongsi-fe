@@ -75,10 +75,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: VERSION_TAG
           script: |
+            VERSION_TAG="${{ env.VERSION_TAG }}"
             echo "[1] Pull new image"
-            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
+            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:$VERSION_TAG
 
             echo "[2] Stop and remove existing container"
             docker stop frontend || true
@@ -86,11 +86,14 @@ jobs:
 
             echo "[3] Remove previous images except the latest and 'latest-frontend'"
             docker images "${{ secrets.ECR_REGISTRY }}/siungongsi" --format "{{.Repository}}:{{.Tag}} {{.ID}}" \
-              | grep -vE "(${{ env.VERSION_TAG }}|latest-frontend)" \
+              | grep -vE "(${VERSION_TAG}|latest-frontend)" \
               | awk '{print $2}' \
               | xargs -r docker rmi
 
             echo "[4] Run new container"
             docker run -d --name frontend -p 3000:80 --restart always \
-              ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
+              ${{ secrets.ECR_REGISTRY }}/siungongsi:$VERSION_TAG
+        env:
+          VERSION_TAG: ${{ env.VERSION_TAG }}
+        
         
