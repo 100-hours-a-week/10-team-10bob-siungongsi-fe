@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - main
+      - deploy
 
 jobs:
   build-and-push-frontend:
