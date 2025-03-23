@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - deploy  # main 브랜치 푸시 시 실행
+      - deploy  # deploy 브랜치 푸시 시 실행
 
 jobs:
   build-and-push-frontend:
@@ -17,48 +17,51 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-            node-version: 20
-            cache: 'npm'
+          node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build React App
         run: |
-            export CI=false
-            npm run build
+          export CI=false
+          npm run build
+
+      - name: Set VERSION_TAG
+        run: echo "VERSION_TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
         run: |
-            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws configure set region ${{ secrets.AWS_REGION }}
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         run: |
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+          | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-      - name: Set Version Tag
-        run: echo "VERSION_TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
-
-      - name: Build Frontend Docker Image
+      - name: Build Frontend Docker Image with Version Tag
         run: |
-            docker build --no-cache \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_APP_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_APP_ID }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
-              --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
-              --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-              --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
-              -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend .
+          docker build --no-cache \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_APP_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_APP_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
+            --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+            --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
+            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend \
+            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }} .
 
-      - name: Push Frontend Docker Image
+      - name: Push Docker Images
         run: |
-            docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
+          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
+          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
 
   deploy:
     name: Deploy Frontend Container to EC2
@@ -69,12 +72,25 @@ jobs:
       - name: SSH into EC2 and Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-                docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
-                docker stop frontend || true
-                docker rm frontend || true
-                docker run -d --name frontend -p 3000:80 --restart always \
-                    ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: VERSION_TAG
+          script: |
+            echo "[1] Pull new image"
+            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
+
+            echo "[2] Stop and remove existing container"
+            docker stop frontend || true
+            docker rm frontend || true
+
+            echo "[3] Remove previous images except the latest and 'latest-frontend'"
+            docker images "${{ secrets.ECR_REGISTRY }}/siungongsi" --format "{{.Repository}}:{{.Tag}} {{.ID}}" \
+              | grep -vE "(${{ env.VERSION_TAG }}|latest-frontend)" \
+              | awk '{print $2}' \
+              | xargs -r docker rmi
+
+            echo "[4] Run new container"
+            docker run -d --name frontend -p 3000:80 --restart always \
+              ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
+        
