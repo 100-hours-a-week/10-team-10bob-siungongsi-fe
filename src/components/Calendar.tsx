@@ -14,7 +14,10 @@ import {
 import { ko } from "date-fns/locale";
 
 interface CalendarProps {
-  onSubmitDate: (startDate: Date | null, endDate: Date | null) => void;
+  onSubmitDate: (
+    startDate: Date | undefined,
+    endDate: Date | undefined,
+  ) => void;
   clearDate: () => void;
   clearModal: () => void;
 }
@@ -26,8 +29,8 @@ export const Calendar = ({
 }: CalendarProps) => {
   const today = new Date(); // 현재 날짜
   const [currentMonth, setCurrentMonth] = useState(today); // 현재 달력의 월
-  const [startDate, setStartDate] = useState<Date | null>(today); // 시작 날짜
-  const [endDate, setEndDate] = useState<Date | null>(null); // 종료 날짜
+  const [startDate, setStartDate] = useState<Date | undefined>(today); // 시작 날짜
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined); // 종료 날짜
 
   // 현재 월의 시작과 끝을 구하기
   const monthStart = startOfMonth(currentMonth);
@@ -60,7 +63,7 @@ export const Calendar = ({
     if (!date) return;
     if (!startDate || (startDate && endDate)) {
       setStartDate(date);
-      setEndDate(null);
+      setEndDate(undefined);
     } else {
       if (isSameDay(date, startDate)) {
         setEndDate(date);
@@ -68,7 +71,7 @@ export const Calendar = ({
         setEndDate(date);
       } else {
         setStartDate(date);
-        setEndDate(null);
+        setEndDate(undefined);
       }
     }
   };
