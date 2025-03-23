@@ -3,12 +3,15 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - deploy  # deploy 브랜치 푸시 시 실행
+      - main
 
 jobs:
   build-and-push-frontend:
     name: Build and Push Frontend Docker Image
     runs-on: ubuntu-latest
+
+    outputs:
+      version_tag: ${{ steps.set-version.outputs.version_tag }}
 
     steps:
       - name: Checkout repository
@@ -28,9 +31,6 @@ jobs:
           export CI=false
           npm run build
 
-      - name: Set VERSION_TAG
-        run: echo "VERSION_TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
-
       - name: Configure AWS Credentials
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -39,10 +39,16 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-          | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
-      - name: Build Frontend Docker Image with Version Tag
+      - name: Set Version Tag
+        id: set-version
+        run: |
+          VERSION_TAG=$(date +'%Y%m%d-%H%M%S')
+          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV
+          echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+
+      - name: Build Frontend Docker Image
         run: |
           docker build --no-cache \
             --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
@@ -56,12 +62,12 @@ jobs:
             --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
             --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
             -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend \
-            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }} .
+            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}-frontend .
 
-      - name: Push Docker Images
+      - name: Push Frontend Docker Image
         run: |
           docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
-          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}
+          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}-frontend
 
   deploy:
     name: Deploy Frontend Container to EC2
@@ -76,24 +82,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            VERSION_TAG="${{ env.VERSION_TAG }}"
-            echo "[1] Pull new image"
-            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:$VERSION_TAG
+            VERSION_TAG=${{ needs.build-and-push-frontend.outputs.version_tag }}
+            echo "Pulling new image..."
+            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
 
-            echo "[2] Stop and remove existing container"
+            echo "Stopping and removing old container..."
             docker stop frontend || true
             docker rm frontend || true
 
-            echo "[3] Remove previous images except the latest and 'latest-frontend'"
-            docker images "${{ secrets.ECR_REGISTRY }}/siungongsi" --format "{{.Repository}}:{{.Tag}} {{.ID}}" \
-              | grep -vE "(${VERSION_TAG}|latest-frontend)" \
-              | awk '{print $2}' \
-              | xargs -r docker rmi
-
-            echo "[4] Run new container"
+            echo "Running new frontend container..."
             docker run -d --name frontend -p 3000:80 --restart always \
-              ${{ secrets.ECR_REGISTRY }}/siungongsi:$VERSION_TAG
-        env:
-          VERSION_TAG: ${{ env.VERSION_TAG }}
-        
-        
+              ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
