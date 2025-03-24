@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cat <<EOF > /usr/share/nginx/html/env.js
+window._env_ = {
+    REACT_APP_API_URL: "$REACT_APP_API_URL",
+    REACT_APP_SENTRY_DSN: "$REACT_APP_SENTRY_DSN",
+    REACT_APP_PUBLIC_FIREBASE_VAPID_KEY: "$REACT_APP_PUBLIC_FIREBASE_VAPID_KEY"
+};
+EOF

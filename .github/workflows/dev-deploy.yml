@@ -3,7 +3,7 @@ name: Deploy React Frontend to AWS EC2
 on:
   push:
     branches:
-      - main  # main 브랜치 푸시 시 실행
+      - deploy  # main 브랜치 푸시 시 실행
 
 jobs:
   build-and-push-frontend:
@@ -59,9 +59,6 @@ jobs:
             --build-arg REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_APP_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_APP_ID }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
-            --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
-            --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
-            --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
             -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend \
             -t ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}-frontend .
 
@@ -98,4 +95,7 @@ jobs:
 
             echo "Running new frontend container..."
             docker run -d --name frontend -p 3000:80 --restart always \
+              -e REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+              -e REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
+              -e REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
               ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
