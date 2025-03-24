@@ -7,8 +7,8 @@ import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 interface GongsiPaginationProps {
   filterMenu: string;
-  startDate: string | undefined;
-  endDate: string | undefined;
+  startDate: string;
+  endDate: string;
   selectedCompany: number | undefined;
 }
 
@@ -26,8 +26,13 @@ export const GongsiPagination = ({
   const [prevFilterKey, setPrevFilterKey] = useState("");
   useEffect(() => {
     // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
-    setSearchParams({ page: currentPage.toString(), sort: filterMenu });
-  }, [currentPage, filterMenu]);
+    setSearchParams({
+      page: currentPage.toString(),
+      sort: filterMenu,
+      startDate: startDate,
+      endDate: endDate,
+    });
+  }, [currentPage, filterMenu, startDate, endDate]);
   useEffect(() => {
     const getGongsiList = async () => {
       try {
@@ -57,7 +62,12 @@ export const GongsiPagination = ({
     const newFilterKey = `${filterMenu}_${startDate}_${endDate}_${selectedCompany}`;
     if (prevFilterKey && prevFilterKey !== newFilterKey) {
       setCurrentPage(1);
-      setSearchParams({ page: "1" });
+      setSearchParams({
+        page: "1",
+        sort: filterMenu,
+        startDate: startDate,
+        endDate: endDate,
+      });
     }
     setPrevFilterKey(newFilterKey);
   }, [filterMenu, startDate, endDate, selectedCompany]);

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { HeaderLogin } from "../../components/HeaderLogin";
 import { useEffect, useState } from "react";
 import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
+import { ServiceButton } from "./ServiceButton";
 
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
@@ -33,6 +34,19 @@ export const Main = () => {
   }, []);
   const navigate = useNavigate();
   const length = popularGongsiList?.gongsiList?.length || 0;
+  const formatDate = (date: Date | null) => {
+    if (date) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+        .format(date)
+        .replace(/\. /g, "-")
+        .replace(".", "");
+    }
+  };
+  const today = formatDate(new Date())?.toString(); // 현재 날짜
 
   return (
     <div>
@@ -71,6 +85,7 @@ export const Main = () => {
               <GongsiList
                 gongsiTitle={gongsiTitle.gongsiTitle}
                 gongsiCompany={gongsiTitle.companyName}
+                gongsiId={gongsiTitle.gongsiId}
               />
             ))
         ) : (
@@ -88,9 +103,13 @@ export const Main = () => {
       </section>
       <section>
         <SectionTitle>이런 서비스는 어때요?</SectionTitle>
-        <article className="flex m-2">
-          <div className="w-[50%] h-[300px] border">로그인 하고 알림받기</div>
-          <div className="w-[50%] h-[300px] border">사전 이용하기 </div>
+        <article className="flex justify-center m-2 gap-2">
+          <ServiceButton imgSrc="./images/enter_1.png">
+            로그인하고<br></br>알림받기
+          </ServiceButton>
+          <ServiceButton imgSrc="./images/dictionary_1.png">
+            사전<br></br>이용하기
+          </ServiceButton>
         </article>
       </section>
 

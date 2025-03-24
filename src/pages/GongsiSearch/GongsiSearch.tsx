@@ -18,19 +18,22 @@ import { useSearchParams } from "react-router-dom";
 export const GongsiSearch = () => {
   const [selectedCompany, setSelectedCompany] = useState<number>();
   const [isCalendarModalOn, setIsCalendarModalOn] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+
   const [companies, setCompanies] = useState<Companies>();
   const [keyword, setKeyword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
+  const initialStartDate = searchParams.get("startDate") || "";
+  const [startDate, setStartDate] = useState<string>(initialStartDate);
+  const initialEndDate = searchParams.get("endDate") || "";
+  const [endDate, setEndDate] = useState<string>(initialEndDate);
   const initalFilter = searchParams.get("sort") || "latest";
   const [filterMenu, setFilterMenu] = useState<string>(initalFilter);
-  useEffect(() => {
-    // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
-    setSearchParams({ sort: filterMenu });
-  }, [filterMenu]);
+  // useEffect(() => {
+  //   // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
+  //   setSearchParams({ sort: filterMenu });
+  // }, [filterMenu]);
 
   const [isSearchBarOn, setIsSearchBarON] = useState<boolean>(true);
   useEffect(() => {
@@ -58,19 +61,22 @@ export const GongsiSearch = () => {
   const clearModal = () => {
     setIsCalendarModalOn(false);
   };
-  const onSubmitDate = (startDate: Date | null, endDate: Date | null) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
+  const onSubmitDate = (
+    startDate: Date | undefined,
+    endDate: Date | undefined,
+  ) => {
+    setStartDate(formatDate(startDate).toString());
+    setEndDate(formatDate(endDate).toString());
     setIsCalendarModalOn(false);
   };
   const clearDate = () => {
-    setStartDate(null);
-    setEndDate(null);
+    setStartDate("");
+    setEndDate("");
     setIsCalendarModalOn(false);
   };
 
   //필터 상태 변경
-  const onChangeFilterCondition = (condition: string) => {
+  const onChangeFilter = (condition: string) => {
     setFilterMenu(condition);
   };
 
@@ -80,7 +86,7 @@ export const GongsiSearch = () => {
     setIsSearchBarON(false);
   };
 
-  const formatDate = (date: Date | null) => {
+  const formatDate = (date: Date | undefined) => {
     if (date) {
       return new Intl.DateTimeFormat("ko-KR", {
         year: "numeric",
@@ -90,7 +96,7 @@ export const GongsiSearch = () => {
         .format(date)
         .replace(/\. /g, "-")
         .replace(".", "");
-    }
+    } else return "";
   };
   return (
     <div>
@@ -107,7 +113,7 @@ export const GongsiSearch = () => {
         />
       </div>
       <div className="flex py-2 justify-between items-center border-b">
-        <PostFilter onChangeFilterCondition={onChangeFilterCondition} />
+        <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
         <div className="flex flex-col items-end">
           <div
             className="border border-primary rounded-xl p-1 text-sm text-primary cursor-pointer"
@@ -115,7 +121,7 @@ export const GongsiSearch = () => {
           >
             {startDate ? (
               <div className="flex gap-2 ">
-                {formatDate(startDate)} ~ {formatDate(endDate)}
+                {startDate} ~ {endDate}
                 <svg
                   className="w-4 text-primary dark:text-white"
                   aria-hidden="true"
@@ -136,8 +142,8 @@ export const GongsiSearch = () => {
       <div>
         <GongsiPagination
           filterMenu={filterMenu}
-          startDate={formatDate(startDate)?.toString()}
-          endDate={formatDate(endDate)?.toString()}
+          startDate={startDate}
+          endDate={endDate}
           selectedCompany={selectedCompany}
         />
       </div>

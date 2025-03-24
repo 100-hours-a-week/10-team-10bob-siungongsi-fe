@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-type CorpCardProps = {
-  name: string;
-};
-export const CorpCard = ({ name }: CorpCardProps) => {
+
+export const RecommendList = () => {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(false);
   return (
     <div className="flex justify-between items-center p-4 border my-4 rounded-xl">
       <div className="flex flex-col">
-        <div>{name}</div>
+        <div>삼성</div>
         <div className="text-gray-300 text-sm">10k알림</div>
       </div>
       <div onClick={() => setIsSubscribe(!isSubscribe)}>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Header } from "../../components/Header";
+
 import { getPushToken } from "../../firebase";
-import { Regist_02 } from "../Regist/Regist_02";
-import { AlarmSelect } from "./AlarmSelect";
+
 import { HeaderLogin } from "../../components/HeaderLogin";
 import { Modal } from "../../components/Modal";
 import { BottomNavigation } from "../../components/BottomNavigation";
+import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 
 export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
@@ -83,7 +83,7 @@ export const SettingPage = () => {
               />
             </button>
           </div>
-          {isNotificationEnabled && <AlarmSelect />}
+          {isNotificationEnabled && <SelectAlarm />}
         </div>
 
         <div className="flex flex-col ">
