@@ -98,4 +98,4 @@ jobs:
 
             echo "Running new frontend container..."
             docker run -d --name frontend -p 3000:80 --restart always \
-              ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
+              ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
