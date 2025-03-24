@@ -4,6 +4,7 @@ import kakao from "../assets/kakao_login.png";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/authService";
 
 interface Props {
   isOpen: boolean;
@@ -17,22 +18,46 @@ declare global {
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const navigate = useNavigate();
+  const [loginInfo, setLoginInfo] = useState<
+    | {
+        accessToken: string;
+        isUser: boolean;
+      }
+    | undefined
+  >(undefined);
   useEffect(() => {
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
     }
   }, []);
 
-  const loginWithKakao = () => {
-    window.Kakao.Auth.login({
-      success: (authObj: any) => {
-        console.log("로그인 성공", authObj);
-        alert(`토큰: ${authObj.access_token}`);
-      },
-      fail: (err: any) => {
-        console.error("로그인 실패", err);
-      },
+  const loginWithKakao = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      window.Kakao.Auth.login({
+        success: (authObj: any) => {
+          console.log("로그인 성공", authObj);
+          resolve(authObj.access_token); // ✅ resolve로 access_token 전달
+        },
+        fail: (err: any) => {
+          console.error("로그인 실패", err);
+          reject(err);
+        },
+      });
     });
+  };
+  // useEffect(() => {
+  //   const postAccesstoken = async () => {};
+  // }, []);
+
+  const postAccessToken = async () => {
+    try {
+      const accessToken = await loginWithKakao();
+      const data = await login(accessToken);
+      console.log(data);
+      setLoginInfo(data.data);
+    } catch (error) {
+      console.error("로그인 에러: ", error);
+    }
   };
 
   if (!isOpen) return null;
@@ -59,7 +84,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         <div className="flex flex-col p-8 items-center gap-8">
           <img
             className="cursor-pointer"
-            onClick={loginWithKakao}
+            onClick={postAccessToken}
             src={kakao}
             alt=""
           />

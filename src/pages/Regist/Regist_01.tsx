@@ -15,6 +15,8 @@ export const Regist = () => {
   const [allChecked, setAllChecked] = useState(false);
   const [checks, setChecks] = useState([false, false]);
   const [termsOfUse, setTermsOfUse] = useState<termsOfUse[]>([]);
+  const [registButtonClicked, setRegistButtonClicked] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getTermsofUse = async () => {
@@ -26,6 +28,15 @@ export const Regist = () => {
       }
     };
     getTermsofUse();
+  }, []);
+  useEffect(() => {
+    const createUser = async () => {
+      try {
+        const data = await createUser();
+      } catch (error) {
+        console.error("회원가입 오류 : ", error);
+      }
+    };
   }, []);
 
   const handleAllClick = () => {
@@ -39,6 +50,11 @@ export const Regist = () => {
 
     setChecks(newChecks);
     setAllChecked(newChecks.every((check) => check));
+  };
+  const handleRegistButton = () => {
+    if (allChecked) {
+      navigate("/regist_02");
+    }
   };
 
   return (
