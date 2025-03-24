@@ -26,3 +26,58 @@ export const fetchTermsOfUse = async (): Promise<{
     throw error;
   }
 };
+export const createUser = async (
+  accessToken: string,
+  agreedTermsIds: number[],
+): Promise<{
+  code: number;
+  message: string;
+}> => {
+  try {
+    const response = await api.post<{
+      code: number;
+      message: string;
+    }>(`${apiKey}auth/register`, { accessToken, agreedTermsIds });
+    return response.data;
+  } catch (error) {
+    console.error("회원가입 에러: ", error);
+    throw error;
+  }
+};
+export const login = async (
+  accessToken: string | void,
+): Promise<{
+  code: number;
+  message: string;
+  data: { accessToken: string; isUser: boolean };
+}> => {
+  try {
+    const response = await api.post<{
+      code: number;
+      message: string;
+      data: { accessToken: string; isUser: boolean };
+    }>(
+      `${apiKey}auth/login`,
+      {},
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("로그인 에러: ", error);
+    throw error;
+  }
+};
+export const userWithdraw = async (): Promise<{
+  code: number;
+  message: string;
+}> => {
+  try {
+    const response = await api.delete<{ code: number; message: string }>(
+      `${apiKey}auth/withdraw`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("회원 탈퇴 에러 : ", error);
+    throw error;
+  }
+};
