@@ -3,20 +3,26 @@ import api from "../api/api";
 interface APIData {
   code: number;
   message: string;
-  data: Companies[];
+  data: companies1;
 }
-interface Companies {
+interface companies1 {
+  companies: companies2[];
+}
+interface companies2 {
   companyId: number;
   companyName: string;
   subscriberCnt: number;
   isSubscribed: boolean;
 }
 const apiKey = process.env.REACT_APP_API_URL;
-
-export const fetchRecomendedCompaniesList = async (): Promise<APIData> => {
+//추천기업 불러오기
+export const fetchRecomendedCompaniesList = async (
+  accessToken: string | null,
+): Promise<APIData> => {
   try {
     const response = await api.get<APIData>(
       `${apiKey}notifications/recommended-companies`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return response.data;
   } catch (error) {
@@ -24,8 +30,10 @@ export const fetchRecomendedCompaniesList = async (): Promise<APIData> => {
     throw error;
   }
 };
+//알림설정 기업 추가
 export const postNotifications = async (
   companyId: number,
+  accessToken: string | null,
 ): Promise<{
   code: number;
   message: string;
@@ -33,7 +41,9 @@ export const postNotifications = async (
   try {
     const response = await api.post<{ code: number; message: string }>(
       `${apiKey}notifications`,
-      companyId,
+
+      { companyId },
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return response.data;
   } catch (error) {
@@ -41,6 +51,7 @@ export const postNotifications = async (
     throw error;
   }
 };
+//알림설정 기업 삭제
 export const deleteNotifications = async (
   companyId: number,
 ): Promise<{

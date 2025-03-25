@@ -3,12 +3,14 @@ interface Props {
   submitMessage: string;
   helperText: string | null;
   closeModal: () => void;
+  onSubmit?: () => void;
 }
 export const Modal = ({
   titleMessage,
   submitMessage,
   helperText,
   closeModal,
+  onSubmit,
 }: Props) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
@@ -21,7 +23,9 @@ export const Modal = ({
             )}
             <div className="flex justify-center gap-4">
               <button onClick={closeModal}>닫기</button>
-              <button className="bg-red-500 text-white">{submitMessage}</button>
+              <button onClick={onSubmit} className="bg-red-500 text-white">
+                {submitMessage}
+              </button>
             </div>
           </div>
         </div>

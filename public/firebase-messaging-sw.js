@@ -12,13 +12,13 @@ importScripts(
 // Firebase 설정 (여기서 Firebase를 초기화)
 // eslint-disable-next-line no-undef
 firebase.initializeApp({
-  apiKey: process.env.REACT_APP_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID,
+  apiKey: 'AIzaSyAsiclSA9rvBi34_OMPMwWYn-bNKvYi_n8',
+  authDomain: 'bob-8a8f9.firebaseapp.com',
+  projectId: 'bob-8a8f9',
+  storageBucket: 'bob-8a8f9.firebasestorage.app',
+  messagingSenderId: '370304423066',
+  appId: '1:370304423066:web:38f53ffa33b108383cfb23',
+  measurementId: 'G-K2C7C3YG0R',
 });
 
 // 메시징 핸들러

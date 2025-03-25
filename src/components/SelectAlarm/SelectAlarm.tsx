@@ -7,8 +7,31 @@ import {
 import { SelectBar } from "./SelectBar";
 import { Badge } from "./Badge";
 import { RecommendList } from "./RecommendList";
+import { fetchRecomendedCompaniesList } from "../../services/notificationService";
 
 export const SelectAlarm = () => {
+  const [recommendList, setRecommendList] = useState<
+    {
+      companyId: number;
+      companyName: string;
+      subscriberCnt: number;
+      isSubscribed: boolean;
+    }[]
+  >([]);
+  useEffect(() => {
+    const getRecommend = async () => {
+      try {
+        const data = await fetchRecomendedCompaniesList(
+          localStorage.getItem("accessToken"),
+        );
+        console.log(data.data.companies);
+        setRecommendList(data.data.companies);
+      } catch (error) {
+        console.error("기업 추천 목록 에러 : ", error);
+      }
+    };
+    getRecommend();
+  }, []);
   const [isVibrating, setIsVibrating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [companies, setCompanies] = useState<Companies>();
@@ -44,6 +67,7 @@ export const SelectAlarm = () => {
         setIsLoading(false);
       }
     };
+
     getCompaniesName();
   }, [keyword]);
 
@@ -109,10 +133,9 @@ export const SelectAlarm = () => {
       {/* 이런기업은 어떄요 */}
       <div>
         <div>이런 기업은 어때요?</div>
-        <RecommendList />
-        <RecommendList />
-        <RecommendList />
-        <RecommendList />
+        {recommendList.map((company) => (
+          <RecommendList company={company} />
+        ))}
       </div>
     </div>
   );

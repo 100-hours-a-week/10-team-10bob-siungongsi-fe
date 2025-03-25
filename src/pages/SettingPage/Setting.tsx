@@ -6,6 +6,7 @@ import { HeaderLogin } from "../../components/HeaderLogin";
 import { Modal } from "../../components/Modal";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
+import { userWithdraw } from "../../services/authService";
 
 export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
@@ -13,7 +14,12 @@ export const SettingPage = () => {
     null,
   );
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState({
+  const [modalContent, setModalContent] = useState<{
+    titleMessage: string;
+    submitMessage: string;
+    helperText: string | null;
+    onSubmit?: () => void;
+  }>({
     titleMessage: "",
     submitMessage: "",
     helperText: null as string | null,
@@ -25,6 +31,7 @@ export const SettingPage = () => {
   const handleToggle = async () => {
     if (permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
+
       alert("브라우저 설정에서 직접 알림을 해제해야 합니다.");
       return;
     }
@@ -50,16 +57,25 @@ export const SettingPage = () => {
     titleMessage: string,
     submitMessage: string,
     helperText: string | null,
+    onSubmit?: () => void,
   ) => {
     setModalContent({
       titleMessage: titleMessage,
       submitMessage: submitMessage,
       helperText: helperText,
+      onSubmit,
     });
     setIsModalOn(true);
   };
   const closeModal = () => {
     setIsModalOn(false);
+  };
+  const userWithDrawFunction = async () => {
+    try {
+      const data = await userWithdraw(localStorage.getItem("accessToken"));
+    } catch (error) {
+      console.error("회원탈퇴 에러 : ", error);
+    }
   };
 
   return (
@@ -97,13 +113,7 @@ export const SettingPage = () => {
 
           {/* 회원 탈퇴 (비활성화) */}
           <div
-            onClick={() =>
-              onModal(
-                "회원탈퇴 하시겠습니까?",
-                "확인",
-                "회원탈퇴는 되돌릴 수 없습니다.",
-              )
-            }
+            onClick={userWithDrawFunction}
             className="text-gray-400 text-lg font-medium py-4"
           >
             회원 탈퇴
