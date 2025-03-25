@@ -1,4 +1,3 @@
-# 1. Node.js 20으로 React 빌드
 FROM node:20 AS builder
 WORKDIR /app
 
@@ -29,16 +28,4 @@ RUN echo "REACT_APP_PUBLIC_FIREBASE_API_KEY=$REACT_APP_PUBLIC_FIREBASE_API_KEY" 
     echo "REACT_APP_API_URL=$REACT_APP_API_URL" >> .env && \
     echo "REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN" >> .env
 
-
 RUN npm run build
-
-# 2. Nginx로 정적 파일 제공
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
-
-COPY --from=builder /app/build .
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
