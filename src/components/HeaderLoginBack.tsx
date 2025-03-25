@@ -5,6 +5,7 @@ interface Props {
 }
 export const HeaderLoginBack = ({ isLogin }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const token = localStorage.getItem("kakao_187d878b0016b88b3051032882052481");
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <div onClick={() => window.history.back()} className="cursor-pointer">

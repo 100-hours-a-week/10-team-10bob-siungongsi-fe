@@ -10,22 +10,47 @@ import { HeaderLogin } from "../../components/HeaderLogin";
 import { useEffect, useState } from "react";
 import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { ServiceButton } from "./ServiceButton";
+import { useNotificationToken } from "../../hooks/useNotificationToken";
 
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
+  const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+  useNotificationToken(localStorage.getItem("accessToken"));
+
+  useEffect(() => {
+    try {
+      const todayGongsi = async () => {
+        const todayGongsiData = await fetchGongsiList(
+          undefined,
+          "latest",
+          true,
+          1,
+          5,
+          today,
+          today,
+        );
+        setTodayGongsi(todayGongsiData.data);
+      };
+      todayGongsi();
+    } catch (error) {
+      console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
+    }
+  });
   useEffect(() => {
     try {
       const popularGongsi = async () => {
-        const response = await fetchGongsiList(
+        const popularGongsiData = await fetchGongsiList(
           undefined,
           "views",
           true,
           1,
           5,
-          undefined,
-          undefined,
+          today,
+          today,
         );
-        setPopularGongsiList(response.data);
+
+        setPopularGongsiList(popularGongsiData.data);
       };
       popularGongsi();
     } catch (error) {
@@ -50,6 +75,7 @@ export const Main = () => {
 
   return (
     <div>
+      {isNotificationEnabled && <div>허용됨</div>}
       <HeaderLogin isLogin={false} />
 
       <div className="my-4">
@@ -79,7 +105,7 @@ export const Main = () => {
           <SectionTitle>오늘 올라온 공시</SectionTitle>
         </div>
         {length > 0 ? (
-          popularGongsiList?.gongsiList
+          todayGongsi?.gongsiList
             .slice(0, 5)
             .map((gongsiTitle) => (
               <GongsiList

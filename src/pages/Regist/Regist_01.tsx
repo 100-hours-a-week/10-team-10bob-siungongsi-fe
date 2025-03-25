@@ -6,17 +6,21 @@ import { RegistContent } from "./RegistContent";
 import { ReactComponent as Close } from "../../assets/close-svgrepo-com.svg";
 
 import { BottomNavigation } from "../../components/BottomNavigation";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { fetchTermsOfUse } from "../../services/authService";
+import { createUser, fetchTermsOfUse } from "../../services/authService";
 import { termsOfUse } from "../../services/authService";
 export const Regist = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const loginInfo = location.state;
   const [allChecked, setAllChecked] = useState(false);
   const [checks, setChecks] = useState([false, false]);
   const [termsOfUse, setTermsOfUse] = useState<termsOfUse[]>([]);
-  const [registButtonClicked, setRegistButtonClicked] =
-    useState<boolean>(false);
+
+  const agreedTermsIds = checks
+    .map((checked, index) => (checked ? index + 1 : null))
+    .filter((id): id is number => id !== null);
 
   useEffect(() => {
     const getTermsofUse = async () => {
@@ -29,15 +33,16 @@ export const Regist = () => {
     };
     getTermsofUse();
   }, []);
-  useEffect(() => {
-    const createUser = async () => {
-      try {
-        const data = await createUser();
-      } catch (error) {
-        console.error("회원가입 오류 : ", error);
-      }
-    };
-  }, []);
+
+  const onRegistSubmit = async () => {
+    try {
+      console.log(loginInfo);
+      const data = await createUser(loginInfo, agreedTermsIds);
+      navigate("/");
+    } catch (error) {
+      console.error("회원가입 오류 : ", error);
+    }
+  };
 
   const handleAllClick = () => {
     const newState = !allChecked;
@@ -50,11 +55,6 @@ export const Regist = () => {
 
     setChecks(newChecks);
     setAllChecked(newChecks.every((check) => check));
-  };
-  const handleRegistButton = () => {
-    if (allChecked) {
-      navigate("/regist_02");
-    }
   };
 
   return (
@@ -85,7 +85,7 @@ export const Regist = () => {
         ))}
       </div>
       <div
-        onClick={() => allChecked && navigate("/regist_02")}
+        onClick={onRegistSubmit}
         className={`m-12 p-4 rounded-xl text-center text-white transition ease-in-out ${allChecked ? "bg-primary cursor-pointer" : "bg-gray-300"}  `}
       >
         다음으로

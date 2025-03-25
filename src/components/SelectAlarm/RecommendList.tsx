@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { fetchRecomendedCompaniesList } from "../../services/notificationService";
 
-export const RecommendList = () => {
+interface RecommendListProps {
+  company: {
+    companyId: number;
+    companyName: string;
+    isSubscribed: boolean;
+    subscriberCnt: number;
+  };
+}
+export const RecommendList = ({ company }: RecommendListProps) => {
   const [isSubscribe, setIsSubscribe] = useState<boolean>(false);
+
   return (
     <div className="flex justify-between items-center p-4 border my-4 rounded-xl">
       <div className="flex flex-col">
-        <div>삼성</div>
-        <div className="text-gray-300 text-sm">10k알림</div>
+        <div>{company.companyName}</div>
+        <div className="text-gray-300 text-sm">
+          {company.subscriberCnt}명이 알림받는중
+        </div>
       </div>
       <div onClick={() => setIsSubscribe(!isSubscribe)}>
         {isSubscribe ? (

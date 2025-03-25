@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Company } from "../../services/companiesService";
+import { postNotifications } from "../../services/notificationService";
 interface SearchBarProps {
   keyword: string;
   companies: Company[] | undefined;
@@ -19,6 +20,12 @@ export const SelectBar = ({
   isSearchBarOn,
   isDisabled,
 }: SearchBarProps) => {
+  const postNotificationCompany = async (companyId: number) => {
+    const data = await postNotifications(
+      companyId,
+      localStorage.getItem("accessToken"),
+    );
+  };
   return (
     <div>
       <div>
@@ -39,7 +46,7 @@ export const SelectBar = ({
                 companies && companies.length > 0 ? (
                   companies.slice(0, 5).map((company) => (
                     <div
-                      onClick={() => onSelectCompany(company.companyName)}
+                      onClick={() => postNotificationCompany(company.companyId)}
                       key={company.companyName} // 🔹 key 추가
                       className="p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
                     >

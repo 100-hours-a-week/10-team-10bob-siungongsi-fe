@@ -45,16 +45,20 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       });
     });
   };
-  // useEffect(() => {
-  //   const postAccesstoken = async () => {};
-  // }, []);
 
   const postAccessToken = async () => {
     try {
       const accessToken = await loginWithKakao();
+      localStorage.setItem("accessToken", accessToken);
       const data = await login(accessToken);
-      console.log(data);
       setLoginInfo(data.data);
+
+      if (data.data.isUser) {
+        navigate("/");
+        onClose();
+      } else {
+        navigate("/regist", { state: accessToken.toString() });
+      }
     } catch (error) {
       console.error("로그인 에러: ", error);
     }
