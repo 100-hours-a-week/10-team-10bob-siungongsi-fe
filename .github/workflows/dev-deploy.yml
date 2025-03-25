@@ -1,57 +1,28 @@
-name: Deploy React Frontend to AWS EC2
+name: Deploy React Frontend to S3 + CloudFront
 
 on:
   push:
     branches:
-      - main  # main 브랜치 푸시 시 실행
+      -  main
 
 jobs:
-  build-and-push-frontend:
-    name: Build and Push Frontend Docker Image
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-    outputs:
-      version_tag: ${{ steps.set-version.outputs.version_tag }}
-
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          node-version: 20
-          cache: 'npm'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build React App
+      - name: Build React frontend in Docker
         run: |
-          export CI=false
-          npm run build
-
-      - name: Configure AWS Credentials
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set region ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-          | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-
-      - name: Set Version Tag
-        id: set-version
-        run: |
-          VERSION_TAG=$(date +'%Y%m%d-%H%M%S')
-          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV
-          echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
-
-      - name: Build Frontend Docker Image
-        run: |
-          docker build --no-cache \
+          docker build \
             --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID }} \
@@ -62,40 +33,20 @@ jobs:
             --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
             --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
             --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
-            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend \
-            -t ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}-frontend .
+            -t react-builder .
 
-      - name: Push Frontend Docker Image
+      - name: Extract build/ from container
         run: |
-          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:latest-frontend
-          docker push ${{ secrets.ECR_REGISTRY }}/siungongsi:${{ env.VERSION_TAG }}-frontend
+          docker create --name extract react-builder
+          docker cp extract:/app/build ./build
+          docker rm extract
 
-  deploy:
-    name: Deploy Frontend Container to EC2
-    needs: [build-and-push-frontend]
-    runs-on: ubuntu-latest
+      - name: Sync build to S3
+        run: |
+          aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME }}/dev --delete
 
-    steps:
-      - name: SSH into EC2 and Deploy
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            VERSION_TAG=${{ needs.build-and-push-frontend.outputs.version_tag }}
-
-            echo "Logging into ECR..."
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-              | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-
-            echo "Pulling new image..."
-            docker pull ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
-
-            echo "Stopping and removing old container..."
-            docker stop frontend || true
-            docker rm frontend || true
-
-            echo "Running new frontend container..."
-            docker run -d --name frontend -p 3000:80 --restart always \
-              ${{ secrets.ECR_REGISTRY }}/siungongsi:${VERSION_TAG}-frontend
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
