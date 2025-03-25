@@ -10,35 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build React App
-        run: |
-          export CI=false
-          npm run build
-
-      - name: Configure AWS Credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to S3
+      - name: Build React frontend in Docker
         run: |
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+          docker build \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_API_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_API_KEY }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_PROJECT_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_APP_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_APP_ID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
+            --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
+            --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+            --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
+            -t react-builder .
 
-      - name: Invalidate CloudFront Cache
+      - name: Extract build/ from container
+        run: |
+          docker create --name extract react-builder
+          docker cp extract:/app/build ./build
+          docker rm extract
+
+      - name: Sync build to S3
+        run: |
+          aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME }} --delete
+
+      - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \

@@ -29,13 +29,3 @@ RUN echo "REACT_APP_PUBLIC_FIREBASE_API_KEY=$REACT_APP_PUBLIC_FIREBASE_API_KEY" 
     echo "REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN" >> .env
 
 RUN npm run build
-
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
-
-COPY --from=builder /app/build .
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
