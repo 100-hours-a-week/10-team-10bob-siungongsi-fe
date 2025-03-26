@@ -58,10 +58,6 @@ export const Main = () => {
     }
   }, []);
   const navigate = useNavigate();
-  const location = useLocation();
-  const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
-  };
 
   const length = popularGongsiList?.gongsiList?.length || 0;
   const formatDate = (date: Date | null) => {
@@ -137,7 +133,7 @@ export const Main = () => {
           <ServiceButton route="/login" imgSrc="./images/enter_1.png">
             로그인하고<br></br>알림받기
           </ServiceButton>
-          <ServiceButton route="/" imgSrc="./images/dictionary_1.png">
+          <ServiceButton route="" imgSrc="./images/dictionary_1.png">
             사전<br></br>이용하기
           </ServiceButton>
         </article>
