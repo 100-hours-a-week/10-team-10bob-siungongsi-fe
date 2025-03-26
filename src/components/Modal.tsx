@@ -22,15 +22,20 @@ export const Modal = ({
               <div className="text-gray-300 text-center">{helperText}</div>
             )}
             <div className="flex justify-center gap-4">
-              <button onClick={closeModal}>닫기</button>
+              <button
+                className="p-2 px-4 rounded-2xl bg-gray-400 text-white"
+                onClick={closeModal}
+              >
+                닫기
+              </button>
               <button
                 onClick={() => {
                   onSubmit?.();
                   closeModal();
                 }}
-                className="bg-red-500 text-white"
+                className="p-2 px-4 rounded-2xl bg-primary text-white"
               >
-                확인
+                {submitMessage}
               </button>
             </div>
           </div>

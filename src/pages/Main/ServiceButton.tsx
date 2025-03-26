@@ -15,7 +15,7 @@ export const ServiceButton = ({
   const location = useLocation();
 
   const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
+    navigate(route, { state: { backgroundLocation: location } });
   };
   return (
     <div onClick={openLoginModal}>
