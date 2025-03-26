@@ -89,9 +89,10 @@ export const SettingPage = () => {
   const userWithDrawFunction = async () => {
     try {
       await userWithdraw(localStorage.getItem("jwtToken"));
-      localStorage.removeItem("jwtToken");
     } catch (error) {
       console.error("회원탈퇴 에러 : ", error);
+    } finally {
+      localStorage.removeItem("jwtToken");
     }
   };
 
@@ -122,7 +123,9 @@ export const SettingPage = () => {
         <div className="flex flex-col ">
           {/* 로그아웃 버튼 */}
           <div
-            onClick={() => onModal("로그아웃 하시겠습니까?", "확인", null)}
+            onClick={() =>
+              onModal("로그아웃 하시겠습니까?", "확인", null, undefined)
+            }
             className="text-red-500 text-lg font-semibold py-4 border-b"
           >
             로그아웃

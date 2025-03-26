@@ -116,7 +116,7 @@ export const GongsiSearch = () => {
         <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
         <div className="flex flex-col items-end">
           <div
-            className="border border-primary rounded-xl p-1 text-sm text-primary cursor-pointer"
+            className="border border-primary rounded-lg p-1 text-sm text-primary cursor-pointer"
             onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
           >
             {startDate ? (

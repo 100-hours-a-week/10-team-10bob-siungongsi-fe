@@ -43,7 +43,11 @@ export const PostFilter = ({ filter, onChangeFilter }: PostFilterProps) => {
     //     )}
     //   </div>
     // );
-    <select value={filter} onChange={(e) => onChangeFilter(e.target.value)}>
+    <select
+      className="border-none "
+      value={filter}
+      onChange={(e) => onChangeFilter(e.target.value)}
+    >
       <option value="latest">최신순</option>
       <option value="views">조회순</option>
       <option value="oldest">오래된순</option>

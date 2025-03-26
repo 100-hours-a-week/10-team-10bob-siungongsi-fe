@@ -6,10 +6,34 @@ import { Modal } from "../../components/Modal";
 import { useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { fetchSusbscriptions } from "../../services/usersService";
+import {
+  deleteNotifications,
+  postNotifications,
+} from "../../services/notificationService";
+import { PushNotification } from "../../components/PushNotification";
 
 export const GongsiDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gongsiInfo, setGongsiInfo] = useState<GongsiInfo>();
+  const [mySubscriptions, setMySubscriptions] = useState<
+    {
+      companyId: number;
+      companyName: string;
+      companyCode: string;
+      stockCode: number;
+    }[]
+  >([]);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>();
+
+  useEffect(() => {
+    const subscriptions = async () => {
+      const data = await fetchSusbscriptions(localStorage.getItem("jwtToken"));
+      setMySubscriptions(data.data.subscribedCompanies);
+    };
+    subscriptions();
+  }, []);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -27,6 +51,14 @@ export const GongsiDetail = () => {
     getCompaniesName();
   }, []);
 
+  const checkSubscribe = () => {
+    mySubscriptions.find((sub) => sub.companyId === gongsiInfo?.company.id)
+      ? setIsSubscribed(true)
+      : setIsSubscribed(false);
+  };
+  useEffect(() => {
+    checkSubscribe();
+  }, []);
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState({
     titleMessage: "",
@@ -47,6 +79,17 @@ export const GongsiDetail = () => {
   };
   const closeModal = () => {
     setIsModalOn(false);
+  };
+  const handleSubscribe = async (id: number | undefined) => {
+    if (id) {
+      if (isSubscribed) {
+        await deleteNotifications(id, localStorage.getItem("jwtToken"));
+        setIsSubscribed(false);
+      } else {
+        await postNotifications(id, localStorage.getItem("jwtToken"));
+        setIsSubscribed(true);
+      }
+    }
   };
 
   return (
@@ -77,9 +120,11 @@ export const GongsiDetail = () => {
               </div>
               <div
                 onClick={() =>
-                  onModal("로그인이 필요한 서비스입니다", "로그인", null)
+                  !localStorage.getItem("jwtToken")
+                    ? onModal("로그인이 필요한 서비스입니다", "로그인", null)
+                    : handleSubscribe(gongsiInfo?.company.id)
                 }
-                className="border border-primary text-primary rounded-xl p-1 px-4 cursor-pointer"
+                className={`border border-primary text-primary rounded-xl p-1 px-4 cursor-pointer ${isSubscribed && "bg-primary text-white"}`}
               >
                 알림
               </div>
