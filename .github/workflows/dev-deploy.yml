@@ -3,7 +3,7 @@ name: Deploy React Frontend to S3 + CloudFront
 on:
   push:
     branches:
-      -  deploy
+      - deploy
 
 jobs:
   build-and-deploy:
@@ -41,12 +41,19 @@ jobs:
           docker cp extract:/app/build ./build
           docker rm extract
 
-      - name: Sync build to S3
+      - name: Sync static files to S3 (exclude index.html)
         run: |
-          aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME }}/dev --delete
+          aws s3 sync ./build s3://${{ secrets.S3_BUCKET_NAME }}/dev --delete \
+            --exclude "index.html"
 
-      - name: Invalidate CloudFront cache
+      - name: Upload index.html with no cache
+        run: |
+          aws s3 cp ./build/index.html s3://${{ secrets.S3_BUCKET_NAME }}/dev/index.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --content-type "text/html"
+
+      - name: Invalidate CloudFront cache (index.html only)
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+            --paths "/dev/index.html"
