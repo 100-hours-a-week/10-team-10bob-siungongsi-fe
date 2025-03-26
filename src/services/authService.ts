@@ -32,11 +32,13 @@ export const createUser = async (
 ): Promise<{
   code: number;
   message: string;
+  data: string;
 }> => {
   try {
     const response = await api.post<{
       code: number;
       message: string;
+      data: string;
     }>(
       `${apiKey}auth/register`,
       { agreedTermIds },
@@ -49,7 +51,7 @@ export const createUser = async (
   }
 };
 export const login = async (
-  accessToken: string | void,
+  accessToken: string,
 ): Promise<{
   code: number;
   message: string;

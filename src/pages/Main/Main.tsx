@@ -4,7 +4,7 @@ import NewsSlider from "../../components/Slider";
 import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { GongsiList } from "../../components/GongsiList";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { HeaderLogin } from "../../components/HeaderLogin";
 import { useEffect, useState } from "react";
@@ -15,8 +15,8 @@ import { useNotificationToken } from "../../hooks/useNotificationToken";
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
-  const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
-  useNotificationToken(localStorage.getItem("accessToken"));
+
+  useNotificationToken(localStorage.getItem("jwtToken"));
 
   useEffect(() => {
     try {
@@ -58,6 +58,11 @@ export const Main = () => {
     }
   }, []);
   const navigate = useNavigate();
+  const location = useLocation();
+  const openLoginModal = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+  };
+
   const length = popularGongsiList?.gongsiList?.length || 0;
   const formatDate = (date: Date | null) => {
     if (date) {
@@ -75,7 +80,6 @@ export const Main = () => {
 
   return (
     <div>
-      {isNotificationEnabled && <div>허용됨</div>}
       <HeaderLogin isLogin={false} />
 
       <div className="my-4">
@@ -130,10 +134,10 @@ export const Main = () => {
       <section>
         <SectionTitle>이런 서비스는 어때요?</SectionTitle>
         <article className="flex justify-center m-2 gap-2">
-          <ServiceButton imgSrc="./images/enter_1.png">
+          <ServiceButton route="/login" imgSrc="./images/enter_1.png">
             로그인하고<br></br>알림받기
           </ServiceButton>
-          <ServiceButton imgSrc="./images/dictionary_1.png">
+          <ServiceButton route="/" imgSrc="./images/dictionary_1.png">
             사전<br></br>이용하기
           </ServiceButton>
         </article>

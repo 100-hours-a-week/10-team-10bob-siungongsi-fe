@@ -5,14 +5,14 @@ interface Props {
 }
 export const HeaderLoginBack = ({ isLogin }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const token = localStorage.getItem("kakao_187d878b0016b88b3051032882052481");
+  const token = localStorage.getItem("jwtToken");
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <div onClick={() => window.history.back()} className="cursor-pointer">
         {"<"}
       </div>
       <h1 className="text-2xl">Siun</h1>
-      {isLogin ? (
+      {token ? (
         <button className="bg-white p-2 rounded-lg text-primary">
           로그아웃
         </button>

@@ -8,10 +8,15 @@ interface RecommendListProps {
     isSubscribed: boolean;
     subscriberCnt: number;
   };
+  postSubscribe: (companyId: number) => void;
+  deleteSubscribe: (companyId: number) => void;
 }
-export const RecommendList = ({ company }: RecommendListProps) => {
-  const [isSubscribe, setIsSubscribe] = useState<boolean>(false);
-
+export const RecommendList = ({
+  company,
+  postSubscribe,
+  deleteSubscribe,
+}: RecommendListProps) => {
+  useEffect(() => {}, [company.isSubscribed]);
   return (
     <div className="flex justify-between items-center p-4 border my-4 rounded-xl">
       <div className="flex flex-col">
@@ -20,8 +25,14 @@ export const RecommendList = ({ company }: RecommendListProps) => {
           {company.subscriberCnt}명이 알림받는중
         </div>
       </div>
-      <div onClick={() => setIsSubscribe(!isSubscribe)}>
-        {isSubscribe ? (
+      <div
+        onClick={() => {
+          !company.isSubscribed
+            ? postSubscribe(company.companyId)
+            : deleteSubscribe(company.companyId);
+        }}
+      >
+        {company.isSubscribed ? (
           <svg
             className="w-6 h-6 text-primary dark:text-white"
             aria-hidden="true"

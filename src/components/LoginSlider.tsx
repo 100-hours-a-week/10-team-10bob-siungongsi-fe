@@ -49,15 +49,16 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const postAccessToken = async () => {
     try {
       const accessToken = await loginWithKakao();
-      localStorage.setItem("accessToken", accessToken);
+
       const data = await login(accessToken);
       setLoginInfo(data.data);
 
       if (data.data.isUser) {
         navigate("/");
+        localStorage.setItem("jwtToken", data.data.accessToken);
         onClose();
       } else {
-        navigate("/regist", { state: accessToken.toString() });
+        navigate("/regist", { state: accessToken });
       }
     } catch (error) {
       console.error("로그인 에러: ", error);

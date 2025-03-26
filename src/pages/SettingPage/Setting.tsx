@@ -7,6 +7,7 @@ import { Modal } from "../../components/Modal";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 import { userWithdraw } from "../../services/authService";
+import { patchUserNotificationInfo } from "../../services/usersService";
 
 export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
@@ -14,6 +15,7 @@ export const SettingPage = () => {
     null,
   );
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
+
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
     submitMessage: string;
@@ -28,6 +30,19 @@ export const SettingPage = () => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
   }, []);
+  const sendTokenToServer = async (token: string | undefined) => {
+    try {
+      const data = await patchUserNotificationInfo(
+        true,
+        token,
+        localStorage.getItem("jwtToken"),
+      );
+
+      console.log("✅ FCM 토큰 서버에 전송 완료");
+    } catch (error) {
+      console.error("❌ FCM 토큰 서버 전송 실패:", error);
+    }
+  };
   const handleToggle = async () => {
     if (permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
@@ -51,6 +66,7 @@ export const SettingPage = () => {
       const token = await getPushToken();
       console.log("푸시 토큰:", token);
       setIsNotificationEnabled(true);
+      sendTokenToServer(token);
     }
   };
   const onModal = (
@@ -72,7 +88,8 @@ export const SettingPage = () => {
   };
   const userWithDrawFunction = async () => {
     try {
-      const data = await userWithdraw(localStorage.getItem("accessToken"));
+      await userWithdraw(localStorage.getItem("jwtToken"));
+      localStorage.removeItem("jwtToken");
     } catch (error) {
       console.error("회원탈퇴 에러 : ", error);
     }
@@ -113,7 +130,14 @@ export const SettingPage = () => {
 
           {/* 회원 탈퇴 (비활성화) */}
           <div
-            onClick={userWithDrawFunction}
+            onClick={() =>
+              onModal(
+                "회원탈퇴 하시겠습니까?",
+                "확인",
+                "회원탈퇴는 되돌릴 수 없습니다",
+                userWithDrawFunction,
+              )
+            }
             className="text-gray-400 text-lg font-medium py-4"
           >
             회원 탈퇴
@@ -126,6 +150,7 @@ export const SettingPage = () => {
           submitMessage={modalContent.submitMessage}
           helperText={modalContent.helperText}
           closeModal={closeModal}
+          onSubmit={userWithDrawFunction}
         />
       )}
       <BottomNavigation />
