@@ -54,13 +54,15 @@ export const postNotifications = async (
 //알림설정 기업 삭제
 export const deleteNotifications = async (
   companyId: number,
+  accessToken: string | null,
 ): Promise<{
   code: number;
   message: string;
 }> => {
   try {
-    const response = await api.post<{ code: number; message: string }>(
+    const response = await api.delete<{ code: number; message: string }>(
       `${apiKey}notifications/${companyId}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return response.data;
   } catch (error) {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { gongsiTitleList } from "../Main/dummyTitle";
-import { GongsiList } from "../../components/GongsiList";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";

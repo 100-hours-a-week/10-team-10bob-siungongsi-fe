@@ -23,8 +23,14 @@ export const Modal = ({
             )}
             <div className="flex justify-center gap-4">
               <button onClick={closeModal}>닫기</button>
-              <button onClick={onSubmit} className="bg-red-500 text-white">
-                {submitMessage}
+              <button
+                onClick={() => {
+                  onSubmit?.();
+                  closeModal();
+                }}
+                className="bg-red-500 text-white"
+              >
+                확인
               </button>
             </div>
           </div>

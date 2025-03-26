@@ -25,7 +25,7 @@ export const fetchUserNotificationInfo = async (
 };
 export const patchUserNotificationInfo = async (
   notificationFlag: boolean,
-  pushToken: string,
+  pushToken: string | undefined,
   accessToken: string | null,
 ): Promise<{
   code: number;
@@ -48,19 +48,41 @@ export const patchUserNotificationInfo = async (
     throw error;
   }
 };
-export const deleteNotifications = async (
-  companyId: number,
+
+export const fetchSusbscriptions = async (
+  accessToken: string | null,
 ): Promise<{
   code: number;
   message: string;
+  data: {
+    userId: number;
+    subscribedCompanies: {
+      companyId: number;
+      companyName: string;
+      companyCode: string;
+      stockCode: number;
+    }[];
+  };
 }> => {
   try {
-    const response = await api.post<{ code: number; message: string }>(
-      `${apiKey}notifications/${companyId}`,
-    );
+    const response = await api.get<{
+      code: number;
+      message: string;
+      data: {
+        userId: number;
+        subscribedCompanies: {
+          companyId: number;
+          companyName: string;
+          companyCode: string;
+          stockCode: number;
+        }[];
+      };
+    }>(`${apiKey}users/subscriptions`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     return response.data;
   } catch (error) {
-    console.error("알림 삭제 에러 : ", error);
+    console.error("구독 목록 불러오기 에러 : ", error);
     throw error;
   }
 };

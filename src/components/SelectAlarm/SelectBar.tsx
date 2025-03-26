@@ -6,9 +6,10 @@ interface SearchBarProps {
   companies: Company[] | undefined;
   onChangeKeyword: (value: string) => void;
   isLoading: boolean | undefined;
-  onSelectCompany: (company: string) => void;
+  onSelectCompany: (companyId: number) => void;
   isSearchBarOn: boolean;
   isDisabled: boolean;
+  clearSearchBar: () => void;
 }
 
 export const SelectBar = ({
@@ -19,13 +20,8 @@ export const SelectBar = ({
   onSelectCompany,
   isSearchBarOn,
   isDisabled,
+  clearSearchBar,
 }: SearchBarProps) => {
-  const postNotificationCompany = async (companyId: number) => {
-    const data = await postNotifications(
-      companyId,
-      localStorage.getItem("accessToken"),
-    );
-  };
   return (
     <div>
       <div>
@@ -46,7 +42,10 @@ export const SelectBar = ({
                 companies && companies.length > 0 ? (
                   companies.slice(0, 5).map((company) => (
                     <div
-                      onClick={() => postNotificationCompany(company.companyId)}
+                      onClick={() => {
+                        onSelectCompany(company.companyId);
+                        clearSearchBar();
+                      }}
                       key={company.companyName} // 🔹 key 추가
                       className="p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
                     >

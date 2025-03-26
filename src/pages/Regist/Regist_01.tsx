@@ -38,6 +38,7 @@ export const Regist = () => {
     try {
       console.log(loginInfo);
       const data = await createUser(loginInfo, agreedTermsIds);
+      localStorage.setItem("jwtToken", data.data);
       navigate("/");
     } catch (error) {
       console.error("회원가입 오류 : ", error);
