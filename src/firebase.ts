@@ -27,7 +27,6 @@ export const getPushToken = async () => {
       serviceWorkerRegistration: registration, // ✅ 명확하게 Service Worker 전달
     });
 
-    console.log("푸시 토큰:", token);
     return token;
   } catch (error) {
     console.error("Error getting push token:", error);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { GongsiData } from "../services/gongsiService";
 import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
 
 interface NewsSliderProps {
   GongsiData: GongsiData | undefined;
@@ -8,6 +9,7 @@ interface NewsSliderProps {
 export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const length = GongsiData?.gongsiList?.length || 1;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -15,7 +17,7 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [GongsiData]);
+  }, [currentIndex, length]);
 
   // 수동으로 슬라이드 변경
   const prevSlide = () => {
@@ -36,13 +38,18 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
     preventScrollOnSwipe: true,
     trackMouse: true, // 마우스 드래그도 인식
   });
-
+  const routeDetailPage = (id: number | undefined) => {
+    navigate(`/detail/${id}`);
+  };
   return (
     <div>
       {GongsiData?.gongsiListSize !== 0 ? (
         <div
+          onClick={() =>
+            routeDetailPage(GongsiData?.gongsiList[currentIndex].gongsiId)
+          }
           {...handlers}
-          className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg"
+          className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg cursor-pointer"
         >
           {/* 기사 내용 */}
           <h2 className="text-lg font-bold mb-1">
@@ -67,7 +74,10 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
-            onClick={prevSlide}
+            onClick={(e) => {
+              e.stopPropagation();
+              prevSlide();
+            }}
             viewBox="0 0 8 14"
           >
             <path
@@ -82,7 +92,10 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
             className="w-6 h-6 text-gray-800/10 dark:text-white absolute right-2 top-1/2 transform -translate-y-1/2 p-1 cursor-pointer"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            onClick={nextSlide}
+            onClick={(e) => {
+              e.stopPropagation();
+              nextSlide();
+            }}
             fill="none"
             viewBox="0 0 8 14"
           >

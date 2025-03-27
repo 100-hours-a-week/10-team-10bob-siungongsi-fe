@@ -33,17 +33,8 @@ export const useNotificationToken = (userId: string | null) => {
 
   // 최초 permission 확인
   useEffect(() => {
-    const requestPermission = async () => {
-      if (permission === "granted" || permission === "denied") {
-        const currentPermission = Notification.permission;
-        setPermission(currentPermission);
-        return;
-      } else if (localStorage.getItem("jwtToken")) {
-        const newPermission = await Notification.requestPermission();
-        setPermission(newPermission);
-      }
-    };
-    requestPermission();
+    const currentPermission = Notification.permission;
+    setPermission(currentPermission);
   }, []);
 
   // permission 이 "granted"이면 토큰 발급 후 전송

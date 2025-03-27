@@ -8,7 +8,7 @@ import { BottomNavigation } from "../../components/BottomNavigation";
 import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 import { userWithdraw } from "../../services/authService";
 import { patchUserNotificationInfo } from "../../services/usersService";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const SettingPage = () => {
   const navigate = useNavigate();
@@ -108,6 +108,12 @@ export const SettingPage = () => {
     localStorage.removeItem("jwtToken");
   };
 
+  const location = useLocation();
+
+  const openLoginModal = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+  };
+
   return (
     <div>
       <HeaderLogin isLogin={true} />
@@ -170,7 +176,9 @@ export const SettingPage = () => {
       ) : (
         <div className="max-w-md h-[50vh] flex flex-col gap-2 justify-center items-center p-4">
           <div className="text-2xl font-bold">로그인이 필요합니다</div>
-          <div className="text-gray-400">로그인하러 가기 {">>"}</div>
+          <div onClick={openLoginModal} className="text-gray-400">
+            로그인하러 가기 {">>"}
+          </div>
         </div>
       )}
       {isModalOn && <Modal modalContent={modalContent} />}

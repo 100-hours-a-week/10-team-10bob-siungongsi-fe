@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import kakao from "../assets/kakao_login.png";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 
 interface Props {
@@ -17,14 +17,10 @@ declare global {
 }
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
+  const location = useLocation();
+
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState<
-    | {
-        accessToken: string;
-        isUser: boolean;
-      }
-    | undefined
-  >(undefined);
+
   useEffect(() => {
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
@@ -51,17 +47,18 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       const accessToken = await loginWithKakao();
 
       const data = await login(accessToken);
-      setLoginInfo(data.data);
 
       if (data.data.isUser) {
         localStorage.setItem("jwtToken", data.data.accessToken);
         onClose();
-        navigate(0);
       } else {
         navigate("/regist", { state: accessToken });
       }
     } catch (error) {
       console.error("로그인 에러: ", error);
+    } finally {
+      navigate(location.pathname, { replace: true });
+      await Notification.requestPermission();
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LoginSlider } from "../../components/LoginSlider";
+
 interface ServiceButtonProps {
   children: ReactNode;
   imgSrc: string;
@@ -15,11 +15,17 @@ export const ServiceButton = ({
   const location = useLocation();
 
   const openLoginModal = () => {
-    navigate(route, { state: { backgroundLocation: location } });
+    if (route === "/login") {
+      navigate(route, { state: { backgroundLocation: location } });
+    } else if (route === "https://dart.fss.or.kr/main.do") {
+      window.open(route, "_blank");
+    } else {
+      navigate(route);
+    }
   };
   return (
     <div onClick={openLoginModal}>
-      <div className="flex justify-center border bg-primary p-2 gap-2 rounded-lg cursor-pointer min-h-lg">
+      <div className="flex max-w-[146px] justify-center border bg-primary p-2 gap-2 rounded-lg cursor-pointer min-h-lg">
         <div className="text-white font-bold">{children}</div>
         <img className="w-[50px]" src={imgSrc} alt="" />
       </div>
