@@ -36,7 +36,7 @@ export const Main = () => {
     } catch (error) {
       console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
     }
-  });
+  }, []);
   useEffect(() => {
     try {
       const popularGongsi = async () => {

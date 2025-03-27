@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { LoginSlider } from "./LoginSlider";
+import { useNavigate } from "react-router-dom";
 interface Props {
   isLogin: boolean;
 }
 export const HeaderLoginBack = ({ isLogin }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const token = localStorage.getItem("jwtToken");
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+    navigate(0);
+  };
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <div onClick={() => window.history.back()} className="cursor-pointer">
@@ -13,7 +20,10 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
       </div>
       <h1 className="text-2xl">Siun</h1>
       {token ? (
-        <button className="bg-white p-2 rounded-lg text-primary">
+        <button
+          onClick={logout}
+          className="bg-primary text-white p-2 rounded-lg border border-white"
+        >
           로그아웃
         </button>
       ) : (

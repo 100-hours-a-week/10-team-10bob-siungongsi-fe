@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as Search } from "../assets/search-svgrepo-com.svg";
-import { ReactComponent as Setting } from "../assets/setting-5-svgrepo-com.svg";
+import search from "../assets/search.png";
+import home from "../assets/home.png";
+import setting from "../assets/setting.png";
 
 export const BottomNavigation = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export const BottomNavigation = () => {
             type="button"
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
-            <img className="w-[30px]" src="./images/home.png" alt="" />
+            <img className="w-[30px]" src={home} alt="" />
             <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"></span>
           </button>
 
@@ -23,7 +24,7 @@ export const BottomNavigation = () => {
             type="button"
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
-            <img className="w-[30px]" src="./images/search.png" alt="" />
+            <img className="w-[30px]" src={search} alt="" />
             <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"></span>
           </button>
           <button
@@ -31,7 +32,7 @@ export const BottomNavigation = () => {
             type="button"
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
-            <img className="w-[30px]" src="./images/setting.png" alt="" />
+            <img className="w-[30px]" src={setting} alt="" />
             <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"></span>
           </button>
         </div>

@@ -26,13 +26,15 @@ export const GongsiDetail = () => {
   >([]);
   const [isSubscribed, setIsSubscribed] = useState<boolean>();
 
-  useEffect(() => {
-    const subscriptions = async () => {
-      const data = await fetchSusbscriptions(localStorage.getItem("jwtToken"));
-      setMySubscriptions(data.data.subscribedCompanies);
-    };
-    subscriptions();
-  }, []);
+  // useEffect(() => {
+  //   const subscriptions = async () => {
+  //     const data = await fetchSusbscriptions(localStorage.getItem('jwtToken'));
+  //     setMySubscriptions(data.data.subscribedCompanies);
+  //   };
+  //   if (localStorage.getItem('jwtToken')) {
+  //     subscriptions();
+  //   }
+  // }, []);
 
   const { id } = useParams();
 
@@ -40,8 +42,18 @@ export const GongsiDetail = () => {
     setIsLoading(true);
     const getCompaniesName = async () => {
       try {
-        const response = await fetchGongsiDetail(Number(id));
-        setGongsiInfo(response.data);
+        if (localStorage.getItem("jwtToken")) {
+          const data = await fetchGongsiDetail(
+            Number(id),
+            localStorage.getItem("jwtToken"),
+          );
+          setGongsiInfo(data.data);
+          console.log(data.data);
+        } else {
+          const data = await fetchGongsiDetail(Number(id), null);
+          setGongsiInfo(data.data);
+          console.log(data.data);
+        }
       } catch (error) {
         console.error("공시 상세보기 에러 : ", error);
       } finally {
@@ -51,14 +63,14 @@ export const GongsiDetail = () => {
     getCompaniesName();
   }, []);
 
-  const checkSubscribe = () => {
-    mySubscriptions.find((sub) => sub.companyId === gongsiInfo?.company.id)
-      ? setIsSubscribed(true)
-      : setIsSubscribed(false);
-  };
-  useEffect(() => {
-    checkSubscribe();
-  }, []);
+  // const checkSubscribe = () => {
+  //   mySubscriptions.find((sub) => sub.companyId === gongsiInfo?.company.id)
+  //     ? setIsSubscribed(true)
+  //     : setIsSubscribed(false);
+  // };
+  // useEffect(() => {
+  //   checkSubscribe();
+  // }, []);
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState({
     titleMessage: "",
@@ -81,15 +93,21 @@ export const GongsiDetail = () => {
     setIsModalOn(false);
   };
   const handleSubscribe = async (id: number | undefined) => {
-    if (id) {
-      if (isSubscribed) {
+    if (!id || !gongsiInfo) return;
+    try {
+      if (gongsiInfo?.company.isSubscribed) {
         await deleteNotifications(id, localStorage.getItem("jwtToken"));
-        setIsSubscribed(false);
       } else {
         await postNotifications(id, localStorage.getItem("jwtToken"));
-        setIsSubscribed(true);
       }
-    }
+      setGongsiInfo({
+        ...gongsiInfo,
+        company: {
+          ...gongsiInfo.company,
+          isSubscribed: !gongsiInfo.company.isSubscribed,
+        },
+      });
+    } catch (error) {}
   };
 
   return (
@@ -124,7 +142,7 @@ export const GongsiDetail = () => {
                     ? onModal("로그인이 필요한 서비스입니다", "로그인", null)
                     : handleSubscribe(gongsiInfo?.company.id)
                 }
-                className={`border border-primary text-primary rounded-xl p-1 px-4 cursor-pointer ${isSubscribed && "bg-primary text-white"}`}
+                className={`border border-primary text-primary rounded-xl p-1 px-4 cursor-pointer ${gongsiInfo?.company.isSubscribed && "bg-primary text-white"}`}
               >
                 알림
               </div>

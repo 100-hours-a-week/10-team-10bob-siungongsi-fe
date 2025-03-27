@@ -43,7 +43,7 @@ interface CompanyInfo {
   id: number;
   name: string;
   prdyCtr: number;
-  isSubscribed: false;
+  isSubscribed: boolean;
 }
 const apiKey = process.env.REACT_APP_API_URL;
 
@@ -70,10 +70,18 @@ export const fetchGongsiList = async (
 
 export const fetchGongsiDetail = async (
   gongsiId: number,
+  accessToken: string | null,
 ): Promise<APIDataDetail> => {
   try {
     const response = await api.get<APIDataDetail>(
       `${apiKey}gongsi/${gongsiId}`,
+      accessToken
+        ? {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        : undefined,
     );
     return response.data;
   } catch (error) {
