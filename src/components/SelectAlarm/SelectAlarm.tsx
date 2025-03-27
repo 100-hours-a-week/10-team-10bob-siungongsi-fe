@@ -23,18 +23,19 @@ export const SelectAlarm = () => {
       isSubscribed: boolean;
     }[]
   >([]);
+
+  const getRecommend = async () => {
+    try {
+      const data = await fetchRecomendedCompaniesList(
+        localStorage.getItem("jwtToken"),
+      );
+
+      setRecommendList(data.data.companies);
+    } catch (error) {
+      console.error("기업 추천 목록 에러 : ", error);
+    }
+  };
   useEffect(() => {
-    const getRecommend = async () => {
-      try {
-        const data = await fetchRecomendedCompaniesList(
-          localStorage.getItem("jwtToken"),
-        );
-        console.log(data.data.companies);
-        setRecommendList(data.data.companies);
-      } catch (error) {
-        console.error("기업 추천 목록 에러 : ", error);
-      }
-    };
     getRecommend();
   }, []);
   const [isVibrating, setIsVibrating] = useState(false);
@@ -103,12 +104,9 @@ export const SelectAlarm = () => {
 
   const postNotificationCompany = async (companyId: number) => {
     try {
-      const data = await postNotifications(
-        companyId,
-        localStorage.getItem("jwtToken"),
-      );
-
+      await postNotifications(companyId, localStorage.getItem("jwtToken"));
       await getSubscriptions();
+      getRecommend();
     } catch (error) {
       console.error("구독목록 추가 에러 : ", error);
     }
@@ -121,6 +119,14 @@ export const SelectAlarm = () => {
   const deleteNotificationCompany = async (id: number) => {
     setSubscriptions(subscriptions.filter((sub) => sub.companyId !== id));
     await deleteNotifications(id, localStorage.getItem("jwtToken"));
+    getRecommend();
+  };
+  const subscribeHandler = (id: number, isSubscribe: boolean) => {
+    try {
+      !isSubscribe
+        ? postNotificationCompany(id)
+        : deleteNotificationCompany(id);
+    } catch (error) {}
   };
   const onDeleteBadge = async (id: number) => {
     setSubscriptions(subscriptions.filter((sub) => sub.companyId !== id));
@@ -176,8 +182,7 @@ export const SelectAlarm = () => {
         {recommendList.map((company) => (
           <RecommendList
             company={company}
-            postSubscribe={postNotificationCompany}
-            deleteSubscribe={deleteNotificationCompany}
+            subscribeHandler={subscribeHandler}
           />
         ))}
       </div>

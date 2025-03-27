@@ -20,9 +20,10 @@ export const SearchBar = ({
   return (
     <div>
       <input
-        className="w-full max-w-[350px] border p-1"
+        className="w-full max-w-[350px] border p-1 placeholder-gray-400"
         value={keyword}
         onChange={(e) => onChangeKeyword(e.target.value)}
+        placeholder="기업명을 입력하세요"
       ></input>
       {isSearchBarOn && (
         <div

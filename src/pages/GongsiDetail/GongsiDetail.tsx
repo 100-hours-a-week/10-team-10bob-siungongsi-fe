@@ -76,16 +76,19 @@ export const GongsiDetail = () => {
     titleMessage: "",
     submitMessage: "",
     helperText: null as string | null,
+    closeModal: () => {},
   });
   const onModal = (
     titleMessage: string,
     submitMessage: string,
     helperText: string | null,
+    closeModal: () => void,
   ) => {
     setModalContent({
       titleMessage: titleMessage,
       submitMessage: submitMessage,
       helperText: helperText,
+      closeModal: closeModal,
     });
     setIsModalOn(true);
   };
@@ -139,7 +142,12 @@ export const GongsiDetail = () => {
               <div
                 onClick={() =>
                   !localStorage.getItem("jwtToken")
-                    ? onModal("로그인이 필요한 서비스입니다", "로그인", null)
+                    ? onModal(
+                        "로그인이 필요한 서비스입니다",
+                        "로그인",
+                        null,
+                        closeModal,
+                      )
                     : handleSubscribe(gongsiInfo?.company.id)
                 }
                 className={`border border-primary text-primary rounded-xl p-1 px-4 cursor-pointer ${gongsiInfo?.company.isSubscribed && "bg-primary text-white"}`}
@@ -176,14 +184,7 @@ export const GongsiDetail = () => {
       ) : (
         <LoadingSpinner />
       )}
-      {isModalOn && (
-        <Modal
-          titleMessage={modalContent.titleMessage}
-          submitMessage={modalContent.submitMessage}
-          helperText={modalContent.helperText}
-          closeModal={closeModal}
-        />
-      )}
+      {isModalOn && <Modal modalContent={modalContent} />}
       <BottomNavigation />
     </div>
   );

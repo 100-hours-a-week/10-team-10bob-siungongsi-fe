@@ -54,9 +54,9 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       setLoginInfo(data.data);
 
       if (data.data.isUser) {
-        // navigate('/');
         localStorage.setItem("jwtToken", data.data.accessToken);
         onClose();
+        navigate(0);
       } else {
         navigate("/regist", { state: accessToken });
       }
@@ -93,12 +93,12 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
             src={kakao}
             alt=""
           />
-          <button
+          {/* <button
             className="text-gray-300 font-normal"
             onClick={() => navigate("/regist")}
           >
             회원가입 하시겠습니까?
-          </button>
+          </button> */}
         </div>
       </motion.div>
     </div>

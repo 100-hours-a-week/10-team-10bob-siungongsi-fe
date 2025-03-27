@@ -8,8 +8,10 @@ import { BottomNavigation } from "../../components/BottomNavigation";
 import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 import { userWithdraw } from "../../services/authService";
 import { patchUserNotificationInfo } from "../../services/usersService";
+import { useNavigate } from "react-router-dom";
 
 export const SettingPage = () => {
+  const navigate = useNavigate();
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission | null>(
     null,
@@ -20,11 +22,14 @@ export const SettingPage = () => {
     titleMessage: string;
     submitMessage: string;
     helperText: string | null;
+    closeModal: () => void;
     onSubmit?: () => void;
   }>({
     titleMessage: "",
     submitMessage: "",
     helperText: null as string | null,
+    closeModal: () => {},
+    onSubmit: () => {},
   });
   useEffect(() => {
     setPermission(Notification.permission);
@@ -69,16 +74,19 @@ export const SettingPage = () => {
       sendTokenToServer(token);
     }
   };
+  //모달 내 내용 설정
   const onModal = (
     titleMessage: string,
     submitMessage: string,
     helperText: string | null,
+    closeModal: () => void,
     onSubmit?: () => void,
   ) => {
     setModalContent({
       titleMessage: titleMessage,
       submitMessage: submitMessage,
       helperText: helperText,
+      closeModal: closeModal,
       onSubmit,
     });
     setIsModalOn(true);
@@ -93,69 +101,79 @@ export const SettingPage = () => {
       console.error("회원탈퇴 에러 : ", error);
     } finally {
       localStorage.removeItem("jwtToken");
+      navigate("/");
     }
+  };
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
   };
 
   return (
     <div>
       <HeaderLogin isLogin={true} />
-      <div className="max-w-md mx-auto p-4 bg-white">
-        {/* 알림 허용 토글 */}
-        <div className="border-b">
-          <div className="flex items-center justify-between py-4">
-            <span className="text-lg font-medium">알림 허용</span>
-            <button
-              onClick={handleToggle}
-              className={`relative w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
-                isNotificationEnabled ? "bg-blue-500" : "bg-gray-300"
-              }`}
-            >
-              <div
-                className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
-                  isNotificationEnabled ? "translate-x-6" : "translate-x-0"
+      {localStorage.getItem("jwtToken") ? (
+        <div className="max-w-md mx-auto p-4 bg-white">
+          {/* 알림 허용 토글 */}
+          <div className="border-b">
+            <div className="flex items-center justify-between py-4">
+              <span className="text-lg font-medium">알림 허용</span>
+              <button
+                onClick={handleToggle}
+                className={`relative w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
+                  isNotificationEnabled ? "bg-blue-500" : "bg-gray-300"
                 }`}
-              />
-            </button>
-          </div>
-          {isNotificationEnabled && <SelectAlarm />}
-        </div>
-
-        <div className="flex flex-col ">
-          {/* 로그아웃 버튼 */}
-          <div
-            onClick={() =>
-              onModal("로그아웃 하시겠습니까?", "확인", null, undefined)
-            }
-            className="text-red-500 text-lg font-semibold py-4 border-b"
-          >
-            로그아웃
+              >
+                <div
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
+                    isNotificationEnabled ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+            {isNotificationEnabled && <SelectAlarm />}
           </div>
 
-          {/* 회원 탈퇴 (비활성화) */}
-          <div
-            onClick={() =>
-              onModal(
-                "회원탈퇴 하시겠습니까?",
-                "확인",
-                "회원탈퇴는 되돌릴 수 없습니다",
-                userWithDrawFunction,
-              )
-            }
-            className="text-gray-400 text-lg font-medium py-4"
-          >
-            회원 탈퇴
+          <div className="flex flex-col ">
+            {/* 로그아웃 버튼 */}
+            <div
+              onClick={() =>
+                onModal(
+                  "로그아웃 하시겠습니까?",
+                  "확인",
+                  null,
+                  closeModal,
+                  logout,
+                )
+              }
+              className="text-red-500 text-lg font-semibold py-4 border-b"
+            >
+              로그아웃
+            </div>
+
+            {/* 회원 탈퇴 (비활성화) */}
+            <div
+              onClick={() =>
+                onModal(
+                  "회원탈퇴 하시겠습니까?",
+                  "확인",
+                  "회원탈퇴는 되돌릴 수 없습니다",
+                  closeModal,
+                  userWithDrawFunction,
+                )
+              }
+              className="text-gray-400 text-lg font-medium py-4"
+            >
+              회원 탈퇴
+            </div>
           </div>
         </div>
-      </div>
-      {isModalOn && (
-        <Modal
-          titleMessage={modalContent.titleMessage}
-          submitMessage={modalContent.submitMessage}
-          helperText={modalContent.helperText}
-          closeModal={closeModal}
-          onSubmit={userWithDrawFunction}
-        />
+      ) : (
+        <div className="max-w-md h-[50vh] flex flex-col gap-2 justify-center items-center p-4">
+          <div className="text-2xl font-bold">로그인이 필요합니다</div>
+          <div className="text-gray-400">로그인하러 가기 {">>"}</div>
+        </div>
       )}
+      {isModalOn && <Modal modalContent={modalContent} />}
       <BottomNavigation />
     </div>
   );
