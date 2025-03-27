@@ -6,25 +6,15 @@ import { Modal } from "../../components/Modal";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { fetchSusbscriptions } from "../../services/usersService";
+
 import {
   deleteNotifications,
   postNotifications,
 } from "../../services/notificationService";
-import { PushNotification } from "../../components/PushNotification";
 
 export const GongsiDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gongsiInfo, setGongsiInfo] = useState<GongsiInfo>();
-  const [mySubscriptions, setMySubscriptions] = useState<
-    {
-      companyId: number;
-      companyName: string;
-      companyCode: string;
-      stockCode: number;
-    }[]
-  >([]);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>();
 
   // useEffect(() => {
   //   const subscriptions = async () => {

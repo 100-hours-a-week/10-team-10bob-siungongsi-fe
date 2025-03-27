@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { fetchRecomendedCompaniesList } from "../../services/notificationService";
-
 interface RecommendListProps {
   company: {
     companyId: number;

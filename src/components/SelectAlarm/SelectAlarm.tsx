@@ -15,6 +15,7 @@ import {
 import { fetchSusbscriptions } from "../../services/usersService";
 
 export const SelectAlarm = () => {
+  //추천기업 목록 불러오기
   const [recommendList, setRecommendList] = useState<
     {
       companyId: number;
@@ -38,6 +39,7 @@ export const SelectAlarm = () => {
   useEffect(() => {
     getRecommend();
   }, []);
+
   const [isVibrating, setIsVibrating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [companies, setCompanies] = useState<Companies>();
@@ -54,20 +56,19 @@ export const SelectAlarm = () => {
       stockCode: number;
     }[]
   >([]);
-  const [addVibratingTrigger, setAddVibratingTrigger] =
-    useState<boolean>(false);
 
+  //텍스트 진동
   useEffect(() => {
     if (subscriptions.length >= 10) {
       setIsVibrating(true);
       setIsDisabled(true);
-      setAddVibratingTrigger(true);
       setTimeout(() => setIsVibrating(false), 300);
     } else {
       setIsDisabled(false);
-      setAddVibratingTrigger(false);
     }
   }, [subscriptions]);
+
+  //자동완성 불러오기
   useEffect(() => {
     const getCompaniesName = async () => {
       setIsLoading(true);
@@ -81,9 +82,12 @@ export const SelectAlarm = () => {
         setIsLoading(false);
       }
     };
-
-    getCompaniesName();
+    if (keyword) {
+      getCompaniesName();
+    }
   }, [keyword]);
+
+  //현재 알림받고있는 기업들 불러오기
   const getSubscriptions = async () => {
     try {
       const data = await fetchSusbscriptions(localStorage.getItem("jwtToken"));
