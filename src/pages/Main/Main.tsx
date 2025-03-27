@@ -131,10 +131,10 @@ export const Main = () => {
         <SectionTitle>이런 서비스는 어때요?</SectionTitle>
         <article className="flex justify-center m-2 gap-2">
           <ServiceButton route="/login" imgSrc="./images/enter_1.png">
-            로그인<br></br>알림받기
+            로그인하고<br></br>알림받기
           </ServiceButton>
           <ServiceButton route="" imgSrc="./images/dictionary_1.png">
-            사전<br></br>이용하기
+            사전<br></br>이용하기<br></br>
           </ServiceButton>
         </article>
       </section>

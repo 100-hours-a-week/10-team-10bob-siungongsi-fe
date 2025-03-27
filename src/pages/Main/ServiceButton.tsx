@@ -19,7 +19,7 @@ export const ServiceButton = ({
   };
   return (
     <div onClick={openLoginModal}>
-      <div className="flex w-[146px] justify-center border bg-primary p-2 gap-2 rounded-lg cursor-pointer">
+      <div className="flex justify-center border bg-primary p-2 gap-2 rounded-lg cursor-pointer min-h-lg">
         <div className="text-white font-bold">{children}</div>
         <img className="w-[50px]" src={imgSrc} alt="" />
       </div>

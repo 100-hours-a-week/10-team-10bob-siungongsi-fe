@@ -44,7 +44,7 @@ export const PostFilter = ({ filter, onChangeFilter }: PostFilterProps) => {
     //   </div>
     // );
     <select
-      className="border-none"
+      className="border-none cursor-pointer"
       value={filter}
       onChange={(e) => onChangeFilter(e.target.value)}
     >

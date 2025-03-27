@@ -25,12 +25,15 @@ export const GongsiPagination = ({
   const [prevFilterKey, setPrevFilterKey] = useState("");
   useEffect(() => {
     // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
-    setSearchParams({
-      page: currentPage.toString(),
-      sort: filterMenu,
-      startDate: startDate,
-      endDate: endDate,
-    });
+    setSearchParams(
+      {
+        page: currentPage.toString(),
+        sort: filterMenu,
+        startDate: startDate,
+        endDate: endDate,
+      },
+      { replace: true },
+    );
   }, [currentPage, filterMenu, startDate, endDate]);
   useEffect(() => {
     const getGongsiList = async () => {

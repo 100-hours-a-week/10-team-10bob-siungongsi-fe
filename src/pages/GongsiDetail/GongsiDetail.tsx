@@ -3,7 +3,7 @@ import { Header } from "../../components/Header";
 import { HeaderLoginBack } from "../../components/HeaderLoginBack";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { Modal } from "../../components/Modal";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { fetchSusbscriptions } from "../../services/usersService";
@@ -77,18 +77,21 @@ export const GongsiDetail = () => {
     submitMessage: "",
     helperText: null as string | null,
     closeModal: () => {},
+    onSubmit: () => {},
   });
   const onModal = (
     titleMessage: string,
     submitMessage: string,
     helperText: string | null,
     closeModal: () => void,
+    openLoginModal: () => void,
   ) => {
     setModalContent({
       titleMessage: titleMessage,
       submitMessage: submitMessage,
       helperText: helperText,
       closeModal: closeModal,
+      onSubmit: openLoginModal,
     });
     setIsModalOn(true);
   };
@@ -111,6 +114,12 @@ export const GongsiDetail = () => {
         },
       });
     } catch (error) {}
+  };
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const openLoginModal = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
   };
 
   return (
@@ -147,6 +156,7 @@ export const GongsiDetail = () => {
                         "로그인",
                         null,
                         closeModal,
+                        openLoginModal,
                       )
                     : handleSubscribe(gongsiInfo?.company.id)
                 }
