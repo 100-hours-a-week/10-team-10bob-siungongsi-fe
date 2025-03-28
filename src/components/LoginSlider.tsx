@@ -57,8 +57,12 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error("로그인 에러: ", error);
     } finally {
-      navigate(location.pathname, { replace: true });
-      await Notification.requestPermission();
+      const permission = await Notification.requestPermission();
+
+      if (permission !== "granted") {
+        console.warn("알림 권한이 거부됨");
+      }
+      // navigate(location.pathname, { replace: true });
     }
   };
 

@@ -51,7 +51,6 @@ export const GongsiPagination = ({
         );
 
         setGongsiData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("공시목록 조회 에러 : ", error);
       } finally {
@@ -64,12 +63,15 @@ export const GongsiPagination = ({
     const newFilterKey = `${filterMenu}_${startDate}_${endDate}_${selectedCompany}`;
     if (prevFilterKey && prevFilterKey !== newFilterKey) {
       setCurrentPage(1);
-      setSearchParams({
-        page: "1",
-        sort: filterMenu,
-        startDate: startDate,
-        endDate: endDate,
-      });
+      setSearchParams(
+        {
+          page: "1",
+          sort: filterMenu,
+          startDate: startDate,
+          endDate: endDate,
+        },
+        { replace: true },
+      );
     }
     setPrevFilterKey(newFilterKey);
   }, [filterMenu, startDate, endDate, selectedCompany]);

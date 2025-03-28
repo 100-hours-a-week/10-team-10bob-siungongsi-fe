@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import { LoginSlider } from "./LoginSlider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 interface Props {
   isLogin: boolean;
 }
 export const HeaderLoginBack = ({ isLogin }: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const token = localStorage.getItem("jwtToken");
   const navigate = useNavigate();
+  const location = useLocation();
+  const openLoginModal = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+  };
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
     navigate(0);
   };
+
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <div onClick={() => window.history.back()} className="cursor-pointer">
@@ -29,14 +33,10 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
       ) : (
         <button
           className="bg-white p-2 rounded-lg text-primary"
-          onClick={() => setIsOpen(true)}
+          onClick={openLoginModal}
         >
           로그인
         </button>
-      )}
-
-      {isOpen && (
-        <LoginSlider isOpen={isOpen} onClose={() => setIsOpen(false)} />
       )}
     </div>
   );

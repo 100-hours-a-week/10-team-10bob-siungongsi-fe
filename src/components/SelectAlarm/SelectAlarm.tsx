@@ -132,10 +132,7 @@ export const SelectAlarm = () => {
         : deleteNotificationCompany(id);
     } catch (error) {}
   };
-  const onDeleteBadge = async (id: number) => {
-    setSubscriptions(subscriptions.filter((sub) => sub.companyId !== id));
-    deleteNotificationCompany(id);
-  };
+
   return (
     <div>
       <div className={`transition`}>
@@ -176,7 +173,7 @@ export const SelectAlarm = () => {
             key={idx}
             name={sub.companyName}
             id={sub.companyId}
-            onDeleteBadge={onDeleteBadge}
+            onDeleteBadge={deleteNotificationCompany}
           />
         ))}
       </div>

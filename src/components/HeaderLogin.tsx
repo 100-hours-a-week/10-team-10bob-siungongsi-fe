@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { LoginSlider } from "./LoginSlider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 interface Props {
   isLogin: boolean;
 }
 export const HeaderLogin = ({ isLogin }: Props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const token = localStorage.getItem("jwtToken");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const openLoginModal = () => {
+    navigate("/login", { state: { backgroundLocation: location } });
+  };
   const logout = () => {
     localStorage.removeItem("jwtToken");
     navigate(0);
@@ -25,14 +29,10 @@ export const HeaderLogin = ({ isLogin }: Props) => {
       ) : (
         <button
           className="bg-white p-2 rounded-lg text-primary"
-          onClick={() => setIsOpen(true)}
+          onClick={openLoginModal}
         >
           로그인
         </button>
-      )}
-
-      {isOpen && (
-        <LoginSlider isOpen={isOpen} onClose={() => setIsOpen(false)} />
       )}
     </div>
   );

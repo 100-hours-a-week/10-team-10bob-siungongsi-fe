@@ -119,12 +119,13 @@ export const Main = () => {
             <p className="w-full text-center">오늘 올라온 공시가 없습니다.</p>
           </div>
         )}
-
-        <div
-          onClick={() => navigate("/search")}
-          className="text-right text-gray-400 text-sm mt-2 cursor-pointer"
-        >
-          더보기 &gt;&gt;
+        <div className="flex justify-end">
+          <div
+            onClick={() => navigate("/search")}
+            className="max-w-fit text-right text-gray-400 text-sm mt-2 cursor-pointer"
+          >
+            더보기 &gt;&gt;
+          </div>
         </div>
       </section>
       <section>
@@ -135,7 +136,10 @@ export const Main = () => {
               로그인하고<br></br>알림받기
             </ServiceButton>
           ) : (
-            <ServiceButton route="https://dart.fss.or.kr/main.do" imgSrc="">
+            <ServiceButton
+              route="https://dart.fss.or.kr/main.do"
+              imgSrc="./images/exit.png"
+            >
               OpenDart<br></br>이동하기
             </ServiceButton>
           )}
