@@ -7,10 +7,10 @@ type Props = {
 };
 export const Badge = ({ name, onDeleteBadge, id }: Props) => {
   return (
-    <div className="mx-1">
+    <div className="">
       <div className="flex gap-2 border py-1 px-2 rounded-xl items-center">
         <div>{name}</div>
-        <div onClick={() => onDeleteBadge(id)}>
+        <div className="cursor-pointer" onClick={() => onDeleteBadge(id)}>
           <Close />
         </div>
       </div>

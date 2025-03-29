@@ -6,8 +6,6 @@ interface SearchBarProps {
   onChangeKeyword: (value: string) => void;
   isLoading: boolean | undefined;
   onSelectCompany: (id: number, name: string) => void;
-  isSearchBarOn: boolean;
-  selectedCompanyName: string;
 }
 
 export const SearchBar = ({
@@ -16,30 +14,39 @@ export const SearchBar = ({
   companies,
   isLoading,
   onSelectCompany,
-  isSearchBarOn,
-  selectedCompanyName,
+  // isSearchBarOn,
 }: SearchBarProps) => {
+  const [isSearchBarOn, setIsSearchBarOn] = useState(false);
   return (
     <div>
       <input
-        className="w-full max-w-[350px] border p-1 placeholder-gray-400"
+        className={`w-full max-w-[350px] border p-2 placeholder-gray-400 ${isSearchBarOn ? "rounded-tl-lg rounded-tr-lg" : "rounded-lg"}`}
         value={keyword}
-        onChange={(e) => onChangeKeyword(e.target.value)}
+        onChange={(e) => {
+          if (e.target.value !== "") {
+            onChangeKeyword(e.target.value);
+            setIsSearchBarOn(true);
+          } else {
+            onChangeKeyword(e.target.value);
+            setIsSearchBarOn(false);
+          }
+        }}
         placeholder="기업명을 입력하세요"
       ></input>
       {isSearchBarOn && (
         <div
-          className={`absolute bg-white w-full max-w-[340px] rounded-br-lg rounded-bl-lg border${keyword ? "" : "hidden"}`}
+          className={`absolute bg-white w-full max-w-[335px] rounded-br-lg rounded-bl-lg border${keyword ? "" : "hidden"}`}
         >
           {keyword && (
             <>
               {
                 companies && companies.length > 0 ? (
-                  companies.slice(0, 5).map((company) => (
+                  companies.map((company) => (
                     <div
                       onClick={() => {
                         onSelectCompany(company.companyId, company.companyName);
                         onChangeKeyword(company.companyName);
+                        setIsSearchBarOn(false);
                       }}
                       key={company.companyName} // 🔹 key 추가
                       className="p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"

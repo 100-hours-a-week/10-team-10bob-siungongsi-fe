@@ -8,7 +8,7 @@ interface GongsiPaginationProps {
   filterMenu: string;
   startDate: string;
   endDate: string;
-  selectedCompany: number | undefined;
+  selectedCompany: number;
 }
 
 export const GongsiPagination = ({
@@ -25,16 +25,18 @@ export const GongsiPagination = ({
   const [prevFilterKey, setPrevFilterKey] = useState("");
   useEffect(() => {
     // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
+
     setSearchParams(
       {
         page: currentPage.toString(),
+        companyId: selectedCompany.toString(),
         sort: filterMenu,
         startDate: startDate,
         endDate: endDate,
       },
       { replace: true },
     );
-  }, [currentPage, filterMenu, startDate, endDate]);
+  }, [currentPage, filterMenu, startDate, endDate, selectedCompany]);
   useEffect(() => {
     const getGongsiList = async () => {
       try {
@@ -59,6 +61,7 @@ export const GongsiPagination = ({
     };
     getGongsiList();
   }, [currentPage, filterMenu, startDate, endDate, selectedCompany]);
+  //조건을 바꾸면 currentPage = 1 로 됨
   useEffect(() => {
     const newFilterKey = `${filterMenu}_${startDate}_${endDate}_${selectedCompany}`;
     if (prevFilterKey && prevFilterKey !== newFilterKey) {
@@ -66,6 +69,7 @@ export const GongsiPagination = ({
       setSearchParams(
         {
           page: "1",
+          companyId: selectedCompany.toString(),
           sort: filterMenu,
           startDate: startDate,
           endDate: endDate,

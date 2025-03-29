@@ -16,10 +16,6 @@ import {
 import { useSearchParams } from "react-router-dom";
 
 export const GongsiSearch = () => {
-  const [selectedCompany, setSelectedCompany] = useState<{
-    id: number;
-    name: string;
-  }>({ id: 0, name: "" });
   const [isCalendarModalOn, setIsCalendarModalOn] = useState<boolean>(false);
 
   const [companies, setCompanies] = useState<Companies>();
@@ -33,24 +29,24 @@ export const GongsiSearch = () => {
   const [endDate, setEndDate] = useState<string>(initialEndDate);
   const initalFilter = searchParams.get("sort") || "latest";
   const [filterMenu, setFilterMenu] = useState<string>(initalFilter);
+  const initalSelectedCompany = parseInt(
+    searchParams.get("companyId") || "0",
+    10,
+  );
+  const [selectedCompany, setSelectedCompany] = useState<number>(
+    initalSelectedCompany,
+  );
+
   // useEffect(() => {
   //   // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
   //   setSearchParams({ sort: filterMenu });
   // }, [filterMenu]);
 
-  const [isSearchBarOn, setIsSearchBarON] = useState<boolean>(true);
-
   useEffect(() => {
-    const trimmedKeyword = keyword.trim();
-
-    if (!trimmedKeyword) {
-      setCompanies(undefined);
-      return;
-    }
     const getCompaniesName = async () => {
       setIsLoading(true);
       try {
-        const response = await fetchCompanyNameList(trimmedKeyword);
+        const response = await fetchCompanyNameList(keyword);
         setCompanies(response.data);
         setIsLoading(true);
       } catch (error) {
@@ -59,13 +55,13 @@ export const GongsiSearch = () => {
         setIsLoading(false);
       }
     };
-    getCompaniesName();
+    if (keyword !== "") {
+      getCompaniesName();
+    }
   }, [keyword]);
 
   const onChangeKeyword = (value: string) => {
     setKeyword(value);
-
-    setIsSearchBarON((prev) => !prev);
   };
 
   //달력 관련
@@ -92,8 +88,8 @@ export const GongsiSearch = () => {
   };
 
   //선택된 기업 불러오기
-  const onSelectCompany = (id: number, name: string) => {
-    setSelectedCompany({ id, name });
+  const onSelectCompany = (id: number) => {
+    setSelectedCompany(id);
   };
 
   const formatDate = (date: Date | undefined) => {
@@ -119,8 +115,6 @@ export const GongsiSearch = () => {
           companies={companies?.companyNameList}
           isLoading={isLoading}
           onSelectCompany={onSelectCompany}
-          isSearchBarOn={isSearchBarOn}
-          selectedCompanyName={selectedCompany.name}
         />
       </div>
       <div className="flex py-2 justify-between items-center border-b">
@@ -155,7 +149,7 @@ export const GongsiSearch = () => {
           filterMenu={filterMenu}
           startDate={startDate}
           endDate={endDate}
-          selectedCompany={selectedCompany.id}
+          selectedCompany={selectedCompany}
         />
       </div>
       <div className="flex justify-center">

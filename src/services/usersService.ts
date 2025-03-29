@@ -1,7 +1,7 @@
 import api from "../api/api";
 
 const apiKey = process.env.REACT_APP_API_URL;
-
+//구독중인 기업 목록 조회
 export const fetchUserNotificationInfo = async (
   accessToken: string | null,
 ): Promise<{

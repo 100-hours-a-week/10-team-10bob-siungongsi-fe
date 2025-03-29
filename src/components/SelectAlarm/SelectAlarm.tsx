@@ -178,9 +178,7 @@ export const SelectAlarm = () => {
         onChangeKeyword={onChangeKeyword}
         isLoading={isLoading}
         onSelectCompany={postNotificationCompany}
-        isSearchBarOn={isSearchBarOn}
         isDisabled={isDisabled}
-        clearSearchBar={clearSearchBar}
       />
 
       {/* 배지추가되는부분 */}

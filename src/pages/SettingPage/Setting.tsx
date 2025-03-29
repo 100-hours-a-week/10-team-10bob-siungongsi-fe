@@ -69,7 +69,7 @@ export const SettingPage = () => {
     if (newPermission === "granted") {
       // Firebase 푸시 토큰 요청
       const token = await getPushToken();
-      console.log("푸시 토큰:", token);
+
       setIsNotificationEnabled(true);
       sendTokenToServer(token);
     }
@@ -176,7 +176,10 @@ export const SettingPage = () => {
       ) : (
         <div className="max-w-md h-[50vh] flex flex-col gap-2 justify-center items-center p-4">
           <div className="text-2xl font-bold">로그인이 필요합니다</div>
-          <div onClick={openLoginModal} className="text-gray-400">
+          <div
+            onClick={openLoginModal}
+            className="text-gray-400 cursor-pointer"
+          >
             로그인하러 가기 {">>"}
           </div>
         </div>

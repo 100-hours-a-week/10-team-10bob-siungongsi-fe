@@ -31,7 +31,6 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
     return new Promise((resolve, reject) => {
       window.Kakao.Auth.login({
         success: (authObj: any) => {
-          console.log("로그인 성공", authObj);
           resolve(authObj.access_token); // ✅ resolve로 access_token 전달
         },
         fail: (err: any) => {

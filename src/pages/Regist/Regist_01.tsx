@@ -36,7 +36,6 @@ export const Regist = () => {
 
   const onRegistSubmit = async () => {
     try {
-      console.log(loginInfo);
       const data = await createUser(loginInfo, agreedTermsIds);
       localStorage.setItem("jwtToken", data.data);
       navigate("/");

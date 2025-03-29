@@ -13,7 +13,9 @@ export const Modal = ({ modalContent }: Props) => {
       <div className="flex justify-center bg-white rounded-lg">
         <div className="flex max-w-max p-8">
           <div className="flex flex-col gap-4">
-            <div className="text-center">{modalContent.titleMessage}</div>
+            <div className="text-center text-lg font-bold text-black">
+              {modalContent.titleMessage}
+            </div>
             {modalContent.helperText && (
               <div className="text-gray-300 text-center">
                 {modalContent.helperText}
