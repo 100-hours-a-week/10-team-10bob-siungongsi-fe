@@ -23,6 +23,7 @@ export const fetchUserNotificationInfo = async (
     throw error;
   }
 };
+//현재 알림 상태 변경
 export const patchUserNotificationInfo = async (
   notificationFlag: boolean,
   pushToken: string | undefined,

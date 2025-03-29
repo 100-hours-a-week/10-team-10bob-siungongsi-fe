@@ -34,10 +34,17 @@ export const SettingPage = () => {
   useEffect(() => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
+    const changeNoti = async () => {
+      if (permission === "granted") {
+        const token = await getPushToken();
+        sendTokenToServer(token);
+      }
+    };
+    changeNoti();
   }, []);
   const sendTokenToServer = async (token: string | undefined) => {
     try {
-      const data = await patchUserNotificationInfo(
+      await patchUserNotificationInfo(
         true,
         token,
         localStorage.getItem("jwtToken"),
