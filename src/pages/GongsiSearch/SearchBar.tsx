@@ -5,8 +5,9 @@ interface SearchBarProps {
   companies: Company[] | undefined;
   onChangeKeyword: (value: string) => void;
   isLoading: boolean | undefined;
-  onSelectCompany: (company: number | undefined) => void;
+  onSelectCompany: (id: number, name: string) => void;
   isSearchBarOn: boolean;
+  selectedCompanyName: string;
 }
 
 export const SearchBar = ({
@@ -16,6 +17,7 @@ export const SearchBar = ({
   isLoading,
   onSelectCompany,
   isSearchBarOn,
+  selectedCompanyName,
 }: SearchBarProps) => {
   return (
     <div>
@@ -35,7 +37,10 @@ export const SearchBar = ({
                 companies && companies.length > 0 ? (
                   companies.slice(0, 5).map((company) => (
                     <div
-                      onClick={() => onSelectCompany(company.companyId)}
+                      onClick={() => {
+                        onSelectCompany(company.companyId, company.companyName);
+                        onChangeKeyword(company.companyName);
+                      }}
                       key={company.companyName} // 🔹 key 추가
                       className="p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
                     >

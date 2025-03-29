@@ -5,7 +5,7 @@ interface RecommendListProps {
     isSubscribed: boolean;
     subscriberCnt: number;
   };
-  subscribeHandler: (id: number, isSubscribe: boolean) => void;
+  subscribeHandler: (id: number, isSubscribe: boolean, name: string) => void;
 }
 export const RecommendList = ({
   company,
@@ -21,7 +21,11 @@ export const RecommendList = ({
       </div>
       <div
         onClick={() =>
-          subscribeHandler(company.companyId, company.isSubscribed)
+          subscribeHandler(
+            company.companyId,
+            company.isSubscribed,
+            company.companyName,
+          )
         }
       >
         {company.isSubscribed ? (

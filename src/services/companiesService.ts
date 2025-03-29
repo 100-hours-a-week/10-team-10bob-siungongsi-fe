@@ -17,6 +17,15 @@ const apiKey = process.env.REACT_APP_API_URL;
 export const fetchCompanyNameList = async (
   keyword: string,
 ): Promise<APIData> => {
+  const trimmed = keyword.trim();
+  if (!trimmed) {
+    // 빈 keyword일 경우 빈 응답 처리
+    return Promise.resolve({
+      code: 200,
+      message: "empty",
+      data: { companyNameListSize: 0, companyNameList: [] },
+    });
+  }
   try {
     const response = await api.get<APIData>(
       `${apiKey}companies/name?keyword=${keyword}`,

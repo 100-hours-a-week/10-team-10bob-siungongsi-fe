@@ -6,7 +6,7 @@ interface SearchBarProps {
   companies: Company[] | undefined;
   onChangeKeyword: (value: string) => void;
   isLoading: boolean | undefined;
-  onSelectCompany: (companyId: number) => void;
+  onSelectCompany: (companyId: number, name: string) => void;
   isSearchBarOn: boolean;
   isDisabled: boolean;
   clearSearchBar: () => void;
@@ -44,7 +44,7 @@ export const SelectBar = ({
                   companies.slice(0, 5).map((company) => (
                     <div
                       onClick={() => {
-                        onSelectCompany(company.companyId);
+                        onSelectCompany(company.companyId, company.companyName);
                         clearSearchBar();
                       }}
                       key={company.companyName} // 🔹 key 추가

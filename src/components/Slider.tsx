@@ -52,7 +52,7 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
           className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg cursor-pointer"
         >
           {/* 기사 내용 */}
-          <h2 className="text-lg font-bold mb-1">
+          <h2 className="text-lg font-bold mb-1 line-clamp-1">
             {GongsiData?.gongsiList[currentIndex].gongsiTitle}
           </h2>
           <div className="flex justify-between">

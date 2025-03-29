@@ -106,13 +106,30 @@ export const SelectAlarm = () => {
     setIsSearchBarOn(true);
   };
 
-  const postNotificationCompany = async (companyId: number) => {
+  const postNotificationCompany = async (companyId: number, name: string) => {
+    console.time("postNotification");
     try {
       await postNotifications(companyId, localStorage.getItem("jwtToken"));
-      await getSubscriptions();
-      getRecommend();
+      setSubscriptions((prev) => [
+        ...prev,
+        {
+          companyId,
+          companyName: name, // 필요시 저장된 리스트에서 가져오거나 API 응답 사용
+          companyCode: "",
+          stockCode: 0,
+        },
+      ]);
+      setRecommendList((prev) =>
+        prev.map((item) =>
+          item.companyId === companyId ? { ...item, isSubscribed: true } : item,
+        ),
+      );
+      // await getSubscriptions();
+      // getRecommend();
     } catch (error) {
       console.error("구독목록 추가 에러 : ", error);
+    } finally {
+      console.timeEnd("postNotification");
     }
   };
   const clearSearchBar = () => {
@@ -125,10 +142,10 @@ export const SelectAlarm = () => {
     await deleteNotifications(id, localStorage.getItem("jwtToken"));
     getRecommend();
   };
-  const subscribeHandler = (id: number, isSubscribe: boolean) => {
+  const subscribeHandler = (id: number, isSubscribe: boolean, name: string) => {
     try {
       !isSubscribe
-        ? postNotificationCompany(id)
+        ? postNotificationCompany(id, name)
         : deleteNotificationCompany(id);
     } catch (error) {}
   };
