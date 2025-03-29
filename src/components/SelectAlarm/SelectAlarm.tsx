@@ -107,7 +107,6 @@ export const SelectAlarm = () => {
   };
 
   const postNotificationCompany = async (companyId: number, name: string) => {
-    console.time("postNotification");
     try {
       await postNotifications(companyId, localStorage.getItem("jwtToken"));
       setSubscriptions((prev) => [
@@ -128,8 +127,6 @@ export const SelectAlarm = () => {
       // getRecommend();
     } catch (error) {
       console.error("구독목록 추가 에러 : ", error);
-    } finally {
-      console.timeEnd("postNotification");
     }
   };
   const clearSearchBar = () => {

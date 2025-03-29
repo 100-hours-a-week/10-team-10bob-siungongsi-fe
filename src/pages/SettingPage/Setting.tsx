@@ -38,14 +38,16 @@ export const SettingPage = () => {
   }, [isNotificationEnabled]);
   const sendTokenToServer = async () => {
     try {
-      const token = await getPushToken();
-      await patchUserNotificationInfo(
-        isNotificationEnabled,
-        token,
-        localStorage.getItem("jwtToken"),
-      );
+      if (isNotificationEnabled) {
+        const token = await getPushToken();
+        await patchUserNotificationInfo(
+          isNotificationEnabled,
+          token,
+          localStorage.getItem("jwtToken"),
+        );
 
-      console.log("✅ FCM 토큰 서버에 전송 완료");
+        console.log("✅ FCM 토큰 서버에 전송 완료");
+      }
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }
