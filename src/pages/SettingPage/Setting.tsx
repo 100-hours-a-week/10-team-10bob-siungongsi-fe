@@ -16,7 +16,7 @@ export const SettingPage = () => {
   const [permission, setPermission] = useState<NotificationPermission | null>(
     null,
   );
-  const [isModalOn, setIsModalOn] = useState<boolean>(false);
+  const [isModalOn, setIsModalOn] = useState<boolean>();
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
@@ -34,18 +34,13 @@ export const SettingPage = () => {
   useEffect(() => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
-    const changeNoti = async () => {
-      if (permission === "granted") {
-        const token = await getPushToken();
-        sendTokenToServer(token);
-      }
-    };
-    changeNoti();
-  }, []);
-  const sendTokenToServer = async (token: string | undefined) => {
+    sendTokenToServer();
+  }, [isNotificationEnabled]);
+  const sendTokenToServer = async () => {
     try {
+      const token = await getPushToken();
       await patchUserNotificationInfo(
-        true,
+        isNotificationEnabled,
         token,
         localStorage.getItem("jwtToken"),
       );
@@ -75,10 +70,9 @@ export const SettingPage = () => {
 
     if (newPermission === "granted") {
       // Firebase 푸시 토큰 요청
-      const token = await getPushToken();
 
       setIsNotificationEnabled(true);
-      sendTokenToServer(token);
+      sendTokenToServer();
     }
   };
   //모달 내 내용 설정
