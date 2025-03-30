@@ -3,9 +3,9 @@
 @tailwind utilities;
 @import 'flowbite/src/themes/default';
 
+html,
 body {
-  width: 350px;
-  margin: 0 auto;
+  overflow-x: hidden;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;

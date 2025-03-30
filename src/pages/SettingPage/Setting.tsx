@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { getPushToken } from "../../firebase";
 
@@ -31,7 +31,8 @@ export const SettingPage = () => {
     closeModal: () => {},
     onSubmit: () => {},
   });
-  const sendTokenToServer = async () => {
+
+  const sendTokenToServer = useCallback(async () => {
     try {
       if (isNotificationEnabled) {
         const token = await getPushToken();
@@ -40,18 +41,18 @@ export const SettingPage = () => {
           token,
           localStorage.getItem("jwtToken"),
         );
-
         console.log("✅ FCM 토큰 서버에 전송 완료");
       }
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }
-  };
+  }, [isNotificationEnabled]);
   useEffect(() => {
     setPermission(Notification.permission);
     setIsNotificationEnabled(Notification.permission === "granted");
+
     sendTokenToServer();
-  }, [isNotificationEnabled]);
+  }, [sendTokenToServer]);
 
   const handleToggle = async () => {
     if (permission === "granted") {

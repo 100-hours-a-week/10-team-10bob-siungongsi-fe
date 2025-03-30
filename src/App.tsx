@@ -25,31 +25,33 @@ function App() {
   const state = location.state as { backgroundLocation?: Location };
 
   return (
-    <Sentry.ErrorBoundary
-      fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
-    >
-      <ToastContainer
-        position="bottom-center"
-        autoClose={1000} // 3초 후 자동 닫힘
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnHover
-      />
-      <Routes location={state?.backgroundLocation || location}>
-        <Route path="/" element={<Main />} />
-        <Route path="/search" element={<GongsiSearch />} />
-        <Route path="/regist" element={<Regist />} />
-        <Route path="/regist_02" element={<Regist_02 />} />
-        <Route path="/setting" element={<SettingPage />} />
-        <Route path="/detail/:id" element={<GongsiDetail />} />
-      </Routes>
-      {state?.backgroundLocation && (
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
+    <div className="w-full max-w-screen-sm mx-auto px-4">
+      <Sentry.ErrorBoundary
+        fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
+      >
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000} // 3초 후 자동 닫힘
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+        />
+        <Routes location={state?.backgroundLocation || location}>
+          <Route path="/" element={<Main />} />
+          <Route path="/search" element={<GongsiSearch />} />
+          <Route path="/regist" element={<Regist />} />
+          <Route path="/regist_02" element={<Regist_02 />} />
+          <Route path="/setting" element={<SettingPage />} />
+          <Route path="/detail/:id" element={<GongsiDetail />} />
         </Routes>
-      )}
-    </Sentry.ErrorBoundary>
+        {state?.backgroundLocation && (
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        )}
+      </Sentry.ErrorBoundary>
+    </div>
   );
 }
 

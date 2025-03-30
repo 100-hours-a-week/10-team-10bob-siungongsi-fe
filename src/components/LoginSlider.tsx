@@ -60,8 +60,9 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
 
       if (permission !== "granted") {
         console.warn("알림 권한이 거부됨");
+      } else if (permission === "granted") {
+        navigate(0);
       }
-      // navigate(location.pathname, { replace: true });
     }
   };
 
