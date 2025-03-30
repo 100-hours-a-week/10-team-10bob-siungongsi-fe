@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface ServiceButtonProps {
   children: ReactNode;
@@ -21,6 +22,7 @@ export const ServiceButton = ({
       window.open(route, "_blank");
     } else {
       navigate(route);
+      toast.error("미구현 기능입니다");
     }
   };
   return (

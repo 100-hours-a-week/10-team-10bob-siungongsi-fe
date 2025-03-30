@@ -13,6 +13,7 @@ import {
   postNotifications,
 } from "../../services/notificationService";
 import { fetchSusbscriptions } from "../../services/usersService";
+import { toast } from "react-toastify";
 
 export const SelectAlarm = () => {
   //추천기업 목록 불러오기
@@ -44,7 +45,6 @@ export const SelectAlarm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [companies, setCompanies] = useState<Companies>();
   const [keyword, setKeyword] = useState<string>("");
-  const [isSearchBarOn, setIsSearchBarOn] = useState<boolean>(false);
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
@@ -103,48 +103,55 @@ export const SelectAlarm = () => {
 
   const onChangeKeyword = (value: string) => {
     setKeyword(value);
-    setIsSearchBarOn(true);
   };
 
   const postNotificationCompany = async (companyId: number, name: string) => {
     try {
-      await postNotifications(companyId, localStorage.getItem("jwtToken"));
-      setSubscriptions((prev) => [
-        ...prev,
-        {
-          companyId,
-          companyName: name, // 필요시 저장된 리스트에서 가져오거나 API 응답 사용
-          companyCode: "",
-          stockCode: 0,
-        },
-      ]);
-      setRecommendList((prev) =>
-        prev.map((item) =>
-          item.companyId === companyId ? { ...item, isSubscribed: true } : item,
-        ),
-      );
+      setIsLoading(true);
+      if (!subscriptions.find((sub) => sub.companyId === companyId)) {
+        await postNotifications(companyId, localStorage.getItem("jwtToken"));
+        setSubscriptions((prev) => [
+          ...prev,
+          {
+            companyId,
+            companyName: name, // 필요시 저장된 리스트에서 가져오거나 API 응답 사용
+            companyCode: "",
+            stockCode: 0,
+          },
+        ]);
+        setRecommendList((prev) =>
+          prev.map((item) =>
+            item.companyId === companyId
+              ? { ...item, isSubscribed: true }
+              : item,
+          ),
+        );
+      } else {
+        toast.error("중복된 기업입니다");
+      }
+
       // await getSubscriptions();
       // getRecommend();
     } catch (error) {
       console.error("구독목록 추가 에러 : ", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
-  const clearSearchBar = () => {
-    setIsSearchBarOn(false);
-    setKeyword("");
   };
 
   const deleteNotificationCompany = async (id: number) => {
     setSubscriptions(subscriptions.filter((sub) => sub.companyId !== id));
     await deleteNotifications(id, localStorage.getItem("jwtToken"));
-    getRecommend();
+    setRecommendList((prev) =>
+      prev.map((item) =>
+        item.companyId === id ? { ...item, isSubscribed: false } : item,
+      ),
+    );
   };
   const subscribeHandler = (id: number, isSubscribe: boolean, name: string) => {
-    try {
-      !isSubscribe
-        ? postNotificationCompany(id, name)
-        : deleteNotificationCompany(id);
-    } catch (error) {}
+    !isSubscribe
+      ? postNotificationCompany(id, name)
+      : deleteNotificationCompany(id);
   };
 
   return (
@@ -196,6 +203,7 @@ export const SelectAlarm = () => {
           <RecommendList
             company={company}
             subscribeHandler={subscribeHandler}
+            isLoading={isLoading}
           />
         ))}
       </div>

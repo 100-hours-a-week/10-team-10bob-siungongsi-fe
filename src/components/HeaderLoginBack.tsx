@@ -26,13 +26,13 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
       {token ? (
         <button
           onClick={logout}
-          className="bg-primary text-white p-2 rounded-lg border border-white"
+          className="bg-primary text-white p-1 px-2 rounded-lg border border-white"
         >
           로그아웃
         </button>
       ) : (
         <button
-          className="bg-white p-2 rounded-lg text-primary"
+          className="bg-white p-1 px-2 rounded-lg text-primary"
           onClick={openLoginModal}
         >
           로그인

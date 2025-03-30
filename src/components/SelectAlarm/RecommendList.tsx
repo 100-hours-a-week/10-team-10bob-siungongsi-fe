@@ -6,10 +6,12 @@ interface RecommendListProps {
     subscriberCnt: number;
   };
   subscribeHandler: (id: number, isSubscribe: boolean, name: string) => void;
+  isLoading: boolean;
 }
 export const RecommendList = ({
   company,
   subscribeHandler,
+  isLoading,
 }: RecommendListProps) => {
   return (
     <div className="flex justify-between items-center p-4 border my-4 rounded-xl">
@@ -20,6 +22,7 @@ export const RecommendList = ({
         </div>
       </div>
       <div
+        aria-disabled={isLoading} // 중복 요청 방지
         onClick={() =>
           subscribeHandler(
             company.companyId,

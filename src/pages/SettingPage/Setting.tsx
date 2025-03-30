@@ -31,11 +31,6 @@ export const SettingPage = () => {
     closeModal: () => {},
     onSubmit: () => {},
   });
-  useEffect(() => {
-    setPermission(Notification.permission);
-    setIsNotificationEnabled(Notification.permission === "granted");
-    sendTokenToServer();
-  }, [isNotificationEnabled]);
   const sendTokenToServer = async () => {
     try {
       if (isNotificationEnabled) {
@@ -52,6 +47,12 @@ export const SettingPage = () => {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }
   };
+  useEffect(() => {
+    setPermission(Notification.permission);
+    setIsNotificationEnabled(Notification.permission === "granted");
+    sendTokenToServer();
+  }, [isNotificationEnabled]);
+
   const handleToggle = async () => {
     if (permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
@@ -154,7 +155,7 @@ export const SettingPage = () => {
                   logout,
                 )
               }
-              className="text-red-500 text-lg font-semibold py-4 border-b"
+              className="text-red-500 text-lg font-semibold py-4 border-b cursor-pointer"
             >
               로그아웃
             </div>
@@ -170,7 +171,7 @@ export const SettingPage = () => {
                   userWithDrawFunction,
                 )
               }
-              className="text-gray-400 text-lg font-medium py-4"
+              className="text-gray-400 text-lg font-medium py-4 cursor-pointer"
             >
               회원 탈퇴
             </div>

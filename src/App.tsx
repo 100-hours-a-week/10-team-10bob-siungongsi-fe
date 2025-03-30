@@ -17,6 +17,8 @@ import { SettingPage } from "./pages/SettingPage/Setting";
 import { GongsiDetail } from "./pages/GongsiDetail/GongsiDetail";
 import { LoginSlider } from "./components/LoginSlider";
 import LoginPage from "./components/LoginPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const location = useLocation();
@@ -26,6 +28,14 @@ function App() {
     <Sentry.ErrorBoundary
       fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
     >
+      <ToastContainer
+        position="bottom-center"
+        autoClose={1000} // 3초 후 자동 닫힘
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+      />
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<Main />} />
         <Route path="/search" element={<GongsiSearch />} />
