@@ -189,7 +189,7 @@ export const SelectAlarm = () => {
       <div className="flex my-2 gap-2 flex-wrap mb-4">
         {subscriptions.map((sub, idx) => (
           <Badge
-            key={idx}
+            key={sub.companyId}
             name={sub.companyName}
             id={sub.companyId}
             onDeleteBadge={deleteNotificationCompany}
@@ -201,6 +201,7 @@ export const SelectAlarm = () => {
         <div className="font-bold">이런 기업은 어때요?</div>
         {recommendList.map((company) => (
           <RecommendList
+            key={company.companyId}
             company={company}
             subscribeHandler={subscribeHandler}
             isLoading={isLoading}

@@ -25,7 +25,7 @@ function App() {
   const state = location.state as { backgroundLocation?: Location };
 
   return (
-    <div className="w-full max-w-sm mx-auto">
+    <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
       <Sentry.ErrorBoundary
         fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
       >
