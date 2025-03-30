@@ -33,7 +33,7 @@ export const RecommendList = ({
         className="cursor-pointer transition-all ease-in-out duration-300"
       >
         <svg
-          className={`w-6 h-6 transition-color duration-300 ease-in-out hover:opacity-60 ${company.isSubscribed ? "text-primary" : "text-gray-500"}`}
+          className={`w-6 h-6 transition-color duration-300 ease-in-out ${company.isSubscribed ? "text-primary" : "text-gray-500"}`}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

@@ -108,15 +108,13 @@ export const Main = () => {
             <SectionTitle>오늘 올라온 공시</SectionTitle>
           </div>
           {length > 0 ? (
-            todayGongsi?.gongsiList
-              .slice(0, 5)
-              .map((gongsiTitle) => (
-                <GongsiList
-                  gongsiTitle={gongsiTitle.gongsiTitle}
-                  gongsiCompany={gongsiTitle.companyName}
-                  gongsiId={gongsiTitle.gongsiId}
-                />
-              ))
+            todayGongsi?.gongsiList.map((gongsiTitle) => (
+              <GongsiList
+                gongsiTitle={gongsiTitle.gongsiTitle}
+                gongsiCompany={gongsiTitle.companyName}
+                gongsiId={gongsiTitle.gongsiId}
+              />
+            ))
           ) : (
             <div className="flex items-center w-full h-[300px] border-t border-b">
               <p className="w-full text-center">오늘 올라온 공시가 없습니다.</p>
