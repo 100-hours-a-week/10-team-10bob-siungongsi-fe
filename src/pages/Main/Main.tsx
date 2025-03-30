@@ -81,7 +81,7 @@ export const Main = () => {
       <div className="my-4">
         <SectionTitle>오늘의 핫이슈</SectionTitle>
       </div>
-      <section className="mb-12">
+      <section className="flex justify-center mb-12">
         <NewsSlider GongsiData={popularGongsiList} />
       </section>
 
