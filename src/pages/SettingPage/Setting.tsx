@@ -125,7 +125,7 @@ export const SettingPage = () => {
         <div className="max-w-md mx-auto p-4 bg-white">
           {/* 알림 허용 토글 */}
           <div className="border-b">
-            <div className="flex items-center justify-between py-4">
+            <div className="flex items-center justify-between py-4 mb-4">
               <span className="text-lg font-medium">알림 허용</span>
               <button
                 onClick={handleToggle}

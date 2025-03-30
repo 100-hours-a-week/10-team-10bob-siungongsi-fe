@@ -170,7 +170,7 @@ export const SelectAlarm = () => {
           }
           transition={{ duration: 0.2 }}
         >
-          <div>알림받고 싶은 기업을 선택해주세요</div>
+          <div className="mb-2">알림받고 싶은 기업을 선택해주세요</div>
           <div className={`${subscriptions.length >= 10 && "text-primary"}`}>
             ({subscriptions.length}/10)
           </div>
@@ -186,7 +186,7 @@ export const SelectAlarm = () => {
       />
 
       {/* 배지추가되는부분 */}
-      <div className="flex my-2 gap-2 flex-wrap">
+      <div className="flex my-2 gap-2 flex-wrap mb-4">
         {subscriptions.map((sub, idx) => (
           <Badge
             key={idx}
@@ -198,7 +198,7 @@ export const SelectAlarm = () => {
       </div>
       {/* 이런기업은 어떄요 */}
       <div>
-        <div>이런 기업은 어때요?</div>
+        <div className="font-bold">이런 기업은 어때요?</div>
         {recommendList.map((company) => (
           <RecommendList
             company={company}
