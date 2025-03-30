@@ -107,59 +107,61 @@ export const GongsiSearch = () => {
   return (
     <div>
       <HeaderLogin isLogin={false} />
-      <div className="mt-4 p-2">
-        {/* <SearchBar onSelect={() => null} isDisabled={false} /> */}
-        <SearchBar
-          keyword={keyword}
-          onChangeKeyword={onChangeKeyword}
-          companies={companies?.companyNameList}
-          isLoading={isLoading}
-          onSelectCompany={onSelectCompany}
-        />
-      </div>
-      <div className="flex py-2 justify-between items-center border-b">
-        <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
-        <div className="flex flex-col items-end">
-          <div
-            className="border border-primary rounded-lg p-1 text-sm text-primary cursor-pointer"
-            onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
-          >
-            {startDate ? (
-              <div className="flex gap-2 ">
-                {startDate} ~ {endDate}
-                <svg
-                  className="w-4 text-primary dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
-                </svg>
-              </div>
-            ) : (
-              "전체조회"
-            )}
+      <div className="p-2">
+        <div className="mt-4">
+          {/* <SearchBar onSelect={() => null} isDisabled={false} /> */}
+          <SearchBar
+            keyword={keyword}
+            onChangeKeyword={onChangeKeyword}
+            companies={companies?.companyNameList}
+            isLoading={isLoading}
+            onSelectCompany={onSelectCompany}
+          />
+        </div>
+        <div className="flex py-2 justify-between items-center border-b">
+          <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
+          <div className="flex flex-col items-end">
+            <div
+              className="border border-primary rounded-lg p-1 text-sm text-primary cursor-pointer"
+              onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
+            >
+              {startDate ? (
+                <div className="flex gap-2 ">
+                  {startDate} ~ {endDate}
+                  <svg
+                    className="w-4 text-primary dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
+                  </svg>
+                </div>
+              ) : (
+                "전체조회"
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      {/* 공시목록 */}
-      <div>
-        <GongsiPagination
-          filterMenu={filterMenu}
-          startDate={startDate}
-          endDate={endDate}
-          selectedCompany={selectedCompany}
-        />
-      </div>
-      <div className="flex justify-center">
-        {isCalendarModalOn && (
-          <Calendar
-            onSubmitDate={onSubmitDate}
-            clearDate={clearDate}
-            clearModal={clearModal}
+        {/* 공시목록 */}
+        <div>
+          <GongsiPagination
+            filterMenu={filterMenu}
+            startDate={startDate}
+            endDate={endDate}
+            selectedCompany={selectedCompany}
           />
-        )}
+        </div>
+        <div className="flex justify-center">
+          {isCalendarModalOn && (
+            <Calendar
+              onSubmitDate={onSubmitDate}
+              clearDate={clearDate}
+              clearModal={clearModal}
+            />
+          )}
+        </div>
       </div>
       <BottomNavigation />
     </div>

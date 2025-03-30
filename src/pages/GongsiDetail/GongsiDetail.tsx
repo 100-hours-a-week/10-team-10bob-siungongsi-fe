@@ -116,8 +116,8 @@ export const GongsiDetail = () => {
     <div className="">
       <HeaderLoginBack isLogin={false} />
       {!isLoading ? (
-        <div className="">
-          <div className="p-2">
+        <div className="p-2">
+          <div className="">
             <div className="my-4 text-2xl font-bold">
               {gongsiInfo?.gongsi.title}
             </div>

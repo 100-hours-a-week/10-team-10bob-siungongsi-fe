@@ -18,9 +18,9 @@ export const SearchBar = ({
 }: SearchBarProps) => {
   const [isSearchBarOn, setIsSearchBarOn] = useState(false);
   return (
-    <div>
+    <div className="relative w-full max-w-sm mx-auto">
       <input
-        className={`w-full max-w-[350px] border p-2 placeholder-gray-400 ${isSearchBarOn ? "rounded-tl-lg rounded-tr-lg" : "rounded-lg"}`}
+        className={`w-full max-w-sm border p-2 placeholder-gray-400 ${isSearchBarOn ? "rounded-tl-lg rounded-tr-lg" : "rounded-lg"}`}
         value={keyword}
         onChange={(e) => {
           if (e.target.value !== "") {
@@ -35,7 +35,7 @@ export const SearchBar = ({
       ></input>
       {isSearchBarOn && (
         <div
-          className={`absolute bg-white w-full max-w-[335px] rounded-br-lg rounded-bl-lg border${keyword ? "" : "hidden"}`}
+          className={`absolute bg-white p-1 w-full max-w-sm mx-auto rounded-br-lg rounded-bl-lg border${keyword ? "" : "hidden"}`}
         >
           {keyword && (
             <>
@@ -49,7 +49,7 @@ export const SearchBar = ({
                         setIsSearchBarOn(false);
                       }}
                       key={company.companyName} // 🔹 key 추가
-                      className="p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
+                      className="w-full max-w-sm p-1 transition ease-in-out hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
                     >
                       {company.companyName}
                     </div>
