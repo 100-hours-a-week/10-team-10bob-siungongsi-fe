@@ -8,7 +8,7 @@ type Props = {
 export const Badge = ({ name, onDeleteBadge, id }: Props) => {
   return (
     <div className="">
-      <div className="flex gap-2 border py-1 px-2 rounded-xl items-center">
+      <div className="flex gap-1 border border-primary py-1 px-3 rounded-xl items-center">
         <div>{name}</div>
         <div className="cursor-pointer" onClick={() => onDeleteBadge(id)}>
           <Close />
