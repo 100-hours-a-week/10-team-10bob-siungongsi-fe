@@ -46,17 +46,19 @@ export const SettingPage = () => {
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }
-  }, [permission]);
-  useEffect(() => {
-    setPermission(Notification.permission);
-    if (permission === "default" || permission === "denied") {
-      setIsNotificationEnabled(false);
-    } else {
-      setIsNotificationEnabled(true);
-    }
+  }, [isNotificationEnabled]);
+  // useEffect(() => {
+  //   setPermission(Notification.permission);
+  //   if (permission === 'default' || permission === 'denied') {
+  //     console.log('denied');
+  //     setIsNotificationEnabled(false);
+  //   } else {
+  //     console.log('access');
+  //     setIsNotificationEnabled(true);
+  //   }
 
-    sendTokenToServer();
-  }, [sendTokenToServer]);
+  //   sendTokenToServer();
+  // }, [sendTokenToServer]);
 
   const handleToggle = async () => {
     if (permission === "granted") {
