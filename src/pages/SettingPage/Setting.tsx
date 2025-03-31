@@ -61,12 +61,15 @@ export const SettingPage = () => {
   // }, [sendTokenToServer]);
 
   useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     const handleFocus = () => {
-      window.location.reload(); // 🔄 페이지 새로고침
+      if (isMobile) {
+        window.location.reload(); // 📱 모바일일 때만 새로고침
+      }
     };
 
     window.addEventListener("focus", handleFocus);
-
     return () => {
       window.removeEventListener("focus", handleFocus);
     };
