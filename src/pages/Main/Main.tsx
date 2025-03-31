@@ -110,6 +110,7 @@ export const Main = () => {
           {length > 0 ? (
             todayGongsi?.gongsiList.map((gongsiTitle) => (
               <GongsiList
+                key={gongsiTitle.gongsiId}
                 gongsiTitle={gongsiTitle.gongsiTitle}
                 gongsiCompany={gongsiTitle.companyName}
                 gongsiId={gongsiTitle.gongsiId}

@@ -49,7 +49,11 @@ export const SettingPage = () => {
   }, [isNotificationEnabled]);
   useEffect(() => {
     setPermission(Notification.permission);
-    setIsNotificationEnabled(Notification.permission === "granted");
+    if (permission === "default" || permission === "denied") {
+      setIsNotificationEnabled(false);
+    } else {
+      setIsNotificationEnabled(true);
+    }
 
     sendTokenToServer();
   }, [sendTokenToServer]);
