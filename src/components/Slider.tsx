@@ -10,15 +10,18 @@ interface NewsSliderProps {
 export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   const variants = {
     enter: (direction: number) => ({
+      y: -30,
       x: direction > 0 ? 400 : -400,
       opacity: 0,
     }),
     center: {
-      x: -30,
+      x: -33,
+      y: -30,
       opacity: 1,
     },
     exit: (direction: number) => ({
       x: direction > 0 ? -400 : 400,
+      y: -30,
       opacity: 0,
     }),
   };
@@ -46,12 +49,14 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
 
   // 수동으로 슬라이드 변경
   const prevSlide = () => {
+    setDirections(-1);
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? length - 1 : prevIndex - 1,
     );
   };
 
   const nextSlide = () => {
+    setDirections(1);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % length);
   };
   const setIndicator = (index: number) => {
@@ -76,36 +81,39 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
           {...handlers}
           className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg cursor-pointer"
         >
-          {/* <AnimatePresence initial={false}>
+          <AnimatePresence initial={false}>
             <motion.div
               key={currentIndex}
-              drag='x'
+              drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={handleDragEnd}
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: -20, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              custom={direction}
               variants={variants}
-              className='absolute flex flex-col justify-center w-full h-full'
-            > */}
-          {/* 기사 내용 */}
-          <h2 className="text-lg font-bold mb-1 line-clamp-1">
-            {GongsiData?.gongsiList[currentIndex].gongsiTitle}
-          </h2>
-          <div className="flex justify-between">
-            <p className="text-sm text-gray-500">
-              {GongsiData?.gongsiList[currentIndex].companyName}
-            </p>
-            <p className="text-xs text-gray-400">
-              {GongsiData?.gongsiList[
-                currentIndex
-              ].publishedDatetime.toString()}
-            </p>
-          </div>
-          <div className="mt-2 text-sm line-clamp-6">
-            {GongsiData?.gongsiList[currentIndex].content}
-          </div>
+              onDragEnd={handleDragEnd}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute p-8 flex flex-col justify-center w-full h-full"
+            >
+              {/* 기사 내용 */}
+              <h2 className="text-lg font-bold mb-1 line-clamp-1">
+                {GongsiData?.gongsiList[currentIndex].gongsiTitle}
+              </h2>
+              <div className="flex justify-between">
+                <p className="text-sm text-gray-500">
+                  {GongsiData?.gongsiList[currentIndex].companyName}
+                </p>
+                <p className="text-xs text-gray-400">
+                  {GongsiData?.gongsiList[
+                    currentIndex
+                  ].publishedDatetime.toString()}
+                </p>
+              </div>
+              <div className="mt-2 text-sm line-clamp-6">
+                {GongsiData?.gongsiList[currentIndex].content}
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           <svg
             className="w-6 h-6 text-gray-800/10 dark:text-white absolute left-2 top-1/2 transform -translate-y-1/2 p-1 cursor-pointer"
@@ -145,8 +153,6 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
               d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"
             />
           </svg>
-          {/* </motion.div>
-          </AnimatePresence> */}
         </div>
       ) : (
         <div className="flex justify-center items-center max-w-[400px] h-[262px] overflow-y-hidden mx-auto p-8 border rounded-lg shadow-lg text-center align-middle">
