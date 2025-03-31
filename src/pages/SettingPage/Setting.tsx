@@ -59,6 +59,19 @@ export const SettingPage = () => {
 
   //   sendTokenToServer();
   // }, [sendTokenToServer]);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      window.location.reload(); // 🔄 페이지 새로고침
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
   const handleToggle = async () => {
     if (permission === "granted") {
