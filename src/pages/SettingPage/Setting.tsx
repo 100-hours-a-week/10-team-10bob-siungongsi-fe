@@ -59,12 +59,12 @@ export const SettingPage = () => {
 
   //   sendTokenToServer();
   // }, [sendTokenToServer]);
-
+  const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
   const handleToggle = async () => {
     if (permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
 
-      alert("브라우저 설정에서 직접 알림을 해제해야 합니다.");
+      setSubscribeOn((prev) => !prev);
       return;
     }
 
@@ -80,7 +80,7 @@ export const SettingPage = () => {
 
     if (newPermission === "granted") {
       // Firebase 푸시 토큰 요청
-
+      setSubscribeOn(true);
       setIsNotificationEnabled(true);
       sendTokenToServer();
     }
@@ -133,8 +133,10 @@ export const SettingPage = () => {
           {/* 알림 허용 토글 */}
           <div className="border-b">
             <div className="flex items-center justify-between py-4 mb-4">
-              <span className="text-lg font-medium">알림 허용</span>
-              <button
+              <span onClick={handleToggle} className="text-lg font-medium">
+                알림 허용
+              </span>
+              {/* <button
                 onClick={handleToggle}
                 className={`relative w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
                   isNotificationEnabled ? "bg-blue-500" : "bg-gray-300"
@@ -145,9 +147,9 @@ export const SettingPage = () => {
                     isNotificationEnabled ? "translate-x-6" : "translate-x-0"
                   }`}
                 />
-              </button>
+              </button> */}
             </div>
-            {isNotificationEnabled && <SelectAlarm />}
+            {isNotificationEnabled && subscribeOn && <SelectAlarm />}
           </div>
 
           <div className="flex flex-col ">
