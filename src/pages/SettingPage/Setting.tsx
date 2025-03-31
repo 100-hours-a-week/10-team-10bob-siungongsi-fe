@@ -46,7 +46,7 @@ export const SettingPage = () => {
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }
-  }, [isNotificationEnabled]);
+  }, [permission]);
   useEffect(() => {
     setPermission(Notification.permission);
     if (permission === "default" || permission === "denied") {
