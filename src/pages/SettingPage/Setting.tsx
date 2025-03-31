@@ -9,6 +9,7 @@ import { SelectAlarm } from "../../components/SelectAlarm/SelectAlarm";
 import { userWithdraw } from "../../services/authService";
 import { patchUserNotificationInfo } from "../../services/usersService";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ScrollDown } from "../../components/Icons/ScrollDown";
 
 export const SettingPage = () => {
   const navigate = useNavigate();
@@ -148,10 +149,16 @@ export const SettingPage = () => {
         <div className="max-w-md mx-auto p-4 bg-white">
           {/* 알림 허용 토글 */}
           <div className="border-b">
-            <div className="flex items-center justify-between py-4 mb-4">
-              <span onClick={handleToggle} className="text-lg font-medium">
-                알림 허용
-              </span>
+            <div
+              onClick={handleToggle}
+              className="flex items-center justify-between py-2 mb-2 cursor-pointer"
+            >
+              <span className="text-lg font-medium ">알림 기업 설정</span>
+              <div
+                className={`transform transition-transform duration-300 ${subscribeOn ? "rotate-180" : "rotate-0"}`}
+              >
+                <ScrollDown />
+              </div>
               {/* <button
                 onClick={handleToggle}
                 className={`relative w-12 h-6 flex items-center rounded-full p-1 transition-colors ${

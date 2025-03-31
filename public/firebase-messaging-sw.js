@@ -1,5 +1,7 @@
 // public/firebase-messaging-sw.js
 
+const { url } = require('inspector');
+
 // eslint-disable-next-line no-undef
 importScripts(
   'https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js'
@@ -30,6 +32,7 @@ messaging.onBackgroundMessage((payload) => {
   // eslint-disable-next-line no-restricted-globals
   self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
+
     icon: '/logo192.png', // 알림 아이콘 (public 폴더에 있는 이미지 사용 가능)
   });
 });
