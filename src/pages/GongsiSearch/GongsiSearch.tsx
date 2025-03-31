@@ -43,21 +43,30 @@ export const GongsiSearch = () => {
   // }, [filterMenu]);
 
   useEffect(() => {
+    if (!keyword) return;
+
+    const controller = new AbortController(); // ✅ 새 컨트롤러 생성
+    const signal = controller.signal;
+
     const getCompaniesName = async () => {
       setIsLoading(true);
       try {
-        const response = await fetchCompanyNameList(keyword);
+        const response = await fetchCompanyNameList(keyword, signal);
         setCompanies(response.data);
-        setIsLoading(true);
-      } catch (error) {
-        console.error("검색자동완성 에러 : ", error);
+      } catch (error: any) {
+        if (error.name !== "CanceledError") {
+          console.error("검색자동완성 에러 : ", error);
+        }
       } finally {
         setIsLoading(false);
       }
     };
-    if (keyword !== "") {
-      getCompaniesName();
-    }
+
+    getCompaniesName();
+
+    return () => {
+      controller.abort(); // ✅ 이전 요청 취소
+    };
   }, [keyword]);
 
   const onChangeKeyword = (value: string) => {

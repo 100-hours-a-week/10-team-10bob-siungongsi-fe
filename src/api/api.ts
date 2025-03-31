@@ -29,7 +29,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API 요청 오류:", error);
     return Promise.reject(error);
   },
 );

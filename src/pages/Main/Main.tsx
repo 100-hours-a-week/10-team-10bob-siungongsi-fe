@@ -141,7 +141,7 @@ export const Main = () => {
                 route="https://dart.fss.or.kr/main.do"
                 imgSrc="./images/exit.png"
               >
-                OpenDart<br></br>이동하기
+                DART<br></br>바로가기
               </ServiceButton>
             )}
 

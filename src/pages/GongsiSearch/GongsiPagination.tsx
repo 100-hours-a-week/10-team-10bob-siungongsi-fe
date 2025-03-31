@@ -128,14 +128,16 @@ export const GongsiPagination = ({
           </div>
         )}
       </ul>
-      <div className="flex justify-center mt-4 space-x-5">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1 || isLoading}
-          className={`px-3 py-1 ${currentPage === 1 || isLoading ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
-        >
-          {"<"}
-        </button>
+      <div className="flex justify-center mt-4 gap-6">
+        <div className="flex items-center">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1 || isLoading}
+            className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === 1 || isLoading ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
+          >
+            {"<"}
+          </button>
+        </div>
 
         {/* ⭐ 현재 그룹의 페이지 버튼 */}
         {Array.from(
@@ -145,7 +147,7 @@ export const GongsiPagination = ({
               key={currentGroupStart + index}
               disabled={isLoading}
               onClick={() => setCurrentPage(currentGroupStart + index)}
-              className={`px-3 ${currentPage === currentGroupStart + index ? "bg-blue-500 text-white rounded-lg" : "hover:bg-gray-100"} ${
+              className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === currentGroupStart + index ? "bg-blue-500 text-white rounded-lg" : "hover:bg-gray-100"} ${
                 isLoading ? "text-gray-400 border-gray-300" : ""
               }`}
             >
@@ -164,7 +166,7 @@ export const GongsiPagination = ({
             isLoading ||
             gongsiData?.gongsiListSize === 0
           }
-          className={`px-3 py-1 ${currentPage === totalPages || isLoading || gongsiData?.gongsiListSize === 0 ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
+          className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === totalPages || isLoading || gongsiData?.gongsiListSize === 0 ? "text-gray-400 border-gray-300" : "hover:bg-gray-100"} ${gongsiData?.gongsiListSize === 0 && "hidden"}`}
         >
           {">"}
         </button>

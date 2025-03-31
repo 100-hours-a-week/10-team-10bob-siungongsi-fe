@@ -16,14 +16,21 @@ export type Company = {
 const apiKey = process.env.REACT_APP_API_URL;
 export const fetchCompanyNameList = async (
   keyword: string,
+  signal?: AbortSignal,
 ): Promise<APIData> => {
   try {
     const response = await api.get<APIData>(
       `${apiKey}companies/name?keyword=${keyword}`,
+      { signal },
     );
     return response.data;
-  } catch (error) {
-    console.error("기업명 자동완성 목록 불러오기 에러: ", error);
+  } catch (error: any) {
+    if (error.name === "CanceledError") {
+      console.log("요청 취소됨");
+    } else {
+      console.error("기업명 자동완성 목록 불러오기 에러: ", error);
+    }
+
     throw error;
   }
 };

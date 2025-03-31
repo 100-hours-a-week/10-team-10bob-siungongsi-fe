@@ -38,11 +38,9 @@ export const GongsiDetail = () => {
             localStorage.getItem("jwtToken"),
           );
           setGongsiInfo(data.data);
-          console.log(data.data);
         } else {
           const data = await fetchGongsiDetail(Number(id), null);
           setGongsiInfo(data.data);
-          console.log(data.data);
         }
       } catch (error) {
         console.error("공시 상세보기 에러 : ", error);

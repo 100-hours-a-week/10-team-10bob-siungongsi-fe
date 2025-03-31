@@ -70,14 +70,18 @@ export const SelectAlarm = () => {
 
   //자동완성 불러오기
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const getCompaniesName = async () => {
       setIsLoading(true);
       try {
-        const response = await fetchCompanyNameList(keyword);
+        const response = await fetchCompanyNameList(keyword, signal);
         setCompanies(response.data);
-        setIsLoading(true);
-      } catch (error) {
-        console.error("검색자동완성 에러 : ", error);
+      } catch (error: any) {
+        if (error.name !== "CanceledError") {
+          console.error("검색자동완성 에러 : ", error);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -85,6 +89,9 @@ export const SelectAlarm = () => {
     if (keyword) {
       getCompaniesName();
     }
+    return () => {
+      controller.abort();
+    };
   }, [keyword]);
 
   //현재 알림받고있는 기업들 불러오기

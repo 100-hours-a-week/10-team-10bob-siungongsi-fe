@@ -2,12 +2,28 @@ import { useState, useEffect } from "react";
 import { GongsiData } from "../services/gongsiService";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NewsSliderProps {
   GongsiData: GongsiData | undefined;
 }
 export default function NewsSlider({ GongsiData }: NewsSliderProps) {
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 400 : -400,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -400 : 400,
+      opacity: 0,
+    }),
+  };
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirections] = useState(0);
   const length = GongsiData?.gongsiList?.length || 1;
   const navigate = useNavigate();
 
@@ -51,6 +67,20 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
           {...handlers}
           className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg cursor-pointer"
         >
+          {/* <AnimatePresence custom={direction}>
+            <motion.div
+              key={currentIndex}
+              custom={direction}
+              variants={variants}
+              initial='enter'
+              animate='center'
+              exit='exit'
+              transition={{
+                x: { type: 'spring', stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              className='absolute w-full'
+            > */}
           {/* 기사 내용 */}
           <h2 className="text-lg font-bold mb-1 line-clamp-1">
             {GongsiData?.gongsiList[currentIndex].gongsiTitle}
@@ -107,6 +137,8 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
               d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"
             />
           </svg>
+          {/* </motion.div>
+          </AnimatePresence> */}
         </div>
       ) : (
         <div className="flex justify-center items-center max-w-[400px] h-[262px] overflow-y-hidden mx-auto p-8 border rounded-lg shadow-lg text-center align-middle">
