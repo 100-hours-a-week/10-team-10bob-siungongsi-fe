@@ -72,10 +72,10 @@ export const Main = () => {
         .replace(".", "");
     }
   };
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  // const twoDaysAgo = new Date();
+  // twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-  const today = formatDate(twoDaysAgo)?.toString(); // 현재 날짜
+  const today = formatDate(new Date())?.toString(); // 현재 날짜
 
   return (
     <div>
