@@ -40,6 +40,7 @@ export const SettingPage = () => {
 
   const sendTokenToServer = async (notiEnabled: boolean) => {
     try {
+      console.log(notiEnabled);
       if (notiEnabled) {
         const token = await getPushToken();
         await patchUserNotificationInfo(
@@ -48,9 +49,17 @@ export const SettingPage = () => {
           localStorage.getItem("jwtToken"),
         );
         console.log("✅ FCM 토큰 서버에 전송 완료");
+      } else {
+        await patchUserNotificationInfo(
+          notiEnabled,
+          "",
+          localStorage.getItem("jwtToken"),
+        );
       }
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
+    } finally {
+      fetchNotiInfo();
     }
   };
 
@@ -79,33 +88,30 @@ export const SettingPage = () => {
     console.log(data);
   };
   const handleToggle = async () => {
+    setPermission(Notification.permission);
     if (permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
       setIsNotificationEnabled(true);
       sendTokenToServer(isNotificationEnabled);
       setSubscribeOn((prev) => !prev);
       return;
-    }
-
-    if (permission === "denied") {
+    } else if (permission === "denied") {
       setIsNotificationEnabled(false);
       sendTokenToServer(isNotificationEnabled);
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
       return;
+    } else {
+      const newPermission = await Notification.requestPermission();
+      setPermission(newPermission);
+      if (newPermission === "granted") {
+        // Firebase 푸시 토큰 요청
+        setSubscribeOn(true);
+        setIsNotificationEnabled(true);
+        sendTokenToServer(isNotificationEnabled);
+      }
     }
 
     // 사용자가 알림 권한을 요청
-    const newPermission = await Notification.requestPermission();
-    setPermission(newPermission);
-
-    if (newPermission === "granted") {
-      // Firebase 푸시 토큰 요청
-      setSubscribeOn(true);
-      setIsNotificationEnabled(true);
-      sendTokenToServer(isNotificationEnabled);
-    }
-
-    fetchNotiInfo();
   };
   //모달 내 내용 설정
   const onModal = (

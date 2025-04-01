@@ -16,7 +16,9 @@ export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
 
-  const [isNotificationEnabled, setIsNotificationEnabled] = useState();
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState<
+    boolean | undefined
+  >();
 
   useNotificationToken(localStorage.getItem("jwtToken"), isNotificationEnabled);
 
@@ -58,6 +60,9 @@ export const Main = () => {
     } catch (error) {
       console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
     }
+  }, []);
+  useEffect(() => {
+    setIsNotificationEnabled(Notification.permission === "granted");
   }, []);
   const navigate = useNavigate();
 
