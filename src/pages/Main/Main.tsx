@@ -164,6 +164,7 @@ export const Main = () => {
         </section>
       </div>
       <BottomNavigation />
+      <div></div>
     </div>
   );
 };
