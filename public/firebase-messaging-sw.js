@@ -1,7 +1,5 @@
 // public/firebase-messaging-sw.js
 
-const { url } = require('inspector');
-
 // eslint-disable-next-line no-undef
 importScripts(
   'https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js'

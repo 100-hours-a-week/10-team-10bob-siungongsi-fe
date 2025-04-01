@@ -85,7 +85,7 @@ export const Main = () => {
   const today = formatDate(new Date())?.toString(); // 현재 날짜
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#FAFAFA]">
       <HeaderLogin isLogin={false} />
       <div className="p-2">
         <div className="my-4">
@@ -114,20 +114,24 @@ export const Main = () => {
             </svg>
             <SectionTitle>오늘 올라온 공시</SectionTitle>
           </div>
-          {length > 0 ? (
-            todayGongsi?.gongsiList.map((gongsiTitle) => (
-              <GongsiList
-                key={gongsiTitle.gongsiId}
-                gongsiTitle={gongsiTitle.gongsiTitle}
-                gongsiCompany={gongsiTitle.companyName}
-                gongsiId={gongsiTitle.gongsiId}
-              />
-            ))
-          ) : (
-            <div className="flex items-center w-full h-[300px] border-t border-b">
-              <p className="w-full text-center">오늘 올라온 공시가 없습니다.</p>
-            </div>
-          )}
+          <div className="border-t">
+            {length > 0 ? (
+              todayGongsi?.gongsiList.map((gongsiTitle) => (
+                <GongsiList
+                  key={gongsiTitle.gongsiId}
+                  gongsiTitle={gongsiTitle.gongsiTitle}
+                  gongsiCompany={gongsiTitle.companyName}
+                  gongsiId={gongsiTitle.gongsiId}
+                />
+              ))
+            ) : (
+              <div className="flex items-center w-full h-[300px] border-b">
+                <p className="w-full text-center">
+                  오늘 올라온 공시가 없습니다.
+                </p>
+              </div>
+            )}
+          </div>
           <div className="flex justify-end">
             <div
               onClick={() => navigate("/search")}
