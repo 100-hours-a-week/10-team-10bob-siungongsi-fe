@@ -14,6 +14,7 @@ export type Company = {
 };
 
 const apiKey = process.env.REACT_APP_API_URL;
+//공시 자동검색
 export const fetchCompanyNameList = async (
   keyword: string,
   signal?: AbortSignal,

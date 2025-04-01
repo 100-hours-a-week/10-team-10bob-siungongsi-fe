@@ -113,10 +113,16 @@ export const SelectAlarm = () => {
   };
 
   const postNotificationCompany = async (companyId: number, name: string) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     try {
       setIsLoading(true);
       if (!subscriptions.find((sub) => sub.companyId === companyId)) {
-        await postNotifications(companyId, localStorage.getItem("jwtToken"));
+        await postNotifications(
+          companyId,
+          localStorage.getItem("jwtToken"),
+          signal,
+        );
         setSubscriptions((prev) => [
           ...prev,
           {
@@ -139,21 +145,40 @@ export const SelectAlarm = () => {
 
       // await getSubscriptions();
       // getRecommend();
-    } catch (error) {
-      console.error("구독목록 추가 에러 : ", error);
+    } catch (error: any) {
+      if (error.name !== "CanceledError") {
+        console.error("구독목록 추가 에러 : ", error);
+      }
     } finally {
       setIsLoading(false);
     }
+    return () => {
+      controller.abort();
+    };
   };
 
   const deleteNotificationCompany = async (id: number) => {
     setSubscriptions(subscriptions.filter((sub) => sub.companyId !== id));
-    await deleteNotifications(id, localStorage.getItem("jwtToken"));
-    setRecommendList((prev) =>
-      prev.map((item) =>
-        item.companyId === id ? { ...item, isSubscribed: false } : item,
-      ),
-    );
+    const controller = new AbortController();
+    const signal = controller.signal;
+    try {
+      setIsLoading(true);
+      await deleteNotifications(id, localStorage.getItem("jwtToken"), signal);
+      setRecommendList((prev) =>
+        prev.map((item) =>
+          item.companyId === id ? { ...item, isSubscribed: false } : item,
+        ),
+      );
+    } catch (error: any) {
+      if (error !== "CanceledError") {
+        console.error("구독목록 삭제 에러 : ", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+    return () => {
+      controller.abort();
+    };
   };
   const subscribeHandler = (id: number, isSubscribe: boolean, name: string) => {
     !isSubscribe

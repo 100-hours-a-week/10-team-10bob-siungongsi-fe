@@ -15,7 +15,7 @@ export const GongsiList = ({
   return (
     <div
       onClick={() => navigate(`/detail/${gongsiId}`)}
-      className="flex max-h-[70px] flex-col gap-2 border-t border-b p-2 cursor-pointer"
+      className="flex max-h-[70px] flex-col gap-2 border-b p-2 cursor-pointer"
     >
       <div className="w-full text-md font-bold overflow-hidden text-ellipsis whitespace-nowrap">
         {gongsiTitle}

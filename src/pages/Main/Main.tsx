@@ -16,7 +16,11 @@ export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
 
-  useNotificationToken(localStorage.getItem("jwtToken"));
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState<
+    boolean | undefined
+  >();
+
+  useNotificationToken(localStorage.getItem("jwtToken"), isNotificationEnabled);
 
   useEffect(() => {
     try {
@@ -57,6 +61,9 @@ export const Main = () => {
       console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
     }
   }, []);
+  useEffect(() => {
+    setIsNotificationEnabled(Notification.permission === "granted");
+  }, []);
   const navigate = useNavigate();
 
   const length = popularGongsiList?.gongsiList?.length || 0;
@@ -78,7 +85,7 @@ export const Main = () => {
   const today = formatDate(new Date())?.toString(); // 현재 날짜
 
   return (
-    <div>
+    <div className="min-h-screen">
       <HeaderLogin isLogin={false} />
       <div className="p-2">
         <div className="my-4">
@@ -107,20 +114,24 @@ export const Main = () => {
             </svg>
             <SectionTitle>오늘 올라온 공시</SectionTitle>
           </div>
-          {length > 0 ? (
-            todayGongsi?.gongsiList.map((gongsiTitle) => (
-              <GongsiList
-                key={gongsiTitle.gongsiId}
-                gongsiTitle={gongsiTitle.gongsiTitle}
-                gongsiCompany={gongsiTitle.companyName}
-                gongsiId={gongsiTitle.gongsiId}
-              />
-            ))
-          ) : (
-            <div className="flex items-center w-full h-[300px] border-t border-b">
-              <p className="w-full text-center">오늘 올라온 공시가 없습니다.</p>
-            </div>
-          )}
+          <div className="border-t">
+            {length > 0 ? (
+              todayGongsi?.gongsiList.map((gongsiTitle) => (
+                <GongsiList
+                  key={gongsiTitle.gongsiId}
+                  gongsiTitle={gongsiTitle.gongsiTitle}
+                  gongsiCompany={gongsiTitle.companyName}
+                  gongsiId={gongsiTitle.gongsiId}
+                />
+              ))
+            ) : (
+              <div className="flex items-center w-full h-[300px] border-b">
+                <p className="w-full text-center">
+                  오늘 올라온 공시가 없습니다.
+                </p>
+              </div>
+            )}
+          </div>
           <div className="flex justify-end">
             <div
               onClick={() => navigate("/search")}
@@ -153,6 +164,7 @@ export const Main = () => {
         </section>
       </div>
       <BottomNavigation />
+      <div></div>
     </div>
   );
 };
