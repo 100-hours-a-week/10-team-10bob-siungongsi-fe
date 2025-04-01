@@ -19,9 +19,10 @@ export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(
     Notification.permission === "granted",
   );
-  const [permission, setPermission] = useState<NotificationPermission | null>(
-    null,
-  );
+  const [token, setToken] = useState<string | undefined>("");
+  // const [permission, setPermission] = useState<NotificationPermission | null>(
+  //   null
+  // );
   const [isModalOn, setIsModalOn] = useState<boolean>();
 
   const [modalContent, setModalContent] = useState<{
@@ -40,9 +41,7 @@ export const SettingPage = () => {
 
   const sendTokenToServer = async (notiEnabled: boolean) => {
     try {
-      console.log(notiEnabled);
       if (notiEnabled) {
-        const token = await getPushToken();
         await patchUserNotificationInfo(
           notiEnabled,
           token,
@@ -58,11 +57,10 @@ export const SettingPage = () => {
       }
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
-    } finally {
-      fetchNotiInfo();
     }
   };
 
+  //모바일 환경이면 새로고침
   useEffect(() => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -77,39 +75,48 @@ export const SettingPage = () => {
       window.removeEventListener("focus", handleFocus);
     };
   }, []);
-  // useEffect(() => {
-  //   sendTokenToServer(isNotificationEnabled);
-  // }, []);
+  //Notification.permission 바뀌면 notiflag 변경
+  useEffect(() => {
+    sendTokenToServer(isNotificationEnabled);
+  }, [isNotificationEnabled]);
+  //토큰값 불러오기
+  useEffect(() => {
+    const getToken = async () => {
+      const data = await getPushToken();
+      setToken(data);
+    };
+    getToken();
+  }, []);
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
-  const fetchNotiInfo = async () => {
-    const data = await fetchUserNotificationInfo(
-      localStorage.getItem("jwtToken"),
-    );
-    console.log(data);
-  };
+
   const handleToggle = async () => {
-    setPermission(Notification.permission);
-    if (permission === "granted") {
+    // setPermission(Notification.permission);
+    // console.log(permission);
+    if (Notification.permission === "granted") {
       // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
+      // setIsNotificationEnabled(true);
+      // sendTokenToServer(isNotificationEnabled);
       setIsNotificationEnabled(true);
-      sendTokenToServer(isNotificationEnabled);
       setSubscribeOn((prev) => !prev);
       return;
-    } else if (permission === "denied") {
-      setIsNotificationEnabled(false);
-      sendTokenToServer(isNotificationEnabled);
-      alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
-      return;
-    } else {
-      const newPermission = await Notification.requestPermission();
-      setPermission(newPermission);
-      if (newPermission === "granted") {
-        // Firebase 푸시 토큰 요청
-        setSubscribeOn(true);
-        setIsNotificationEnabled(true);
-        sendTokenToServer(isNotificationEnabled);
-      }
     }
+    if (Notification.permission === "denied") {
+      // setIsNotificationEnabled(false);
+      // sendTokenToServer(isNotificationEnabled);
+      alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
+      setIsNotificationEnabled(false);
+      setSubscribeOn(false);
+      return;
+    }
+    const newPermission = await Notification.requestPermission();
+    console.log(newPermission);
+
+    if (newPermission === "granted") {
+      setSubscribeOn(true);
+      setIsNotificationEnabled(true);
+      // sendTokenToServer(true);
+    }
+    console.log(isNotificationEnabled);
 
     // 사용자가 알림 권한을 요청
   };
@@ -183,7 +190,7 @@ export const SettingPage = () => {
                 />
               </button> */}
             </div>
-            {isNotificationEnabled && subscribeOn && <SelectAlarm />}
+            {subscribeOn && <SelectAlarm />}
           </div>
 
           <div className="flex flex-col ">
