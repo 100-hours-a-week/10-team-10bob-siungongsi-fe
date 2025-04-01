@@ -27,10 +27,12 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신: ', payload);
+  const { title, body, url } = payload.data;
   // eslint-disable-next-line no-restricted-globals
-  self.registration.showNotification(payload.notification.title, {
-    body: payload.notification.body,
+  self.registration.showNotification(title, {
+    body,
 
     icon: '/logo192.png', // 알림 아이콘 (public 폴더에 있는 이미지 사용 가능)
+    data: { url },
   });
 });

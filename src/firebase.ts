@@ -26,6 +26,7 @@ export const getPushToken = async () => {
       vapidKey: process.env.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: registration, // ✅ 명확하게 Service Worker 전달
     });
+    console.log(token);
 
     return token;
   } catch (error) {

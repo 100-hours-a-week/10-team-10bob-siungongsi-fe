@@ -19,7 +19,9 @@ export const SettingPage = () => {
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(
     Notification.permission === "granted",
   );
-  const [token, setToken] = useState<string | undefined>("");
+  const [token, setToken] = useState<string | undefined>(
+    "cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo",
+  );
   // const [permission, setPermission] = useState<NotificationPermission | null>(
   //   null
   // );
