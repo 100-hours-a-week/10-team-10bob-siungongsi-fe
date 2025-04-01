@@ -63,8 +63,7 @@ export const Regist = () => {
       <div className="flex flex-col gap-4 p-4">
         <div className="flex justify-between">
           <div className="text-2xl font-bold">약관동의</div>
-          <div>
-            {/*나중에 onClick으로 뒤로가기 효과 넣기 */}
+          <div onClick={() => navigate("/")} className="cursor-pointer">
             <Close />
           </div>
         </div>

@@ -16,7 +16,9 @@ export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
 
-  useNotificationToken(localStorage.getItem("jwtToken"));
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState();
+
+  useNotificationToken(localStorage.getItem("jwtToken"), isNotificationEnabled);
 
   useEffect(() => {
     try {

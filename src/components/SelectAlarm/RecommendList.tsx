@@ -22,14 +22,14 @@ export const RecommendList = ({
         </div>
       </div>
       <div
-        aria-disabled={isLoading} // 중복 요청 방지
-        onClick={() =>
+        onClick={() => {
+          if (isLoading) return; //중복처리 방지
           subscribeHandler(
             company.companyId,
             company.isSubscribed,
             company.companyName,
-          )
-        }
+          );
+        }}
         className="cursor-pointer transition-all ease-in-out duration-300"
       >
         <svg
