@@ -163,7 +163,7 @@ export const Main = () => {
           </article>
         </section>
       </div>
-      <div></div>
+      <BottomNavigation />
     </div>
   );
 };
