@@ -82,8 +82,10 @@ export const SettingPage = () => {
   //토큰값 불러오기
   useEffect(() => {
     const getToken = async () => {
-      const data = await getPushToken();
-      setToken(data);
+      if (Notification.permission === "granted") {
+        const data = await getPushToken();
+        setToken(data);
+      }
     };
     getToken();
   }, []);

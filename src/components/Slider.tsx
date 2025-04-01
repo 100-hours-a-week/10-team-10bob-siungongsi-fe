@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GongsiData } from "../services/gongsiService";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
@@ -9,27 +9,45 @@ interface NewsSliderProps {
 export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const length = GongsiData?.gongsiList?.length || 1;
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  const startInterval = () => {
+    intervalRef.current = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % length);
     }, 5000);
+  };
+  const resetInterval = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    startInterval();
+  };
 
-    return () => clearInterval(interval);
-  }, [currentIndex, length]);
+  useEffect(() => {
+    if (GongsiData?.gongsiListSize !== 0) {
+      startInterval();
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [length, GongsiData?.gongsiListSize]);
 
   // 수동으로 슬라이드 변경
   const prevSlide = () => {
+    resetInterval();
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? length - 1 : prevIndex - 1,
     );
   };
 
   const nextSlide = () => {
+    resetInterval();
     setCurrentIndex((prevIndex) => (prevIndex + 1) % length);
   };
   const setIndicator = (index: number) => {
+    resetInterval();
     setCurrentIndex(index);
   };
   const handlers = useSwipeable({
