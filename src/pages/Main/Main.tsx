@@ -85,7 +85,7 @@ export const Main = () => {
   const today = formatDate(new Date())?.toString(); // 현재 날짜
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="min-h-screen">
       <HeaderLogin isLogin={false} />
       <div className="p-2">
         <div className="my-4">
