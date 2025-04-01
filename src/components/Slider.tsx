@@ -2,42 +2,14 @@ import { useState, useEffect } from "react";
 import { GongsiData } from "../services/gongsiService";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface NewsSliderProps {
   GongsiData: GongsiData | undefined;
 }
 export default function NewsSlider({ GongsiData }: NewsSliderProps) {
-  const variants = {
-    enter: (direction: number) => ({
-      y: -30,
-      x: direction > 0 ? 400 : -400,
-      opacity: 0,
-    }),
-    center: {
-      x: -33,
-      y: -30,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? -400 : 400,
-      y: -30,
-      opacity: 0,
-    }),
-  };
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirections] = useState(0);
   const length = GongsiData?.gongsiList?.length || 1;
   const navigate = useNavigate();
-  const handleDragEnd = (_: any, info: any) => {
-    const swipePower = info.offset.x;
-
-    if (swipePower < -100 && currentIndex < length - 1) {
-      setCurrentIndex(currentIndex + 1); // 오른쪽으로 넘김
-    } else if (swipePower > 100 && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1); // 왼쪽으로 넘김
-    }
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,14 +21,12 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
 
   // 수동으로 슬라이드 변경
   const prevSlide = () => {
-    setDirections(-1);
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? length - 1 : prevIndex - 1,
     );
   };
 
   const nextSlide = () => {
-    setDirections(1);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % length);
   };
   const setIndicator = (index: number) => {
@@ -81,39 +51,23 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
           {...handlers}
           className="relative max-w-[400px] h-[262px] overflow-y-hidden text-ellipsis mx-auto p-8 border rounded-lg shadow-lg cursor-pointer"
         >
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={currentIndex}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              custom={direction}
-              variants={variants}
-              onDragEnd={handleDragEnd}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute p-8 flex flex-col justify-center w-full h-full"
-            >
-              {/* 기사 내용 */}
-              <h2 className="text-lg font-bold mb-1 line-clamp-1">
-                {GongsiData?.gongsiList[currentIndex].gongsiTitle}
-              </h2>
-              <div className="flex justify-between">
-                <p className="text-sm text-gray-500">
-                  {GongsiData?.gongsiList[currentIndex].companyName}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {GongsiData?.gongsiList[
-                    currentIndex
-                  ].publishedDatetime.toString()}
-                </p>
-              </div>
-              <div className="mt-2 text-sm line-clamp-6">
-                {GongsiData?.gongsiList[currentIndex].content}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          {/* 기사 내용 */}
+          <h2 className="text-lg font-bold mb-1 line-clamp-1">
+            {GongsiData?.gongsiList[currentIndex].gongsiTitle}
+          </h2>
+          <div className="flex justify-between">
+            <p className="text-sm text-gray-500">
+              {GongsiData?.gongsiList[currentIndex].companyName}
+            </p>
+            <p className="text-xs text-gray-400">
+              {GongsiData?.gongsiList[
+                currentIndex
+              ].publishedDatetime.toString()}
+            </p>
+          </div>
+          <div className="mt-2 text-sm line-clamp-6">
+            {GongsiData?.gongsiList[currentIndex].content}
+          </div>
 
           <svg
             className="w-6 h-6 text-gray-800/10 dark:text-white absolute left-2 top-1/2 transform -translate-y-1/2 p-1 cursor-pointer"

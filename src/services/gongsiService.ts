@@ -68,6 +68,7 @@ export const fetchGongsiList = async (
   }
 };
 
+//공시 상세조회
 export const fetchGongsiDetail = async (
   gongsiId: number,
   accessToken: string | null,

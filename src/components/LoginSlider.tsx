@@ -55,7 +55,6 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       }
     } catch (error) {
       console.error("로그인 에러: ", error);
-    } finally {
     }
   };
 

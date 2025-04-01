@@ -34,6 +34,7 @@ export const fetchRecomendedCompaniesList = async (
 export const postNotifications = async (
   companyId: number,
   accessToken: string | null,
+  signal?: AbortSignal,
 ): Promise<{
   code: number;
   message: string;
@@ -43,7 +44,7 @@ export const postNotifications = async (
       `${apiKey}notifications`,
 
       { companyId },
-      { headers: { Authorization: `Bearer ${accessToken}` } },
+      { headers: { Authorization: `Bearer ${accessToken}` }, signal },
     );
     return response.data;
   } catch (error) {
@@ -55,6 +56,7 @@ export const postNotifications = async (
 export const deleteNotifications = async (
   companyId: number,
   accessToken: string | null,
+  signal?: AbortSignal,
 ): Promise<{
   code: number;
   message: string;
@@ -62,11 +64,16 @@ export const deleteNotifications = async (
   try {
     const response = await api.delete<{ code: number; message: string }>(
       `${apiKey}notifications/${companyId}`,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
+      { headers: { Authorization: `Bearer ${accessToken}` }, signal },
     );
     return response.data;
-  } catch (error) {
-    console.error("알림 삭제 에러 : ", error);
+  } catch (error: any) {
+    if (error.name === "CanceledError") {
+      console.log("요청 취소됨");
+    } else {
+      console.error("알림 삭제 에러 : ", error);
+    }
+
     throw error;
   }
 };

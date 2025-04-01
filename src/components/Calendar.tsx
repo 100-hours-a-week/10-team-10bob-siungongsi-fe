@@ -29,7 +29,7 @@ export const Calendar = ({
 }: CalendarProps) => {
   const today = new Date(); // 현재 날짜
   const [currentMonth, setCurrentMonth] = useState(today); // 현재 달력의 월
-  const [startDate, setStartDate] = useState<Date | undefined>(today); // 시작 날짜
+  const [startDate, setStartDate] = useState<Date | undefined>(); // 시작 날짜
   const [endDate, setEndDate] = useState<Date | undefined>(undefined); // 종료 날짜
 
   // 현재 월의 시작과 끝을 구하기
@@ -117,7 +117,7 @@ export const Calendar = ({
               <div
                 key={index}
                 className={`h-10 w-10 flex items-center justify-center rounded-md cursor-pointer
-                ${isToday ? "border border-gray-500" : ""}
+                
                 ${isSelectedStart || isSelectedEnd ? "bg-gray-500 text-white" : ""}
                 ${isInRange ? "bg-red-500 text-white" : ""}
                 ${isCurrentMonth ? "text-black" : "text-gray-400"} 

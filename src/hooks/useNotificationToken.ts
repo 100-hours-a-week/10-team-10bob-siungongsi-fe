@@ -3,7 +3,10 @@ import { getPushToken } from "../firebase"; // FCM 토큰을 가져오는 함수
 import axios from "axios";
 import { patchUserNotificationInfo } from "../services/usersService";
 
-export const useNotificationToken = (userId: string | null) => {
+export const useNotificationToken = (
+  userId: string | null,
+  isNotificationEnabled: boolean | undefined,
+) => {
   const [permission, setPermission] = useState<NotificationPermission | null>(
     null,
   );
