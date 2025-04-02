@@ -87,7 +87,14 @@ export const Calendar = ({
           <h2 className="text-lg font-semibold">
             {format(currentMonth, "yyyy. MM", { locale: ko })}
           </h2>
-          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+          <button
+            className={`${addMonths(currentMonth, 1) > today ? "cursor-default text-gray-300" : ""}`}
+            onClick={() => {
+              const nextMonth = addMonths(currentMonth, 1);
+              if (nextMonth > today) return;
+              setCurrentMonth(addMonths(currentMonth, 1));
+            }}
+          >
             {">"}
           </button>
         </div>
@@ -105,6 +112,7 @@ export const Calendar = ({
         <div className="grid grid-cols-7 gap-1">
           {days.map((day, index) => {
             const isToday = isSameDay(day, today);
+            const isFutureDate = day > today;
             const isSelectedStart = startDate && isSameDay(day, startDate);
             const isSelectedEnd = endDate && isSameDay(day, endDate);
             const isInRange =
@@ -116,13 +124,16 @@ export const Calendar = ({
             return (
               <div
                 key={index}
-                className={`h-10 w-10 flex items-center justify-center rounded-md cursor-pointer
-                
+                onClick={() => {
+                  if (!isFutureDate) handleDateClick(day);
+                }}
+                className={`h-10 w-10 flex items-center justify-center rounded-md hover:border
+                  ${isFutureDate ? "text-gray-200 cursor-not-allowed hover:border-none" : "cursor-pointer"}
                 ${isSelectedStart || isSelectedEnd ? "bg-gray-500 text-white" : ""}
                 ${isInRange ? "bg-red-500 text-white" : ""}
                 ${isCurrentMonth ? "text-black" : "text-gray-400"} 
-                ${day ? "hover:bg-gray-200" : "opacity-0"}`}
-                onClick={() => handleDateClick(day)}
+                
+                `}
               >
                 {format(day, "d")}
               </div>
