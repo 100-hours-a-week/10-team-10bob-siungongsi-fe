@@ -59,6 +59,7 @@ self.addEventListener('notificationclick', (event) => {
 
         if (clients.openWindow) {
           return clients.openWindow(targetUrl);
+          //푸쉬
         }
       })
   );
