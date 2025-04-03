@@ -6,6 +6,7 @@ import { Modal } from "../../components/Modal";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { toast } from "react-toastify";
 
 import {
   deleteNotifications,
@@ -101,7 +102,7 @@ export const GongsiDetail = () => {
           isSubscribed: !gongsiInfo.company.isSubscribed,
         },
       });
-    } catch (error) {}
+    } catch (error: any) {}
   };
 
   const navigate = useNavigate();

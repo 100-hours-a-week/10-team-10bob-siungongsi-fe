@@ -32,7 +32,7 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(title, {
     body,
 
-    icon: '/logo192.png', // 알림 아이콘 (public 폴더에 있는 이미지 사용 가능)
+    icon: '/icon-192x192.png', // 알림 아이콘 (public 폴더에 있는 이미지 사용 가능)
     data: { url },
   });
 });

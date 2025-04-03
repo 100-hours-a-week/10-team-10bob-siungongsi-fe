@@ -1,5 +1,5 @@
 import api from "../api/api";
-
+import { toast } from "react-toastify";
 interface APIData {
   code: number;
   message: string;
@@ -47,8 +47,11 @@ export const postNotifications = async (
       { headers: { Authorization: `Bearer ${accessToken}` }, signal },
     );
     return response.data;
-  } catch (error) {
-    console.error("알림 추가 에러 : ", error);
+  } catch (error: any) {
+    const serverCode = error?.response?.data?.code;
+    if (serverCode === 5405) {
+      toast.error("최대 10개까지만 구독할 수 있어요");
+    }
     throw error;
   }
 };

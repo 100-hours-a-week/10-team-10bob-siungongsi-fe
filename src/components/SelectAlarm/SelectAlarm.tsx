@@ -145,10 +145,7 @@ export const SelectAlarm = () => {
 
       // await getSubscriptions();
       // getRecommend();
-    } catch (error: any) {
-      if (error.name !== "CanceledError") {
-        console.error("구독목록 추가 에러 : ", error);
-      }
+    } catch (error) {
     } finally {
       setIsLoading(false);
     }

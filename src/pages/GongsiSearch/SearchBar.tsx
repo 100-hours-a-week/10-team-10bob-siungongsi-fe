@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Company } from "../../services/companiesService";
+import { useNavigate } from "react-router-dom";
 interface SearchBarProps {
   keyword: string;
   companies: Company[] | undefined;
   onChangeKeyword: (value: string) => void;
   isLoading: boolean | undefined;
-  onSelectCompany: (id: number, name: string) => void;
+  onSelectCompany: (id: number) => void;
 }
 
 export const SearchBar = ({
@@ -16,6 +17,7 @@ export const SearchBar = ({
   onSelectCompany,
   // isSearchBarOn,
 }: SearchBarProps) => {
+  const navigate = useNavigate();
   const [isSearchBarOn, setIsSearchBarOn] = useState(false);
   return (
     <div className="relative w-full max-w-sm mx-auto">
@@ -51,7 +53,11 @@ export const SearchBar = ({
       ></input>
       {keyword && (
         <button
-          onClick={() => onChangeKeyword("")}
+          onClick={() => {
+            onChangeKeyword("");
+            setIsSearchBarOn(false);
+            onSelectCompany(0);
+          }}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
         >
           <svg
@@ -81,7 +87,7 @@ export const SearchBar = ({
                   companies.map((company) => (
                     <div
                       onClick={() => {
-                        onSelectCompany(company.companyId, company.companyName);
+                        onSelectCompany(company.companyId);
                         onChangeKeyword(company.companyName);
                         setIsSearchBarOn(false);
                       }}
