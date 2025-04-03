@@ -17,12 +17,37 @@ import { SettingPage } from "./pages/SettingPage/Setting";
 import { GongsiDetail } from "./pages/GongsiDetail/GongsiDetail";
 import { LoginSlider } from "./components/LoginSlider";
 import LoginPage from "./components/LoginPage";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { messaging, onMessage } from "./firebase";
 
 function App() {
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
+
+  useEffect(() => {
+    // 포그라운드에서 푸시 알림 수신
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log("🔥 포그라운드 메시지 수신:", payload);
+
+      // 예시: 토스트 메시지로 표시
+      toast.info(
+        `${payload.data?.title}\n${payload.data?.body}\n${payload.data?.url}`,
+        {
+          autoClose: 5000,
+          position: "top-right",
+        },
+      );
+
+      // 또는 Custom UI 알림 모달 등 사용 가능
+    });
+
+    return () => {
+      // 클린업
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
