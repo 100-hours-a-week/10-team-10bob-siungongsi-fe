@@ -51,6 +51,8 @@ export const postNotifications = async (
     const serverCode = error?.response?.data?.code;
     if (serverCode === 5405) {
       toast.error("최대 10개까지만 구독할 수 있어요");
+    } else {
+      console.error("알림설정 기업 추가 에러 : ", error);
     }
     throw error;
   }

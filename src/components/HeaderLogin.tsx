@@ -11,6 +11,7 @@ export const HeaderLogin = ({ isLogin }: Props) => {
   const location = useLocation();
   //모달정보 입력
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
@@ -31,6 +32,9 @@ export const HeaderLogin = ({ isLogin }: Props) => {
   };
   const closeModal = () => {
     setIsModalOn(false);
+  };
+  const onClose = () => {
+    setIsOpen(false);
   };
 
   const openLogoutModal = () => {
@@ -60,12 +64,13 @@ export const HeaderLogin = ({ isLogin }: Props) => {
       ) : (
         <button
           className="bg-white p-1 px-2 rounded-lg text-primary"
-          onClick={openLoginModal}
+          onClick={() => setIsOpen(true)}
         >
           로그인
         </button>
       )}
       {isModalOn && <Modal modalContent={modalContent} />}
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
     </div>
   );
 };

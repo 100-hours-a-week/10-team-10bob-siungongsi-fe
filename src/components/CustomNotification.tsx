@@ -5,8 +5,8 @@ export const showCustomNotification = ({
   title,
   body,
 }: {
-  title: string;
-  body: string;
+  title: string | undefined;
+  body: string | undefined;
 }) => {
   toast(
     ({ closeToast }) => (

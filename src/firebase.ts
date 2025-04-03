@@ -20,7 +20,7 @@ export const getPushToken = async () => {
   try {
     // 🛑 Service Worker 등록
     const registration = await navigator.serviceWorker.register(
-      "/firebase-messaging-sw.js?v=2",
+      "/firebase-messaging-sw.js?v=3",
     );
 
     const token = await getToken(messaging, {

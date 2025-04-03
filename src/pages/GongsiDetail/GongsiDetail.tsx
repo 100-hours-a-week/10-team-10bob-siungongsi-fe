@@ -125,7 +125,7 @@ export const GongsiDetail = () => {
                 <div className="flex items-center gap-2">
                   <div>{gongsiInfo?.company.name}</div>
                   <div
-                    className={`${gongsiInfo?.company.prdyCtr.toString().charAt(0) === "-" ? "bg-blue-700" : "bg-primary"} text-sm font-bold text-white px-1 rounded-xl`}
+                    className={`${gongsiInfo?.company.prdyCtr.toString().charAt(0) === "-" ? "bg-blue-700" : gongsiInfo?.company.prdyCtr === 0 ? "bg-gray-500" : "bg-primary"} text-sm font-bold text-white px-1 rounded-xl`}
                   >
                     {gongsiInfo?.company.prdyCtr + "%"}
                   </div>

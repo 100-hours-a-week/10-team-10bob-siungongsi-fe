@@ -21,6 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { messaging, onMessage } from "./firebase";
+import { showCustomNotification } from "./components/CustomNotification";
 
 function App() {
   const location = useLocation();
@@ -29,16 +30,11 @@ function App() {
   useEffect(() => {
     // 포그라운드에서 푸시 알림 수신
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("🔥 포그라운드 메시지 수신:", payload);
-
       // 예시: 토스트 메시지로 표시
-      toast.info(
-        `${payload.data?.title}\n${payload.data?.body}\n${payload.data?.url}`,
-        {
-          autoClose: 5000,
-          position: "top-right",
-        },
-      );
+      showCustomNotification({
+        title: payload.data?.title ?? "알림",
+        body: payload.data?.body ?? "",
+      });
 
       // 또는 Custom UI 알림 모달 등 사용 가능
     });
