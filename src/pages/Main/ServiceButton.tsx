@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LoginSlider } from "../../components/LoginSlider";
 
 interface ServiceButtonProps {
   children: ReactNode;
@@ -12,12 +13,16 @@ export const ServiceButton = ({
   imgSrc,
   route,
 }: ServiceButtonProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
   const navigate = useNavigate();
   const location = useLocation();
 
   const openLoginModal = () => {
     if (route === "/login") {
-      navigate(route, { state: { backgroundLocation: location } });
+      setIsOpen(true);
     } else if (route === "https://dart.fss.or.kr/main.do") {
       window.open(route, "_blank");
     } else {
@@ -31,6 +36,7 @@ export const ServiceButton = ({
         <div className="text-white font-bold">{children}</div>
         <img className="aspect-square w-12" src={imgSrc} alt="" />
       </div>
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
     </div>
   );
 };

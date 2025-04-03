@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "../../components/Header";
+
 import { HeaderLoginBack } from "../../components/HeaderLoginBack";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { Modal } from "../../components/Modal";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { toast } from "react-toastify";
 
 import {
   deleteNotifications,
   postNotifications,
 } from "../../services/notificationService";
+import { LoginSlider } from "../../components/LoginSlider";
+import { useManageNotifications } from "../../hooks/useNotificationList";
 
 export const GongsiDetail = () => {
+  const { subscribe, unsubscribe } = useManageNotifications();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gongsiInfo, setGongsiInfo] = useState<GongsiInfo>();
-
-  // useEffect(() => {
-  //   const subscriptions = async () => {
-  //     const data = await fetchSusbscriptions(localStorage.getItem('jwtToken'));
-  //     setMySubscriptions(data.data.subscribedCompanies);
-  //   };
-  //   if (localStorage.getItem('jwtToken')) {
-  //     subscriptions();
-  //   }
-  // }, []);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const { id } = useParams();
 
@@ -67,6 +63,7 @@ export const GongsiDetail = () => {
     helperText: null as string | null,
     closeModal: () => {},
     onSubmit: () => {},
+    isOpen: false,
   });
   const onModal = (
     titleMessage: string,
@@ -74,6 +71,7 @@ export const GongsiDetail = () => {
     helperText: string | null,
     closeModal: () => void,
     openLoginModal: () => void,
+    isOpen: boolean,
   ) => {
     setModalContent({
       titleMessage: titleMessage,
@@ -81,6 +79,7 @@ export const GongsiDetail = () => {
       helperText: helperText,
       closeModal: closeModal,
       onSubmit: openLoginModal,
+      isOpen: isOpen,
     });
     setIsModalOn(true);
   };
@@ -91,9 +90,9 @@ export const GongsiDetail = () => {
     if (!id || !gongsiInfo) return;
     try {
       if (gongsiInfo?.company.isSubscribed) {
-        await deleteNotifications(id, localStorage.getItem("jwtToken"));
+        unsubscribe(id);
       } else {
-        await postNotifications(id, localStorage.getItem("jwtToken"));
+        subscribe(id);
       }
       setGongsiInfo({
         ...gongsiInfo,
@@ -105,19 +104,17 @@ export const GongsiDetail = () => {
     } catch (error: any) {}
   };
 
-  const navigate = useNavigate();
-  const location = useLocation();
   const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
+    setIsOpen(true);
   };
 
   return (
     <div className="">
       <HeaderLoginBack isLogin={false} />
       {!isLoading ? (
-        <div className="p-2">
+        <div className="p-4 text-lg">
           <div className="">
-            <div className="my-4 text-2xl font-bold">
+            <div className="my-4 text-2xl font-bold font">
               {gongsiInfo?.gongsi.title}
             </div>
             <div className="flex justify-between items-center mb-4">
@@ -146,6 +143,7 @@ export const GongsiDetail = () => {
                         null,
                         closeModal,
                         openLoginModal,
+                        isOpen,
                       )
                     : handleSubscribe(gongsiInfo?.company.id)
                 }
@@ -198,6 +196,7 @@ export const GongsiDetail = () => {
       ) : (
         <LoadingSpinner />
       )}
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
       {isModalOn && <Modal modalContent={modalContent} />}
       <BottomNavigation />
     </div>

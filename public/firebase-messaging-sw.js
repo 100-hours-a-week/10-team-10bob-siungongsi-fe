@@ -26,10 +26,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  if (payload?.notification) {
-    console.log('[SW] 자동 알림 처리됨, 수동 알림 생략');
-    return;
-  }
   console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신: ', payload);
   const { title, body, url } = payload.data;
   // eslint-disable-next-line no-restricted-globals
@@ -45,14 +41,14 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data.url || '/';
+  const targetUrl = event.notification.data.url;
 
   event.waitUntil(
     clients
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         for (const client of clientList) {
-          if (client.url.includes('docent') && 'focus' in client) {
+          if (client.url.includes('siun') && 'focus' in client) {
             return client.focus().then((focusedClient) => {
               if ('postMessage' in focusedClient) {
                 focusedClient.postMessage(targetUrl);
