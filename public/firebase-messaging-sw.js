@@ -44,6 +44,7 @@ self.addEventListener('notificationclick', (event) => {
   const targetUrl = event.notification.data.url;
 
   event.waitUntil(
+    // 현재 열린 탭(윈도우)들 중에서 서비스워커가 컨트롤 할 수 있는 것들을 가져옴
     clients
       .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
