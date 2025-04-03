@@ -26,6 +26,10 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
+  if (payload?.notification) {
+    console.log('[SW] 자동 알림 처리됨, 수동 알림 생략');
+    return;
+  }
   console.log('[firebase-messaging-sw.js] 백그라운드 메시지 수신: ', payload);
   const { title, body, url } = payload.data;
   // eslint-disable-next-line no-restricted-globals
