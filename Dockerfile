@@ -2,7 +2,8 @@ FROM node:20 AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci || npm install
+RUN npm install framer-motion
 
 COPY . .
 ARG REACT_APP_PUBLIC_FIREBASE_API_KEY
