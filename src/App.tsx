@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { messaging, onMessage } from "./firebase";
 import { showCustomNotification } from "./components/CustomNotification";
 import { AuthProvider } from "./contexts/AuthContext";
+import InstallPWA, { isIos } from "./pages/Iphone_main/InstallPWA";
 
 function App() {
   const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
     };
   }, []);
 
+  const FirstPageComponent = isIos() ? <InstallPWA /> : <Main />;
   return (
     <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
       <Sentry.ErrorBoundary
@@ -61,7 +63,7 @@ function App() {
             pauseOnHover
           />
           <Routes location={state?.backgroundLocation || location}>
-            <Route path="/" element={<Main />} />
+            <Route path="/" element={FirstPageComponent} />
             <Route path="/search" element={<GongsiSearch />} />
             <Route path="/regist" element={<Regist />} />
             <Route path="/regist_02" element={<Regist_02 />} />

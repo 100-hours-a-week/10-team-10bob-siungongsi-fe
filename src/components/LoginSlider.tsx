@@ -47,6 +47,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
 
       if (data.data.isUser) {
         localStorage.setItem("jwtToken", data.data.accessToken);
+
         onClose();
       } else {
         navigate("/regist", { state: accessToken });
