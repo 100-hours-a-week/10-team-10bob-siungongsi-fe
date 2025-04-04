@@ -13,7 +13,7 @@ export type Company = {
   companyName: string;
 };
 
-const apiKey = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_URL_DEV;
 //공시 자동검색
 export const fetchCompanyNameList = async (
   keyword: string,

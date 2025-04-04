@@ -45,7 +45,7 @@ interface CompanyInfo {
   prdyCtr: number;
   isSubscribed: boolean;
 }
-const apiKey = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_URL_DEV;
 
 // 공시목록 불러오기
 export const fetchGongsiList = async (

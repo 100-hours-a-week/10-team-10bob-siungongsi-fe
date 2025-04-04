@@ -31,7 +31,7 @@ jobs:
             --build-arg REACT_APP_PUBLIC_FIREBASE_APP_ID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_APP_ID }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_PUBLIC_FIREBASE_MEASUREMENTID }} \
             --build-arg REACT_APP_PUBLIC_FIREBASE_VAPID_KEY=${{ secrets.REACT_APP_PUBLIC_FIREBASE_VAPID_KEY }} \
-            --build-arg REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} \
+            --build-arg REACT_APP_API_URL_DEV=${{ secrets.REACT_APP_API_URL_DEV }} \
             --build-arg REACT_APP_SENTRY_DSN=${{ secrets.REACT_APP_SENTRY_DSN }} \
             -t react-builder .
 
