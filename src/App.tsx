@@ -28,6 +28,9 @@ import InstallPWA, { isIos } from "./pages/Iphone_main/InstallPWA";
 function App() {
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
+  const isInStandaloneMode = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true;
 
   useEffect(() => {
     // 포그라운드에서 푸시 알림 수신
@@ -47,7 +50,8 @@ function App() {
     };
   }, []);
 
-  const FirstPageComponent = isIos() ? <InstallPWA /> : <Main />;
+  const FirstPageComponent =
+    isIos() && !isInStandaloneMode() ? <InstallPWA /> : <Main />;
   return (
     <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
       <Sentry.ErrorBoundary
