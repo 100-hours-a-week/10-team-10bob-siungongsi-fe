@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import { LoginSlider } from "./LoginSlider";
-import { useLocation, useNavigate } from "react-router-dom";
+
 import back from "../assets/back.png";
 import { Modal } from "./Modal";
+import { useAuth } from "../contexts/AuthContext";
 interface Props {
   isLogin: boolean;
 }
 export const HeaderLoginBack = ({ isLogin }: Props) => {
+  const { isLoggedIn, logout } = useAuth();
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const token = localStorage.getItem("jwtToken");
-  const navigate = useNavigate();
-  const location = useLocation();
-  const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
-  };
+
   const closeModal = () => {
     setIsModalOn(false);
   };
@@ -41,10 +38,7 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
     });
     setIsModalOn(true);
   };
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
-    navigate(0);
-  };
+
   const onClose = () => {
     setIsOpen(false);
   };
@@ -56,7 +50,7 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
       </div>
       <h1 className="ml-6 text-2xl">Siun</h1>
       <div className="flex justify-center w-20">
-        {token ? (
+        {isLoggedIn ? (
           <button
             onClick={openLogoutModal}
             className="bg-primary text-white p-1 px-2 rounded-lg border border-white"

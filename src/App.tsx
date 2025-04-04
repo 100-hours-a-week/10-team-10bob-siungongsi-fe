@@ -22,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from "react";
 import { messaging, onMessage } from "./firebase";
 import { showCustomNotification } from "./components/CustomNotification";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   const location = useLocation();
@@ -50,27 +51,29 @@ function App() {
       <Sentry.ErrorBoundary
         fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
       >
-        <ToastContainer
-          position="bottom-center"
-          autoClose={1000} // 3초 후 자동 닫힘
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnHover
-        />
-        <Routes location={state?.backgroundLocation || location}>
-          <Route path="/" element={<Main />} />
-          <Route path="/search" element={<GongsiSearch />} />
-          <Route path="/regist" element={<Regist />} />
-          <Route path="/regist_02" element={<Regist_02 />} />
-          <Route path="/setting" element={<SettingPage />} />
-          <Route path="/detail/:id" element={<GongsiDetail />} />
-        </Routes>
-        {state?.backgroundLocation && (
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
+        <AuthProvider>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={1000} // 3초 후 자동 닫힘
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            pauseOnHover
+          />
+          <Routes location={state?.backgroundLocation || location}>
+            <Route path="/" element={<Main />} />
+            <Route path="/search" element={<GongsiSearch />} />
+            <Route path="/regist" element={<Regist />} />
+            <Route path="/regist_02" element={<Regist_02 />} />
+            <Route path="/setting" element={<SettingPage />} />
+            <Route path="/detail/:id" element={<GongsiDetail />} />
           </Routes>
-        )}
+          {state?.backgroundLocation && (
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          )}
+        </AuthProvider>
       </Sentry.ErrorBoundary>
     </div>
   );

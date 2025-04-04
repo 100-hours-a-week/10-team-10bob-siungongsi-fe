@@ -6,6 +6,7 @@ import { Modal } from "../../components/Modal";
 import { useParams } from "react-router-dom";
 import { GongsiInfo, fetchGongsiDetail } from "../../services/gongsiService";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
   deleteNotifications,
@@ -15,6 +16,7 @@ import { LoginSlider } from "../../components/LoginSlider";
 import { useManageNotifications } from "../../hooks/useNotificationList";
 
 export const GongsiDetail = () => {
+  const { isLoggedIn } = useAuth();
   const { subscribe, unsubscribe } = useManageNotifications();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gongsiInfo, setGongsiInfo] = useState<GongsiInfo>();
@@ -136,7 +138,7 @@ export const GongsiDetail = () => {
               </div>
               <div
                 onClick={() =>
-                  !localStorage.getItem("jwtToken")
+                  !isLoggedIn
                     ? onModal(
                         "로그인이 필요한 서비스입니다",
                         "로그인",
