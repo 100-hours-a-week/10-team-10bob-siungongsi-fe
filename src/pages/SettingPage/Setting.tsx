@@ -49,7 +49,6 @@ export const SettingPage = () => {
           token,
           localStorage.getItem("jwtToken"),
         );
-        console.log("✅ FCM 토큰 서버에 전송 완료");
       } else {
         await patchUserNotificationInfo(
           notiEnabled,
@@ -94,33 +93,24 @@ export const SettingPage = () => {
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
-    // setPermission(Notification.permission);
-    // console.log(permission);
     if (Notification.permission === "granted") {
-      // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
-      // setIsNotificationEnabled(true);
-      // sendTokenToServer(isNotificationEnabled);
       setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
       return;
     }
     if (Notification.permission === "denied") {
-      // setIsNotificationEnabled(false);
-      // sendTokenToServer(isNotificationEnabled);
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
       setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
     }
     const newPermission = await Notification.requestPermission();
-    console.log(newPermission);
 
     if (newPermission === "granted") {
       setSubscribeOn(true);
       setIsNotificationEnabled(true);
       // sendTokenToServer(true);
     }
-    console.log(isNotificationEnabled);
 
     // 사용자가 알림 권한을 요청
   };

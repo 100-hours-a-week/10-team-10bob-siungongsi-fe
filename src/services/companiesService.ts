@@ -27,7 +27,6 @@ export const fetchCompanyNameList = async (
     return response.data;
   } catch (error: any) {
     if (error.name === "CanceledError") {
-      console.log("요청 취소됨");
     } else {
       console.error("기업명 자동완성 목록 불러오기 에러: ", error);
     }

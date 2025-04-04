@@ -26,7 +26,7 @@ export const GongsiDetail = () => {
   };
 
   const { id } = useParams();
-
+  //상세정보 조회
   useEffect(() => {
     setIsLoading(true);
     const getCompaniesName = async () => {
@@ -124,7 +124,16 @@ export const GongsiDetail = () => {
                 <div className="flex items-center gap-2">
                   <div>{gongsiInfo?.company.name}</div>
                   <div
-                    className={`${gongsiInfo?.company.prdyCtr.toString().charAt(0) === "-" ? "bg-blue-700" : gongsiInfo?.company.prdyCtr === 0 ? "bg-gray-500" : "bg-primary"} text-sm font-bold text-white px-1 rounded-xl`}
+                    className={`${
+                      gongsiInfo?.company.prdyCtr === -101
+                        ? "hidden"
+                        : gongsiInfo?.company.prdyCtr.toString().charAt(0) ===
+                            "-"
+                          ? "bg-blue-700"
+                          : gongsiInfo?.company.prdyCtr === 0
+                            ? "bg-gray-500"
+                            : "bg-primary"
+                    } text-sm font-bold text-white px-1 rounded-xl`}
                   >
                     {gongsiInfo?.company.prdyCtr + "%"}
                   </div>
