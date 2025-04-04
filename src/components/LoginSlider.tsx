@@ -17,8 +17,7 @@ declare global {
 }
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
-  const location = useLocation();
-
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +43,6 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const postAccessToken = async () => {
     try {
       const accessToken = await loginWithKakao();
-
       const data = await login(accessToken);
 
       if (data.data.isUser) {
@@ -55,6 +53,10 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       }
     } catch (error) {
       console.error("로그인 에러: ", error);
+    } finally {
+      if (!isMobile) {
+        navigate(0);
+      }
     }
   };
 

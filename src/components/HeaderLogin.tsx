@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { LoginSlider } from "./LoginSlider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from "./Modal";
+import { useAuth } from "../contexts/AuthContext";
 interface Props {
   isLogin: boolean;
 }
 export const HeaderLogin = ({ isLogin }: Props) => {
+  const { isLoggedIn, logout } = useAuth();
   const token = localStorage.getItem("jwtToken");
   const navigate = useNavigate();
   const location = useLocation();
   //모달정보 입력
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
@@ -32,6 +35,9 @@ export const HeaderLogin = ({ isLogin }: Props) => {
   const closeModal = () => {
     setIsModalOn(false);
   };
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const openLogoutModal = () => {
     setModalContent({
@@ -43,14 +49,14 @@ export const HeaderLogin = ({ isLogin }: Props) => {
     });
     setIsModalOn(true);
   };
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
-    navigate(0);
-  };
+  // const logout = () => {
+  //   localStorage.removeItem("jwtToken");
+  //   navigate(0);
+  // };
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white font-bold max-h-[55px]">
       <h1 className="text-2xl">Siun</h1>
-      {token ? (
+      {isLoggedIn ? (
         <button
           onClick={openLogoutModal}
           className="bg-primary text-white p-1 px-2 rounded-lg border border-white"
@@ -60,12 +66,13 @@ export const HeaderLogin = ({ isLogin }: Props) => {
       ) : (
         <button
           className="bg-white p-1 px-2 rounded-lg text-primary"
-          onClick={openLoginModal}
+          onClick={() => setIsOpen(true)}
         >
           로그인
         </button>
       )}
       {isModalOn && <Modal modalContent={modalContent} />}
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
     </div>
   );
 };

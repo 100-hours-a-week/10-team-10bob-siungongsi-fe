@@ -5,6 +5,7 @@ interface Props {
     helperText: string | null;
     closeModal: () => void;
     onSubmit?: () => void;
+    isOpen?: boolean;
   };
 }
 export const Modal = ({ modalContent }: Props) => {

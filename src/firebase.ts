@@ -12,14 +12,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const messaging = getMessaging(app);
+const messaging = getMessaging(app);
+export { messaging, onMessage };
 
 // 🔹 Service Worker 명시적으로 등록 후 푸시 토큰 가져오기
 export const getPushToken = async () => {
   try {
     // 🛑 Service Worker 등록
     const registration = await navigator.serviceWorker.register(
-      "/firebase-messaging-sw.js",
+      "/firebase-messaging-sw.js?v=1",
     );
 
     const token = await getToken(messaging, {
