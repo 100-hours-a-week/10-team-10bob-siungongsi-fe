@@ -13,8 +13,10 @@ import {
 } from "../../services/usersService";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ScrollDown } from "../../components/Icons/ScrollDown";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const SettingPage = () => {
+  const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(
     Notification.permission === "granted",
@@ -49,7 +51,6 @@ export const SettingPage = () => {
           token,
           localStorage.getItem("jwtToken"),
         );
-        console.log("✅ FCM 토큰 서버에 전송 완료");
       } else {
         await patchUserNotificationInfo(
           notiEnabled,
@@ -94,33 +95,24 @@ export const SettingPage = () => {
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
-    // setPermission(Notification.permission);
-    // console.log(permission);
     if (Notification.permission === "granted") {
-      // 알림 해제 로직: 브라우저에서는 직접 차단 불가능하므로 안내
-      // setIsNotificationEnabled(true);
-      // sendTokenToServer(isNotificationEnabled);
       setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
       return;
     }
     if (Notification.permission === "denied") {
-      // setIsNotificationEnabled(false);
-      // sendTokenToServer(isNotificationEnabled);
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
       setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
     }
     const newPermission = await Notification.requestPermission();
-    console.log(newPermission);
 
     if (newPermission === "granted") {
       setSubscribeOn(true);
       setIsNotificationEnabled(true);
       // sendTokenToServer(true);
     }
-    console.log(isNotificationEnabled);
 
     // 사용자가 알림 권한을 요청
   };
@@ -144,18 +136,18 @@ export const SettingPage = () => {
   const closeModal = () => {
     setIsModalOn(false);
   };
+  //회원탈퇴
   const userWithDrawFunction = async () => {
     try {
       await userWithdraw(localStorage.getItem("jwtToken"));
+      setIsLoggedIn(false);
     } catch (error) {
       console.error("회원탈퇴 에러 : ", error);
     } finally {
       localStorage.removeItem("jwtToken");
+
       navigate("/");
     }
-  };
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
   };
 
   const location = useLocation();
@@ -167,7 +159,7 @@ export const SettingPage = () => {
   return (
     <div>
       <HeaderLogin isLogin={true} />
-      {localStorage.getItem("jwtToken") ? (
+      {isLoggedIn ? (
         <div className="max-w-md mx-auto p-4 bg-white">
           {/* 알림 허용 토글 */}
           <div className="border-b">

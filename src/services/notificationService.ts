@@ -74,7 +74,6 @@ export const deleteNotifications = async (
     return response.data;
   } catch (error: any) {
     if (error.name === "CanceledError") {
-      console.log("요청 취소됨");
     } else {
       console.error("알림 삭제 에러 : ", error);
     }

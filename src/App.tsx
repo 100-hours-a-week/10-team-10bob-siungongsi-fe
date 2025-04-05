@@ -23,10 +23,14 @@ import { useEffect } from "react";
 import { messaging, onMessage } from "./firebase";
 import { showCustomNotification } from "./components/CustomNotification";
 import { AuthProvider } from "./contexts/AuthContext";
+import InstallPWA, { isIos } from "./pages/Iphone_main/InstallPWA";
 
 function App() {
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
+  const isInStandaloneMode = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true;
 
   useEffect(() => {
     // 포그라운드에서 푸시 알림 수신
@@ -46,6 +50,8 @@ function App() {
     };
   }, []);
 
+  const FirstPageComponent =
+    isIos() && !isInStandaloneMode() ? <InstallPWA /> : <Main />;
   return (
     <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
       <Sentry.ErrorBoundary
@@ -61,7 +67,7 @@ function App() {
             pauseOnHover
           />
           <Routes location={state?.backgroundLocation || location}>
-            <Route path="/" element={<Main />} />
+            <Route path="/" element={FirstPageComponent} />
             <Route path="/search" element={<GongsiSearch />} />
             <Route path="/regist" element={<Regist />} />
             <Route path="/regist_02" element={<Regist_02 />} />
