@@ -91,6 +91,7 @@ export const GongsiDetail = () => {
   const handleSubscribe = async (id: number | undefined) => {
     if (!id || !gongsiInfo) return;
     try {
+      setIsLoading(true);
       if (gongsiInfo?.company.isSubscribed) {
         unsubscribe(id);
       } else {
@@ -103,7 +104,10 @@ export const GongsiDetail = () => {
           isSubscribed: !gongsiInfo.company.isSubscribed,
         },
       });
-    } catch (error: any) {}
+    } catch (error: any) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const openLoginModal = () => {
@@ -145,7 +149,7 @@ export const GongsiDetail = () => {
                   </div>
                 </div>
               </div>
-              <div
+              <button
                 onClick={() =>
                   !isLoggedIn
                     ? onModal(
@@ -176,7 +180,7 @@ export const GongsiDetail = () => {
                     d="M8 3.464V1.1m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175C15 15.4 15 16 14.462 16H1.538C1 16 1 15.4 1 14.807c0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 8 3.464ZM4.54 16a3.48 3.48 0 0 0 6.92 0H4.54Z"
                   />
                 </svg>
-              </div>
+              </button>
             </div>
             <div style={{ whiteSpace: "pre-line" }} className="mb-4">
               {gongsiInfo?.gongsi.content}
