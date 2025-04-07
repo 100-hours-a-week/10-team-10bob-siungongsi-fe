@@ -1,6 +1,6 @@
 import api from "../api/api";
 
-const apiKey = process.env.REACT_APP_API_URL_DEV;
+const apiKey = process.env.REACT_APP_API_URL;
 
 export const fetchUserNotificationInfo = async (
   accessToken: string | null,

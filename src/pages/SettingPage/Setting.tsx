@@ -14,9 +14,15 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { ScrollDown } from "../../components/Icons/ScrollDown";
 import { useAuth } from "../../contexts/AuthContext";
+import { LoginSlider } from "../../components/LoginSlider";
 
 export const SettingPage = () => {
+  //로그인 창 관련
   const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
   const navigate = useNavigate();
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(
     Notification.permission === "granted",
@@ -152,10 +158,6 @@ export const SettingPage = () => {
 
   const location = useLocation();
 
-  const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
-  };
-
   return (
     <div>
       <HeaderLogin isLogin={true} />
@@ -227,7 +229,7 @@ export const SettingPage = () => {
         <div className="max-w-md h-[50vh] flex flex-col gap-2 justify-center items-center p-4">
           <div className="text-2xl font-bold">로그인이 필요합니다</div>
           <div
-            onClick={openLoginModal}
+            onClick={() => setIsOpen(true)}
             className="text-gray-400 cursor-pointer"
           >
             로그인하러 가기 {">>"}
@@ -236,6 +238,7 @@ export const SettingPage = () => {
       )}
       {isModalOn && <Modal modalContent={modalContent} />}
       <BottomNavigation />
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
     </div>
   );
 };

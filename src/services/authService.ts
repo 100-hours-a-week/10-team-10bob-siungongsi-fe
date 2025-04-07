@@ -6,7 +6,7 @@ export interface termsOfUse {
   termsContent: string;
 }
 
-const apiKey = process.env.REACT_APP_API_URL_DEV;
+const apiKey = process.env.REACT_APP_API_URL;
 
 // 약관 불러오기
 export const fetchTermsOfUse = async (): Promise<{

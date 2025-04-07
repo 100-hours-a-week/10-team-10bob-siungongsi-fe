@@ -14,7 +14,7 @@ interface companies2 {
   subscriberCnt: number;
   isSubscribed: boolean;
 }
-const apiKey = process.env.REACT_APP_API_URL_DEV;
+const apiKey = process.env.REACT_APP_API_URL;
 //추천기업 불러오기
 export const fetchRecomendedCompaniesList = async (
   accessToken: string | null,
