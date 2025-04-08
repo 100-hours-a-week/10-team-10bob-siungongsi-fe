@@ -10,7 +10,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createUser, fetchTermsOfUse } from "../../services/authService";
 import { termsOfUse } from "../../services/authService";
+import { useAuth } from "../../contexts/AuthContext";
 export const Regist = () => {
+  const { setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const loginInfo = location.state;
@@ -38,6 +40,7 @@ export const Regist = () => {
     try {
       const data = await createUser(loginInfo, agreedTermsIds);
       localStorage.setItem("jwtToken", data.data);
+      setIsLoggedIn(true);
       navigate("/");
     } catch (error) {
       console.error("회원가입 오류 : ", error);

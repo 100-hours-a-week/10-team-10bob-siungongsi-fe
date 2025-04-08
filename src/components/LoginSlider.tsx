@@ -5,6 +5,7 @@ import kakao from "../assets/kakao_login.png";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +18,7 @@ declare global {
 }
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
+  const { setIsLoggedIn } = useAuth();
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const navigate = useNavigate();
 
@@ -47,6 +49,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
 
       if (data.data.isUser) {
         localStorage.setItem("jwtToken", data.data.accessToken);
+        setIsLoggedIn(true);
         onClose();
       } else {
         navigate("/regist", { state: accessToken });
