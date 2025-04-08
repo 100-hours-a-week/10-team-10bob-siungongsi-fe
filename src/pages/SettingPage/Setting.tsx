@@ -24,12 +24,13 @@ export const SettingPage = () => {
     setIsOpen(false);
   };
   const navigate = useNavigate();
-  const [isNotificationEnabled, setIsNotificationEnabled] = useState(
-    Notification.permission === "granted",
-  );
-  const [token, setToken] = useState<string | undefined>(
-    "cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo",
-  );
+
+  // const [isNotificationEnabled, setIsNotificationEnabled] = useState(
+  //   Notification.permission === 'granted'
+  // );
+  // const [token, setToken] = useState<string | undefined>(
+  //   'cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo'
+  // );
   // const [permission, setPermission] = useState<NotificationPermission | null>(
   //   null
   // );
@@ -49,25 +50,25 @@ export const SettingPage = () => {
     onSubmit: () => {},
   });
 
-  const sendTokenToServer = async (notiEnabled: boolean) => {
-    try {
-      if (notiEnabled) {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          token,
-          localStorage.getItem("jwtToken"),
-        );
-      } else {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          "",
-          localStorage.getItem("jwtToken"),
-        );
-      }
-    } catch (error) {
-      console.error("❌ FCM 토큰 서버 전송 실패:", error);
-    }
-  };
+  // const sendTokenToServer = async (notiEnabled: boolean) => {
+  //   try {
+  //     if (notiEnabled) {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         token,
+  //         localStorage.getItem('jwtToken')
+  //       );
+  //     } else {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         '',
+  //         localStorage.getItem('jwtToken')
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error('❌ FCM 토큰 서버 전송 실패:', error);
+  //   }
+  // };
 
   //모바일 환경이면 새로고침
   useEffect(() => {
@@ -85,30 +86,30 @@ export const SettingPage = () => {
     };
   }, []);
   //Notification.permission 바뀌면 notiflag 변경
-  useEffect(() => {
-    sendTokenToServer(isNotificationEnabled);
-  }, [isNotificationEnabled]);
+  // useEffect(() => {
+  //   sendTokenToServer(isNotificationEnabled);
+  // }, [isNotificationEnabled]);
   //토큰값 불러오기
-  useEffect(() => {
-    const getToken = async () => {
-      if (Notification.permission === "granted") {
-        const data = await getPushToken();
-        setToken(data);
-      }
-    };
-    getToken();
-  }, []);
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     if (Notification.permission === 'granted') {
+  //       const data = await getPushToken();
+  //       setToken(data);
+  //     }
+  //   };
+  //   getToken();
+  // }, []);
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
     if (Notification.permission === "granted") {
-      setIsNotificationEnabled(true);
+      // setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
       return;
     }
     if (Notification.permission === "denied") {
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
-      setIsNotificationEnabled(false);
+      // setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
     }
@@ -116,7 +117,7 @@ export const SettingPage = () => {
 
     if (newPermission === "granted") {
       setSubscribeOn(true);
-      setIsNotificationEnabled(true);
+      // setIsNotificationEnabled(true);
       // sendTokenToServer(true);
     }
 
@@ -155,8 +156,6 @@ export const SettingPage = () => {
       navigate("/");
     }
   };
-
-  const location = useLocation();
 
   return (
     <div>

@@ -150,6 +150,7 @@ export const GongsiDetail = () => {
                 </div>
               </div>
               <button
+                disabled={isLoading}
                 onClick={() =>
                   !isLoggedIn
                     ? onModal(

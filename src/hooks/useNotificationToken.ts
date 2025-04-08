@@ -15,9 +15,9 @@ export const useNotificationToken = (
 
   const sendTokenToServer = async (token: string) => {
     try {
+      console.log(isNotificationEnabled);
       await patchUserNotificationInfo(isNotificationEnabled, token, userId);
       setIsTokenSent(true);
-      console.log("✅ FCM 토큰 서버에 전송 완료");
     } catch (error) {
       console.error("❌ FCM 토큰 서버 전송 실패:", error);
     }

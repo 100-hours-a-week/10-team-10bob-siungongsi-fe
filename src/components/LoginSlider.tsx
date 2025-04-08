@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import kakao from "../assets/kakao_login.png";
-
+import { getPushToken } from "../firebase";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import { useAuth } from "../contexts/AuthContext";
+import { patchUserNotificationInfo } from "../services/usersService";
 
 interface Props {
   isOpen: boolean;
@@ -50,6 +51,9 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       if (data.data.isUser) {
         localStorage.setItem("jwtToken", data.data.accessToken);
         setIsLoggedIn(true);
+        // if (!isMobile) {
+        //   navigate(0);
+        // }
         onClose();
       } else {
         navigate("/regist", { state: accessToken });
@@ -57,8 +61,19 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error("로그인 에러: ", error);
     } finally {
-      if (!isMobile) {
-        navigate(0);
+      const newToken = await getPushToken();
+      const oldToken = localStorage.getItem("fcmToken");
+
+      if (newToken && newToken !== oldToken) {
+        await patchUserNotificationInfo(
+          true,
+          newToken,
+          localStorage.getItem("jwtToken"),
+        );
+        localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
+        console.log("✅ FCM 토큰 서버에 등록 완료");
+      } else {
+        return;
       }
     }
   };

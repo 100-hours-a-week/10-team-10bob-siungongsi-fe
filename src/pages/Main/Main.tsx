@@ -20,7 +20,7 @@ export const Main = () => {
     boolean | undefined
   >();
 
-  useNotificationToken(localStorage.getItem("jwtToken"), isNotificationEnabled);
+  // useNotificationToken(localStorage.getItem("jwtToken"), isNotificationEnabled);
 
   useEffect(() => {
     try {
@@ -61,9 +61,9 @@ export const Main = () => {
       console.error("오늘의 핫 뉴스 불러오기 에러 : ", error);
     }
   }, []);
-  useEffect(() => {
-    setIsNotificationEnabled(Notification.permission === "granted");
-  }, []);
+  // useEffect(() => {
+  //   setIsNotificationEnabled(Notification.permission === "granted");
+  // }, []);
   const navigate = useNavigate();
 
   const length = popularGongsiList?.gongsiList?.length || 0;
