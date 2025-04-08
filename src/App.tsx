@@ -68,7 +68,7 @@ function App() {
             pauseOnHover
           />
           <Routes location={state?.backgroundLocation || location}>
-            <Route path="/" element={FirstPageComponent} />
+            <Route path="/" element={<Main />} />
             <Route path="/search" element={<GongsiSearch />} />
             <Route path="/regist" element={<Regist />} />
             <Route path="/regist_02" element={<Regist_02 />} />
