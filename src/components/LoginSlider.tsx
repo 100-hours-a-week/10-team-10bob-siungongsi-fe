@@ -73,7 +73,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
         console.log("✅ FCM 토큰 서버에 등록 완료");
       } else {
-        return;
+        console.log("ㄴㄴ");
       }
     }
   };
