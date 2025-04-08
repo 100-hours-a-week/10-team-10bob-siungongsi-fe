@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import { useAuth } from "../contexts/AuthContext";
 import { patchUserNotificationInfo } from "../services/usersService";
+import { isIos } from "../pages/Iphone_main/InstallPWA";
 
 interface Props {
   isOpen: boolean;
@@ -64,7 +65,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       const newToken = await getPushToken();
       const oldToken = localStorage.getItem("fcmToken");
 
-      if (newToken && newToken !== oldToken) {
+      if (newToken && newToken !== oldToken && !isIos()) {
         await patchUserNotificationInfo(
           true,
           newToken,
@@ -73,7 +74,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
         console.log("✅ FCM 토큰 서버에 등록 완료");
       } else {
-        console.log("ㄴㄴ");
+        return;
       }
     }
   };

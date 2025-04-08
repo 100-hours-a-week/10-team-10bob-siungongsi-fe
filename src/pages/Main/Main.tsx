@@ -20,7 +20,7 @@ export const Main = () => {
     boolean | undefined
   >();
 
-  useNotificationToken(localStorage.getItem("jwtToken"), true);
+  // useNotificationToken(localStorage.getItem("jwtToken"), true);
 
   useEffect(() => {
     try {
