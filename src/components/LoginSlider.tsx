@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import kakao from "../assets/kakao_login.png";
-
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
+import { useAuth } from "../contexts/AuthContext";
+import { patchUserNotificationInfo } from "../services/usersService";
+import { isIos } from "../pages/Iphone_main/InstallPWA";
+import { getPushToken } from "../firebase";
+import { toast } from "react-toastify";
 
 interface Props {
   isOpen: boolean;
   onClose: any;
 }
+
 declare global {
   interface Window {
     Kakao: any;
@@ -17,47 +21,133 @@ declare global {
 }
 
 export const LoginSlider = ({ isOpen, onClose }: Props) => {
+  const y = useMotionValue(0);
+  useEffect(() => {
+    y.set(0); // 매번 열릴 때 초기화
+  }, [isOpen, y]);
+  const { setIsLoggedIn } = useAuth();
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함
+  const REDIRECT_URI = "https://siungongsi.site/oauth/callback/kakao"; // 필요에 따라 수정
 
   useEffect(() => {
+    // 카카오 SDK 초기화
     if (!window.Kakao.isInitialized()) {
-      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
+      console.log("카카오 SDK 초기화 시작");
+      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // JavaScript Key 입력
+      console.log("카카오 SDK 초기화 완료:", window.Kakao.isInitialized());
     }
-  }, []);
 
-  const loginWithKakao = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      window.Kakao.Auth.login({
-        success: (authObj: any) => {
-          resolve(authObj.access_token); // ✅ resolve로 access_token 전달
-        },
-        fail: (err: any) => {
-          console.error("로그인 실패", err);
-          reject(err);
-        },
-      });
-    });
+    // 리다이렉트 후 처리
+    const handleKakaoCallback = async () => {
+      console.log("카카오 로그인 콜백 처리 중...");
+      try {
+        // getAuthInfo를 사용하여 인증 정보 확인
+        const authObj = window.Kakao.Auth.getAuthInfo();
+        if (!authObj) {
+          console.log("인증 정보가 없음, 로그인 프로세스 중단");
+          return;
+        }
+
+        console.log("카카오 인증 정보 확인:", authObj);
+        const accessToken = authObj.access_token;
+
+        console.log("백엔드 로그인 시도 중...");
+        const data = await login(accessToken);
+        console.log("백엔드 응답:", data);
+
+        if (data.data.isUser) {
+          console.log("로그인 성공, JWT 토큰 저장");
+          localStorage.setItem("jwtToken", data.data.accessToken);
+          setIsLoggedIn(true);
+          // 알림 토큰 처리
+          handleNotificationToken();
+          // URL에서 인증 코드 파라미터 제거 (선택사항)
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
+        } else {
+          console.log("신규 사용자, 회원가입 페이지로 이동");
+          navigate("/regist", { state: accessToken });
+        }
+      } catch (error: any) {
+        console.error("로그인 처리 중 에러:", error);
+        let errorMessage = "로그인 처리 중 오류가 발생했습니다";
+        setLoginError(errorMessage);
+        toast.error(errorMessage);
+      }
+    };
+
+    // URL에서 인증 코드 확인 (리다이렉트 되었는지 체크)
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+    if (code) {
+      console.log("인가 코드 감지:", code);
+      // 인가 코드가 있으면 이미 리다이렉트된 것이므로 인증 처리
+      window.Kakao.Auth.setAccessToken()
+        .then(() => {
+          console.log("액세스 토큰 설정 완료");
+          handleKakaoCallback();
+        })
+        .catch((err: any) => {
+          console.error("액세스 토큰 설정 실패:", err);
+          setLoginError("카카오 인증 처리 중 오류가 발생했습니다");
+          toast.error("인증 처리 중 오류가 발생했습니다");
+        });
+    }
+  }, [navigate, setIsLoggedIn]);
+
+  // 알림 토큰 처리 함수
+  const handleNotificationToken = async () => {
+    try {
+      console.log("FCM 토큰 처리 시작");
+      const newToken = await getPushToken();
+      const oldToken = localStorage.getItem("fcmToken");
+
+      if (newToken && newToken !== oldToken && !isIos()) {
+        console.log("FCM 토큰 업데이트 필요:", newToken);
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        if (jwtToken) {
+          await patchUserNotificationInfo(true, newToken, jwtToken);
+          localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
+          console.log("✅ FCM 토큰 서버에 등록 완료");
+          toast.info("로그인 되었습니다");
+        } else {
+          console.log("JWT 토큰이 없어 FCM 토큰 업데이트를 건너뜁니다");
+        }
+      } else {
+        console.log(
+          "FCM 토큰 업데이트 불필요. iOS:",
+          isIos(),
+          "토큰 동일:",
+          newToken === oldToken,
+        );
+        toast.info("로그인 되었습니다");
+      }
+    } catch (fcmError) {
+      console.error("FCM 토큰 처리 중 오류:", fcmError);
+    }
   };
 
-  const postAccessToken = async () => {
+  // 카카오 로그인 리다이렉트 방식 구현
+  const loginWithKakao = () => {
+    console.log("카카오 로그인 리다이렉트 시작...");
     try {
-      const accessToken = await loginWithKakao();
-      const data = await login(accessToken);
-
-      if (data.data.isUser) {
-        localStorage.setItem("jwtToken", data.data.accessToken);
-
-        onClose();
-      } else {
-        navigate("/regist", { state: accessToken });
-      }
+      // 리다이렉트 방식으로 인증 시작 (팝업 대신)
+      window.Kakao.Auth.authorize({
+        redirectUri: REDIRECT_URI,
+        state: "kakao_login", // 선택적 상태 정보
+      });
     } catch (error) {
-      console.error("로그인 에러: ", error);
-    } finally {
-      if (!isMobile) {
-        navigate(0);
-      }
+      console.error("카카오 리다이렉트 시작 중 오류:", error);
+      setLoginError("카카오 로그인을 시작할 수 없습니다");
+      toast.error("로그인을 시작할 수 없습니다");
     }
   };
 
@@ -65,36 +155,77 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-end z-[1000]"
       onClick={onClose}
     >
       <motion.div
-        className="fixed bottom-0 bg-white p-6 rounded-tl-xl rounded-tr-xl shadow-xl w-96 max-h-[290px]"
-        initial={{ y: "100vh", opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }} //이거 만약 모바일로 옮기면 수치 수정해야겠음
-        exit={{ y: "100vh", opacity: 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        onClick={(e) => e.stopPropagation()} // 모달 내부 클릭시 닫히지 않도록
+        className="bg-white rounded-t-2xl shadow-xl w-full max-w-sm mx-auto overflow-hidden"
+        initial={{ y: "100%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "100%", opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between mb-4">
-          <h2 className="text-xl font-bold text-black">로그인</h2>
-          <button className="text-black rounded-md" onClick={onClose}>
-            X
-          </button>
+        {/* 상단 핸들 - iOS 스타일 */}
+        <div className="w-full flex justify-center mt-3 mb-1">
+          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
         </div>
-        <div className="flex flex-col p-8 items-center gap-8">
-          <img
-            className="cursor-pointer"
-            onClick={postAccessToken}
-            src={kakao}
-            alt=""
-          />
-          {/* <button
-            className="text-gray-300 font-normal"
-            onClick={() => navigate("/regist")}
-          >
-            회원가입 하시겠습니까?
-          </button> */}
+
+        <div className="p-5">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-gray-900">로그인</h2>
+            <button
+              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500"
+              onClick={onClose}
+            >
+              <svg
+                className="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center mb-6">
+            <div className="bg-gray-50 w-full rounded-2xl p-4 mb-5 text-center">
+              <p className="text-gray-700 text-sm mb-4">
+                간편하게 로그인하고 원하는 기업의
+                <br />
+                공시 정보를 받아보세요
+              </p>
+
+              {loginError && (
+                <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-xs text-left">
+                  <p className="font-bold mb-1">로그인 오류:</p>
+                  <p>{loginError}</p>
+                </div>
+              )}
+
+              <button
+                onClick={loginWithKakao}
+                className="flex items-center justify-center w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <img
+                  className="w-full max-w-[200px]"
+                  src={kakao}
+                  alt="카카오 로그인"
+                />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 text-center">
+              로그인 시 서비스 이용약관 및 개인정보 처리방침에 동의하게 됩니다
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>

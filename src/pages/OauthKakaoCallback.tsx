@@ -5,8 +5,8 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
 
-const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
-const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback";
+const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e";
+const REDIRECT_URI = "https://siungongsi.site/oauth/callback/kakao";
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ export const OauthKakaoCallback = () => {
         localStorage.setItem("jwtToken", loginResponse.data.accessToken);
         setIsLoggedIn(true);
 
-        // navigate(-1); // 로그인 완료 후 메인으로
+        navigate(-1); // 로그인 완료 후 메인으로
       } catch (error) {
         console.error("카카오 로그인 중 에러 발생:", error);
         navigate("/"); // 실패 시 홈으로

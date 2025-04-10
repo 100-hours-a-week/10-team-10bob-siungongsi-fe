@@ -70,7 +70,7 @@ function App() {
           />
           <Routes location={state?.backgroundLocation || location}>
             <Route
-              path="/oauth/kakao/callback"
+              path="/oauth/callback/kakao"
               element={<OauthKakaoCallback />}
             />
             <Route path="/" element={<Main />} />
