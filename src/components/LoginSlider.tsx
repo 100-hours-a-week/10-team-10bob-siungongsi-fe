@@ -87,6 +87,14 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
     }
   };
 
+  const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e"; // 본인의 REST API 키
+  const REDIRECT_URI = "http://localhost:3000/oauth/kakao/callback"; // 카카오에 등록된 Redirect URI
+
+  const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const loginKaKao = () => {
+    window.location.href = kakaoLoginUrl;
+    console.log(localStorage.getItem("kakaoAccessToken"));
+  };
   if (!isOpen) return null;
 
   return (
@@ -148,7 +156,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
               </p>
 
               <button
-                onClick={postAccessToken}
+                onClick={loginKaKao}
                 className="flex items-center justify-center w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <img

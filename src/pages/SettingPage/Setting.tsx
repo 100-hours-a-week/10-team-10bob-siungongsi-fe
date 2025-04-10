@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ScrollDown } from "../../components/Icons/ScrollDown";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginSlider } from "../../components/LoginSlider";
+import { isIos } from "../Iphone_main/InstallPWA";
 
 export const SettingPage = () => {
   const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
@@ -109,11 +110,13 @@ export const SettingPage = () => {
       setSubscribeOn(false);
       return;
     }
-    const newPermission = await Notification.requestPermission();
 
-    if (newPermission === "granted") {
-      setSubscribeOn(true);
-      // setIsNotificationEnabled(true);
+    if (!isIos()) {
+      const newPermission = await Notification.requestPermission();
+      if (newPermission === "granted") {
+        setSubscribeOn(true);
+        // setIsNotificationEnabled(true);
+      }
     }
   };
   //모달 내 내용 설정
@@ -148,12 +151,6 @@ export const SettingPage = () => {
 
       navigate("/");
     }
-  };
-
-  const location = useLocation();
-
-  const openLoginModal = () => {
-    navigate("/login", { state: { backgroundLocation: location } });
   };
 
   return (

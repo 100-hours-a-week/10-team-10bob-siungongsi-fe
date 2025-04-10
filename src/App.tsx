@@ -24,6 +24,7 @@ import { messaging, onMessage } from "./firebase";
 import { showCustomNotification } from "./components/CustomNotification";
 import { AuthProvider } from "./contexts/AuthContext";
 import InstallPWA, { isIos } from "./pages/Iphone_main/InstallPWA";
+import OauthKakaoCallback from "./pages/OauthKakaoCallback";
 
 function App() {
   const location = useLocation();
@@ -68,6 +69,10 @@ function App() {
             pauseOnHover
           />
           <Routes location={state?.backgroundLocation || location}>
+            <Route
+              path="/oauth/kakao/callback"
+              element={<OauthKakaoCallback />}
+            />
             <Route path="/" element={<Main />} />
             <Route path="/search" element={<GongsiSearch />} />
             <Route path="/regist" element={<Regist />} />
