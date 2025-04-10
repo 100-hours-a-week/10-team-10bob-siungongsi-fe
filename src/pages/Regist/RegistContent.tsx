@@ -20,7 +20,7 @@ export const RegistContent = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="mb-6">
+    <div className="mb-1">
       {/* 헤더 부분 */}
       <div className="flex justify-between items-center p-4 bg-white rounded-xl shadow border border-gray-200">
         <div className="flex items-center gap-3 flex-1">
