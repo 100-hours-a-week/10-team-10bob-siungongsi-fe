@@ -8,7 +8,7 @@ export const BottomNavigation = () => {
   const currentPath = location.pathname;
 
   return (
-    <div className="mt-20 z-30">
+    <div className="mt-8 z-30">
       <div className="fixed bottom-0 left-0 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex justify-between h-full max-w-xs grid-cols-4 mx-auto font-medium">
           <Link

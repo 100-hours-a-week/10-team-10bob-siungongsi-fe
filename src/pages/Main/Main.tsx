@@ -11,10 +11,17 @@ import { useEffect, useState } from "react";
 import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { ServiceButton } from "./ServiceButton";
 import { useNotificationToken } from "../../hooks/useNotificationToken";
+import { LoginSlider } from "../../components/LoginSlider";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const [isNotificationEnabled, setIsNotificationEnabled] = useState<
     boolean | undefined
@@ -186,7 +193,7 @@ export const Main = () => {
         </section>
 
         {/* 이런 서비스는 어때요? 섹션 - 애플 스타일로 변경 */}
-        <section className="mb-20">
+        <section className="mb-8">
           <div className="mb-4">
             <span className="text-xs font-medium text-primary uppercase tracking-wide">
               Recommended For You
@@ -197,7 +204,7 @@ export const Main = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-4">
-            {!localStorage.getItem("jwtToken") ? (
+            {!isLoggedIn ? (
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-sm p-5 text-white">
                 <div className="mb-4">
                   <img
@@ -211,7 +218,7 @@ export const Main = () => {
                   알림을 놓치지 마세요
                 </p>
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => setIsOpen(true)}
                   className="mt-4 px-3 py-1.5 bg-white text-blue-600 text-sm font-medium rounded-full"
                 >
                   시작하기
@@ -261,7 +268,7 @@ export const Main = () => {
           </div>
         </section>
       </div>
-
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
       <BottomNavigation />
     </div>
   );

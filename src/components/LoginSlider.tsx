@@ -9,6 +9,7 @@ import { patchUserNotificationInfo } from "../services/usersService";
 import { isIos } from "../pages/Iphone_main/InstallPWA";
 import { X } from "lucide-react";
 import { getPushToken } from "../firebase";
+import { toast } from "react-toastify";
 
 interface Props {
   isOpen: boolean;
@@ -78,7 +79,9 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         );
         localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
         console.log("✅ FCM 토큰 서버에 등록 완료");
+        toast.info("로그인 되었습니다");
       } else {
+        toast.info("로그인 되었습니다");
         return;
       }
     }
