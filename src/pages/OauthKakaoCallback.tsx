@@ -1,6 +1,6 @@
 // src/pages/OauthKakaoCallback.tsx
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
@@ -11,10 +11,11 @@ const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback";
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
   const { setIsLoggedIn } = useAuth();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get("code");
+  console.log("인가코드 : ", code);
 
   useEffect(() => {
-    const code = new URL(window.location.href).searchParams.get("code");
-    console.log("인가코드 : ", code);
     if (!code) {
       console.error("❌ 인가코드가 없습니다. 로그인 실패 처리.");
       return;
@@ -60,7 +61,7 @@ export const OauthKakaoCallback = () => {
     if (code) {
       getTokenAndLogin();
     }
-  }, [navigate, setIsLoggedIn]);
+  }, [code, navigate, setIsLoggedIn]);
 
   return <div>로그인 처리 중입니다...</div>;
 };
