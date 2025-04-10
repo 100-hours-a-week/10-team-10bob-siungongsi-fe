@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
 
 const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e";
-const REDIRECT_URI = "http://localhost:3000/oauth/kakao/callback";
+const REDIRECT_URI = "http://siungongsi.site/oauth/kakao/callback";
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
