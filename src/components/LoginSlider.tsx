@@ -88,7 +88,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   // };
 
   const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e"; // 본인의 REST API 키
-  const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback"; // 카카오에 등록된 Redirect URI
+  const REDIRECT_URI = "https://localhost:3000/oauth/kakao/callback"; // 카카오에 등록된 Redirect URI
 
   const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const loginKaKao = () => {

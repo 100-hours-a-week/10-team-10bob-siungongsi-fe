@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
 
 const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
-const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback";
+const REDIRECT_URI = "http://localhost:3000/oauth/kakao/callback";
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export const OauthKakaoCallback = () => {
         navigate("/"); // 실패 시 홈으로
       }
     };
-
+    console.log("dd");
     if (code) {
       getTokenAndLogin();
     }
