@@ -31,7 +31,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함
-  const REDIRECT_URI = "https://siungongsi.site/oauth/callback/kakao"; // 필요에 따라 수정
+  const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao"; // 필요에 따라 수정
 
   useEffect(() => {
     // 카카오 SDK 초기화
