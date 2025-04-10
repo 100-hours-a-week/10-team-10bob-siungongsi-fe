@@ -115,7 +115,7 @@ export const GongsiSearch = () => {
 
       <div className="p-4">
         {/* 검색 섹션 타이틀 */}
-        <div className="mb-6 mt-2">
+        <div className="mb-4 mt-2">
           <span className="text-xs font-medium text-primary uppercase tracking-wide">
             Search
           </span>
@@ -124,7 +124,7 @@ export const GongsiSearch = () => {
           </h2>
 
           {/* 검색바 */}
-          <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+          <div className="bg-white rounded-2xl shadow-sm p-4">
             <SearchBar
               keyword={keyword}
               onChangeKeyword={onChangeKeyword}
@@ -135,30 +135,35 @@ export const GongsiSearch = () => {
           </div>
         </div>
 
-        {/* 필터 영역 */}
-        <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-            {/* 정렬 필터 */}
-            <div className="flex items-center">
-              <span className="text-gray-500 text-sm mr-3">정렬:</span>
-              <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
-            </div>
+        {/* 필터 영역 - 애플 스타일로 변경 */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 mb-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
+            필터 옵션
+          </h3>
 
-            {/* 기간 선택 필터 */}
+          {/* 정렬 필터 - 세로 배치로 변경 */}
+          <div className="mb-4">
+            <p className="text-sm font-medium text-gray-500 mb-2">정렬 기준</p>
+            <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
+          </div>
+
+          {/* 기간 선택 필터 - 별도 행으로 분리 */}
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-2">기간 설정</p>
             <button
-              className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors"
+              className="flex items-center w-full justify-between py-2 px-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm font-medium text-gray-700 transition-colors border border-gray-200"
               onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
             >
-              <svg
-                className="w-4 h-4 text-primary"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
-              </svg>
-              <span>
+              <span className="flex items-center">
+                <svg
+                  className="w-4 h-4 text-primary mr-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
+                </svg>
                 {startDate ? (
                   <span>
                     {startDate} ~ {endDate}
@@ -167,38 +172,33 @@ export const GongsiSearch = () => {
                   <span>전체 기간</span>
                 )}
               </span>
+              <svg
+                className="w-4 h-4 text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
             </button>
           </div>
         </div>
 
-        {/* 검색 결과 섹션 */}
-        <div className="mb-6">
-          <div className="flex items-baseline justify-between mb-4">
-            <div>
-              <span className="text-xs font-medium text-primary uppercase tracking-wide">
-                Results
-              </span>
-              <h2 className="text-2xl font-bold text-gray-900 mt-1">
-                검색 결과
-              </h2>
-            </div>
-
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-            />
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-            <GongsiPagination
-              filterMenu={filterMenu}
-              startDate={startDate}
-              endDate={endDate}
-              selectedCompany={selectedCompany}
-            />
-          </div>
+        {/* 검색 결과 섹션 - 타이틀 제거 */}
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+          <GongsiPagination
+            filterMenu={filterMenu}
+            startDate={startDate}
+            endDate={endDate}
+            selectedCompany={selectedCompany}
+          />
         </div>
 
         {/* 캘린더 모달 */}
