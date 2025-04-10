@@ -102,7 +102,7 @@ export const Main = () => {
       <HeaderLogin isLogin={false} />
 
       <div className="p-4">
-        <div className="mb-6">
+        <div className="mt-3 mb-6">
           <div className="flex items-center mb-2">
             <span className="text-xs font-medium text-primary uppercase tracking-wide">
               Today's Spotlight
