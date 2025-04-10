@@ -31,69 +31,68 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // 🔹 JavaScript Key 입력
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!window.Kakao.isInitialized()) {
+  //     window.Kakao.init('dc0dfb49278efc7bde35eb001c7c4d5e'); // 🔹 JavaScript Key 입력
+  //   }
+  // }, []);
 
-  const loginWithKakao = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      window.Kakao.Auth.login({
-        success: (authObj: any) => {
-          resolve(authObj.access_token); // ✅ resolve로 access_token 전달
-        },
-        fail: (err: any) => {
-          console.error("로그인 실패", err);
-          reject(err);
-        },
-      });
-    });
-  };
+  // const loginWithKakao = (): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //     window.Kakao.Auth.login({
+  //       success: (authObj: any) => {
+  //         resolve(authObj.access_token); // ✅ resolve로 access_token 전달
+  //       },
+  //       fail: (err: any) => {
+  //         console.error('로그인 실패', err);
+  //         reject(err);
+  //       },
+  //     });
+  //   });
+  // };
 
-  const postAccessToken = async () => {
-    try {
-      const accessToken = await loginWithKakao();
-      const data = await login(accessToken);
-      if (data.data.isUser) {
-        localStorage.setItem("jwtToken", data.data.accessToken);
-        setIsLoggedIn(true);
-        // if (!isMobile) {
-        //   navigate(0);
-        // }
-        onClose();
-      } else {
-        navigate("/regist", { state: accessToken });
-      }
-    } catch (error) {
-      console.error("로그인 에러: ", error);
-    } finally {
-      const newToken = await getPushToken();
-      const oldToken = localStorage.getItem("fcmToken");
+  // const postAccessToken = async () => {
+  //   try {
+  //     const accessToken = await loginWithKakao();
+  //     const data = await login(accessToken);
+  //     if (data.data.isUser) {
+  //       localStorage.setItem('jwtToken', data.data.accessToken);
+  //       setIsLoggedIn(true);
+  //       // if (!isMobile) {
+  //       //   navigate(0);
+  //       // }
+  //       onClose();
+  //     } else {
+  //       navigate('/regist', { state: accessToken });
+  //     }
+  //   } catch (error) {
+  //     console.error('로그인 에러: ', error);
+  //   } finally {
+  //     const newToken = await getPushToken();
+  //     const oldToken = localStorage.getItem('fcmToken');
 
-      if (newToken && newToken !== oldToken && !isIos()) {
-        await patchUserNotificationInfo(
-          true,
-          newToken,
-          localStorage.getItem("jwtToken"),
-        );
-        localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
-        console.log("✅ FCM 토큰 서버에 등록 완료");
-        toast.info("로그인 되었습니다");
-      } else {
-        toast.info("로그인 되었습니다");
-        return;
-      }
-    }
-  };
+  //     if (newToken && newToken !== oldToken && !isIos()) {
+  //       await patchUserNotificationInfo(
+  //         true,
+  //         newToken,
+  //         localStorage.getItem('jwtToken')
+  //       );
+  //       localStorage.setItem('fcmToken', newToken); // 중복 호출 방지
+  //       console.log('✅ FCM 토큰 서버에 등록 완료');
+  //       toast.info('로그인 되었습니다');
+  //     } else {
+  //       toast.info('로그인 되었습니다');
+  //       return;
+  //     }
+  //   }
+  // };
 
-  const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e"; // 본인의 REST API 키
+  const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e"; // 본인의 REST API 키
   const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback"; // 카카오에 등록된 Redirect URI
 
   const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const loginKaKao = () => {
     window.location.href = kakaoLoginUrl;
-    console.log(localStorage.getItem("kakaoAccessToken"));
   };
   if (!isOpen) return null;
 

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
 
-const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e";
+const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
 const REDIRECT_URI = "https://siungongsi.site/oauth/kakao/callback";
 
 export const OauthKakaoCallback = () => {
@@ -14,6 +14,7 @@ export const OauthKakaoCallback = () => {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
+    console.log("인가코드 : ", code);
 
     const getTokenAndLogin = async () => {
       try {
@@ -34,6 +35,9 @@ export const OauthKakaoCallback = () => {
         );
 
         const kakaoAccessToken = res.data.access_token;
+        localStorage.setItem("kakaoAccessToken", kakaoAccessToken);
+
+        console.log(kakaoAccessToken);
 
         // 2. 우리 백엔드 login API로 access token 전송 → JWT 발급
 
@@ -42,7 +46,7 @@ export const OauthKakaoCallback = () => {
         localStorage.setItem("jwtToken", loginResponse.data.accessToken);
         setIsLoggedIn(true);
 
-        navigate(-1); // 로그인 완료 후 메인으로
+        // navigate(-1); // 로그인 완료 후 메인으로
       } catch (error) {
         console.error("카카오 로그인 중 에러 발생:", error);
         navigate("/"); // 실패 시 홈으로
