@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { GongsiData } from "../services/gongsiService";
-import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 
 interface NewsSliderProps {
@@ -15,7 +14,10 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   const length = GongsiData?.gongsiList?.length || 1;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isTouching, setIsTouching] = useState(false);
-  const sliderRef = useRef<HTMLDivElement>(null);
+
+  // 터치 관련 상태
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -104,6 +106,8 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   }, []);
 
   const startInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
     intervalRef.current = setInterval(() => {
       goToSlide((currentIndex + 1) % length, "right");
     }, 5000);
@@ -117,13 +121,19 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   };
 
   useEffect(() => {
-    if (GongsiData?.gongsiListSize !== 0 && !isTouching) {
+    if (GongsiData?.gongsiListSize !== 0 && !isTouching && !isAnimating) {
       startInterval();
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [length, GongsiData?.gongsiListSize, isTouching]);
+  }, [
+    length,
+    GongsiData?.gongsiListSize,
+    isTouching,
+    isAnimating,
+    currentIndex,
+  ]);
 
   // 슬라이드 전환 함수
   const goToSlide = (index: number, slideDirection: "left" | "right") => {
@@ -144,46 +154,74 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
   // 수동으로 슬라이드 변경
   const prevSlide = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    resetInterval();
+    if (isAnimating) return;
+
     const newIndex = currentIndex === 0 ? length - 1 : currentIndex - 1;
     goToSlide(newIndex, "left");
+    resetInterval();
   };
 
   const nextSlide = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    resetInterval();
+    if (isAnimating) return;
+
     const newIndex = (currentIndex + 1) % length;
     goToSlide(newIndex, "right");
+    resetInterval();
   };
 
   const setIndicator = (index: number) => {
-    resetInterval();
+    if (isAnimating) return;
+
     const slideDirection = index > currentIndex ? "right" : "left";
     goToSlide(index, slideDirection);
+    resetInterval();
   };
 
-  // useSwipeable 훅 설정 - 감도와 동작 개선
-  const handlers = useSwipeable({
-    onSwipedLeft: () => nextSlide(),
-    onSwipedRight: () => prevSlide(),
-    preventScrollOnSwipe: true,
-    trackMouse: true,
-    trackTouch: true,
-    delta: 10, // 더 민감하게 스와이프 감지
-    swipeDuration: 500, // 스와이프 지속 시간
-    rotationAngle: 0, // 회전 각도 보정
-  });
-
-  // 터치 이벤트를 위한 별도 핸들러
-  const handleTouchStart = () => {
+  // 네이티브 터치 이벤트 핸들러
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
     setIsTouching(true);
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX.current) return;
+    touchEndX.current = e.touches[0].clientX;
   };
 
   const handleTouchEnd = () => {
     setIsTouching(false);
+
+    if (touchStartX.current && touchEndX.current) {
+      const diff = touchStartX.current - touchEndX.current;
+      const threshold = 50; // 스와이프로 감지할 최소 거리 (픽셀)
+
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          // 왼쪽으로 스와이프 -> 다음 슬라이드
+          nextSlide();
+        } else {
+          // 오른쪽으로 스와이프 -> 이전 슬라이드
+          prevSlide();
+        }
+      }
+    }
+
+    // 터치 상태 초기화
+    touchStartX.current = null;
+    touchEndX.current = null;
+
+    // 타이머 재시작
+    resetInterval();
   };
 
   const routeDetailPage = (id: number | undefined) => {
+    if (isAnimating || isTouching) return;
     navigate(`/detail/${id}`);
   };
 
@@ -271,9 +309,8 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
     <div className="relative w-full overflow-hidden">
       <div
         className="relative h-72"
-        {...handlers}
-        ref={sliderRef}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {/* 현재 슬라이드 */}
