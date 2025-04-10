@@ -53,7 +53,7 @@ function App() {
   const FirstPageComponent =
     isIos() && !isInStandaloneMode() ? <InstallPWA /> : <Main />;
   return (
-    <div className="w-full max-w-sm mx-auto overflow-y-scroll scrollbar-hide">
+    <div className="w-full max-w-[430px] mx-auto overflow-y-scroll scrollbar-hide">
       <Sentry.ErrorBoundary
         fallback={<p>문제가 발생했어요! 잠시 후 다시 시도해주세요.</p>}
       >

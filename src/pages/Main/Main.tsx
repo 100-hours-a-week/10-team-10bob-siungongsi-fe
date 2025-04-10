@@ -81,8 +81,14 @@ export const Main = () => {
   };
   // const twoDaysAgo = new Date();
   // twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  const getAdjustedToday = () => {
+    const now = new Date();
+    const day = now.getDay();
+    now.setDate(now.getDate() - (day === 6 ? 1 : day === 0 ? 2 : 0)); // 토요일이면 -1일, 일요일이면 -2일
+    return now;
+  };
 
-  const today = formatDate(new Date())?.toString(); // 현재 날짜
+  const today = formatDate(getAdjustedToday())?.toString();
 
   return (
     <div className="min-h-screen">

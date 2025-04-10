@@ -103,7 +103,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           exit={{ y: "100%", opacity: 0 }} // 사라질 때
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           drag="y"
-          dragConstraints={{ top: 10, bottom: 100 }}
+          dragConstraints={{ top: 0, bottom: 100 }}
           dragElastic={0.2}
           onDragEnd={(e, info) => {
             if (info.offset.y > 100) {
@@ -113,7 +113,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           onClick={(e) => e.stopPropagation()} // 바텀시트 내부 클릭 시 닫힘 방지
         >
           <div className="w-10 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-4" />
-          <div className="flex justify-between px-6 mb-4 rounded-tl-lg rounded-tr-lg">
+          <div className="flex justify-between px-6 rounded-tl-lg rounded-tr-lg">
             <h2 className="text-xl font-bold text-black">로그인</h2>
 
             <button onClick={onClose}>
@@ -122,7 +122,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
           </div>
           <div className="flex flex-col p-8 items-center gap-8">
             <img
-              className="cursor-pointer"
+              className="cursor-pointe"
               onClick={postAccessToken}
               src={kakao}
               alt=""
