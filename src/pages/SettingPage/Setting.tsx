@@ -69,7 +69,7 @@ export const SettingPage = () => {
       const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
       setIsIOSDevice(isIOS);
     };
-
+    
     checkIOSDevice();
   }, []);
 
@@ -88,12 +88,12 @@ export const SettingPage = () => {
       window.removeEventListener("focus", handleFocus);
     };
   }, []);
-
+  
   //Notification.permission 바뀌면 notiflag 변경
   useEffect(() => {
     sendTokenToServer(isNotificationEnabled);
   }, [isNotificationEnabled]);
-
+  
   //토큰값 불러오기
   useEffect(() => {
     const getToken = async () => {
@@ -104,7 +104,7 @@ export const SettingPage = () => {
     };
     getToken();
   }, []);
-
+  
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
@@ -112,7 +112,7 @@ export const SettingPage = () => {
       setShowIOSModal(true);
       return;
     }
-
+    
     if (Notification.permission === "granted") {
       setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
@@ -131,7 +131,7 @@ export const SettingPage = () => {
       setIsNotificationEnabled(true);
     }
   };
-
+  
   //모달 내 내용 설정
   const onModal = (
     titleMessage: string,
@@ -149,15 +149,15 @@ export const SettingPage = () => {
     });
     setIsModalOn(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOn(false);
   };
-
+  
   const closeIOSModal = () => {
     setShowIOSModal(false);
   };
-
+  
   //회원탈퇴
   const userWithDrawFunction = async () => {
     try {
@@ -384,17 +384,14 @@ export const SettingPage = () => {
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 iOS 알림 설정 안내
               </h3>
-
+              
               <div className="mb-5">
                 <p className="text-gray-600 mb-4">
-                  iOS에서는 웹 알림 기능이 제한됩니다. 더 나은 사용 경험을 위해
-                  홈 화면에 앱을 추가해 보세요.
+                  iOS에서는 웹 알림 기능이 제한됩니다. 더 나은 사용 경험을 위해 홈 화면에 앱을 추가해 보세요.
                 </p>
-
+                
                 <div className="bg-gray-100 rounded-lg p-4 mb-4">
-                  <h4 className="font-medium text-gray-900 mb-2">
-                    PWA 설치 방법
-                  </h4>
+                  <h4 className="font-medium text-gray-900 mb-2">PWA 설치 방법</h4>
                   <ol className="list-decimal list-inside text-sm text-gray-600 space-y-2">
                     <li>Safari 브라우저에서 아래 공유 버튼을 탭하세요</li>
                     <li>'홈 화면에 추가' 옵션을 선택하세요</li>
@@ -402,7 +399,7 @@ export const SettingPage = () => {
                   </ol>
                 </div>
               </div>
-
+              
               <div className="flex justify-end">
                 <button
                   onClick={closeIOSModal}
