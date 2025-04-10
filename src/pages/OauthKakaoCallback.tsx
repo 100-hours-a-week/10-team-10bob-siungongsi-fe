@@ -29,7 +29,7 @@ export const OauthKakaoCallback = () => {
             grant_type: "authorization_code",
             client_id: REST_API_KEY,
             redirect_uri: REDIRECT_URI,
-            code: code || "",
+            code: code,
           }),
           {
             headers: {
