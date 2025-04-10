@@ -15,6 +15,10 @@ export const OauthKakaoCallback = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
     console.log("인가코드 : ", code);
+    if (!code) {
+      console.error("❌ 인가코드가 없습니다. 로그인 실패 처리.");
+      return;
+    }
 
     const getTokenAndLogin = async () => {
       try {

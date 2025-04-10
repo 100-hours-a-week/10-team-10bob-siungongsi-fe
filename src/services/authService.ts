@@ -82,7 +82,7 @@ export const userWithdraw = async (
   try {
     const response = await api.delete<{ code: number; message: string }>(
       `${apiKey}auth/withdraw`,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
+      { headers: { Authorization: `${accessToken}` } },
     );
     return response.data;
   } catch (error) {
