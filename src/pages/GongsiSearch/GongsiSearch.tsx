@@ -37,11 +37,6 @@ export const GongsiSearch = () => {
     initalSelectedCompany,
   );
 
-  // useEffect(() => {
-  //   // 🔹 URL 쿼리 파라미터로 현재 페이지 반영
-  //   setSearchParams({ sort: filterMenu });
-  // }, [filterMenu]);
-
   useEffect(() => {
     if (!keyword) return;
 
@@ -113,76 +108,118 @@ export const GongsiSearch = () => {
         .replace(".", "");
     } else return "";
   };
+
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <HeaderLogin isLogin={false} />
-      <div className="p-2">
-        <div className="mt-4">
-          {/* <SearchBar onSelect={() => null} isDisabled={false} /> */}
-          <SearchBar
-            keyword={keyword}
-            onChangeKeyword={onChangeKeyword}
-            companies={companies?.companyNameList}
-            isLoading={isLoading}
-            onSelectCompany={onSelectCompany}
-          />
-        </div>
-        <div className="flex py-2 justify-between items-center border-b">
-          <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
-          <div className="flex flex-col items-end">
-            <div
-              className="border border-primary rounded-xl p-1 px-3 text-sm text-primary cursor-pointer"
-              onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
-            >
-              {startDate ? (
-                <div className="flex gap-2 ">
-                  {startDate} ~ {endDate}
-                  <svg
-                    className="w-4 text-primary dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
-                  </svg>
-                </div>
-              ) : (
-                <div className="flex gap-4">
-                  전체 기간
-                  <svg
-                    className="w-4 text-primary dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
-                  </svg>
-                </div>
-              )}
-            </div>
+
+      <div className="p-4">
+        {/* 검색 섹션 타이틀 */}
+        <div className="mb-6 mt-2">
+          <span className="text-xs font-medium text-primary uppercase tracking-wide">
+            Search
+          </span>
+          <h2 className="text-2xl font-bold text-gray-900 mt-1 mb-4">
+            공시 검색
+          </h2>
+
+          {/* 검색바 */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+            <SearchBar
+              keyword={keyword}
+              onChangeKeyword={onChangeKeyword}
+              companies={companies?.companyNameList}
+              isLoading={isLoading}
+              onSelectCompany={onSelectCompany}
+            />
           </div>
         </div>
-        {/* 공시목록 */}
-        <div>
-          <GongsiPagination
-            filterMenu={filterMenu}
-            startDate={startDate}
-            endDate={endDate}
-            selectedCompany={selectedCompany}
-          />
+
+        {/* 필터 영역 */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+            {/* 정렬 필터 */}
+            <div className="flex items-center">
+              <span className="text-gray-500 text-sm mr-3">정렬:</span>
+              <PostFilter filter={filterMenu} onChangeFilter={onChangeFilter} />
+            </div>
+
+            {/* 기간 선택 필터 */}
+            <button
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors"
+              onClick={() => setIsCalendarModalOn(!isCalendarModalOn)}
+            >
+              <svg
+                className="w-4 h-4 text-primary"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
+              </svg>
+              <span>
+                {startDate ? (
+                  <span>
+                    {startDate} ~ {endDate}
+                  </span>
+                ) : (
+                  <span>전체 기간</span>
+                )}
+              </span>
+            </button>
+          </div>
         </div>
+
+        {/* 검색 결과 섹션 */}
+        <div className="mb-6">
+          <div className="flex items-baseline justify-between mb-4">
+            <div>
+              <span className="text-xs font-medium text-primary uppercase tracking-wide">
+                Results
+              </span>
+              <h2 className="text-2xl font-bold text-gray-900 mt-1">
+                검색 결과
+              </h2>
+            </div>
+
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+            />
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <GongsiPagination
+              filterMenu={filterMenu}
+              startDate={startDate}
+              endDate={endDate}
+              selectedCompany={selectedCompany}
+            />
+          </div>
+        </div>
+
+        {/* 캘린더 모달 */}
         <div className="flex justify-center">
           {isCalendarModalOn && (
-            <Calendar
-              onSubmitDate={onSubmitDate}
-              clearDate={clearDate}
-              clearModal={clearModal}
-            />
+            <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center backdrop-blur-sm">
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden max-w-md w-full mx-4">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900">기간 선택</h3>
+                </div>
+                <Calendar
+                  onSubmitDate={onSubmitDate}
+                  clearDate={clearDate}
+                  clearModal={clearModal}
+                />
+              </div>
+            </div>
           )}
         </div>
       </div>
+
       <BottomNavigation />
     </div>
   );
