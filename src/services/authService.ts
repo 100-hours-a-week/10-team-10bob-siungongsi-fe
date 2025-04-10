@@ -65,7 +65,7 @@ export const login = async (
     }>(
       `${apiKey}auth/login`,
       {},
-      { headers: { Authorization: `${accessToken}` } },
+      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return response.data;
   } catch (error) {
