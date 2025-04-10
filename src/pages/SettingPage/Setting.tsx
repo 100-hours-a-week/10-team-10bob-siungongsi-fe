@@ -14,6 +14,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { ScrollDown } from "../../components/Icons/ScrollDown";
 import { useAuth } from "../../contexts/AuthContext";
+import { LoginSlider } from "../../components/LoginSlider";
 
 export const SettingPage = () => {
   const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
@@ -25,6 +26,11 @@ export const SettingPage = () => {
     "cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo",
   );
   const [isModalOn, setIsModalOn] = useState<boolean>();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
@@ -40,66 +46,66 @@ export const SettingPage = () => {
     onSubmit: () => {},
   });
 
-  const sendTokenToServer = async (notiEnabled: boolean) => {
-    try {
-      if (notiEnabled) {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          token,
-          localStorage.getItem("jwtToken"),
-        );
-      } else {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          "",
-          localStorage.getItem("jwtToken"),
-        );
-      }
-    } catch (error) {
-      console.error("❌ FCM 토큰 서버 전송 실패:", error);
-    }
-  };
+  // const sendTokenToServer = async (notiEnabled: boolean) => {
+  //   try {
+  //     if (notiEnabled) {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         token,
+  //         localStorage.getItem('jwtToken')
+  //       );
+  //     } else {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         '',
+  //         localStorage.getItem('jwtToken')
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error('❌ FCM 토큰 서버 전송 실패:', error);
+  //   }
+  // };
 
   //모바일 환경이면 새로고침
-  useEffect(() => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // useEffect(() => {
+  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    const handleFocus = () => {
-      if (isMobile) {
-        window.location.reload(); // 📱 모바일일 때만 새로고침
-      }
-    };
+  //   const handleFocus = () => {
+  //     if (isMobile) {
+  //       window.location.reload(); // 📱 모바일일 때만 새로고침
+  //     }
+  //   };
 
-    window.addEventListener("focus", handleFocus);
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
-  }, []);
+  //   window.addEventListener('focus', handleFocus);
+  //   return () => {
+  //     window.removeEventListener('focus', handleFocus);
+  //   };
+  // }, []);
   //Notification.permission 바뀌면 notiflag 변경
-  useEffect(() => {
-    sendTokenToServer(isNotificationEnabled);
-  }, [isNotificationEnabled]);
-  //토큰값 불러오기
-  useEffect(() => {
-    const getToken = async () => {
-      if (Notification.permission === "granted") {
-        const data = await getPushToken();
-        setToken(data);
-      }
-    };
-    getToken();
-  }, []);
+  // useEffect(() => {
+  //   sendTokenToServer(isNotificationEnabled);
+  // }, [isNotificationEnabled]);
+  // //토큰값 불러오기
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     if (Notification.permission === 'granted') {
+  //       const data = await getPushToken();
+  //       setToken(data);
+  //     }
+  //   };
+  //   getToken();
+  // }, []);
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
     if (Notification.permission === "granted") {
-      setIsNotificationEnabled(true);
+      // setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
       return;
     }
     if (Notification.permission === "denied") {
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
-      setIsNotificationEnabled(false);
+      // setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
     }
@@ -107,7 +113,7 @@ export const SettingPage = () => {
 
     if (newPermission === "granted") {
       setSubscribeOn(true);
-      setIsNotificationEnabled(true);
+      // setIsNotificationEnabled(true);
     }
   };
   //모달 내 내용 설정
@@ -337,7 +343,7 @@ export const SettingPage = () => {
               설정을 이용하시려면 로그인해주세요
             </p>
             <button
-              onClick={openLoginModal}
+              onClick={() => setIsOpen(true)}
               className="px-5 py-2.5 bg-primary text-white text-sm font-medium rounded-full shadow-sm hover:shadow-md transition-all"
             >
               로그인하기
@@ -347,6 +353,7 @@ export const SettingPage = () => {
       </div>
 
       {isModalOn && <Modal modalContent={modalContent} />}
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
 
       <BottomNavigation />
     </div>

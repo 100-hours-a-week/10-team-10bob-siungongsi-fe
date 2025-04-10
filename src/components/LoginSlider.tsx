@@ -95,11 +95,19 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       onClick={onClose}
     >
       <motion.div
-        className="bg-white rounded-t-2xl shadow-xl w-full max-w-sm mx-auto overflow-hidden"
+        className="bg-white rounded-t-2xl shadow-xl w-full max-w-[430px] mx-auto overflow-hidden"
         initial={{ y: "100%", opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "100%", opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        drag="y"
+        dragConstraints={{ top: 1, bottom: 100 }}
+        dragElastic={0.2}
+        onDragEnd={(e, info) => {
+          if (info.offset.y > 100) {
+            onClose(); // 아래로 많이 드래그하면 닫힘
+          }
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 상단 핸들 - iOS 스타일 */}
