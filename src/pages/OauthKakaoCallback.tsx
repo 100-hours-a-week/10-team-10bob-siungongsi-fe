@@ -52,8 +52,8 @@ export const OauthKakaoCallback = () => {
         if (isUser) {
           localStorage.setItem("jwtToken", accessToken);
           setIsLoggedIn(true);
-          handleNotificationToken();
 
+          await handleNotificationToken();
           navigate(-1);
         } else {
           navigate("/regist", { state: kakaoAccessToken });
@@ -71,11 +71,13 @@ export const OauthKakaoCallback = () => {
         const newToken = await getPushToken();
         const oldToken = localStorage.getItem("fcmToken");
 
-        if (newToken && newToken !== oldToken && !isIos()) {
-          const jwtToken = localStorage.getItem("jwtToken");
-          if (jwtToken) {
-            await patchUserNotificationInfo(true, newToken, jwtToken);
-            localStorage.setItem("fcmToken", newToken);
+        if (newToken && newToken !== oldToken) {
+          if (!isIos()) {
+            const jwtToken = localStorage.getItem("jwtToken");
+            if (jwtToken) {
+              await patchUserNotificationInfo(true, newToken, jwtToken);
+              localStorage.setItem("fcmToken", newToken);
+            }
           }
         }
       } catch (err) {
