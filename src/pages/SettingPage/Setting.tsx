@@ -119,7 +119,7 @@ export const SettingPage = () => {
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
-    if (isIOSDevice) {
+    if (isIOSDevice && !isInStandaloneMode()) {
       setShowIOSModal(true);
       return;
     }
@@ -384,7 +384,7 @@ export const SettingPage = () => {
       {isModalOn && <Modal modalContent={modalContent} />}
 
       {/* iOS 사용자를 위한 알림 설정 안내 모달 */}
-      {!isInStandaloneMode() && showIOSModal && (
+      {showIOSModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-sm w-full overflow-hidden">
             <div className="p-6">
