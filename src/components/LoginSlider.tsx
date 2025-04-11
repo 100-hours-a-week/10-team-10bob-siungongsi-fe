@@ -31,13 +31,13 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함
-  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL; // 필요에 따라 수정
+  const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
 
   useEffect(() => {
     // 카카오 SDK 초기화
     if (!window.Kakao.isInitialized()) {
       console.log("카카오 SDK 초기화 시작");
-      window.Kakao.init(process.env.REACT_APP_API_KEY); // JavaScript Key 입력
+      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // JavaScript Key 입력
       console.log("카카오 SDK 초기화 완료:", window.Kakao.isInitialized());
     }
 

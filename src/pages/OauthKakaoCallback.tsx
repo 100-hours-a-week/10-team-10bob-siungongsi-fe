@@ -9,8 +9,8 @@ import { getPushToken } from "../firebase";
 import { isIos } from "./Iphone_main/InstallPWA";
 import LoginProcessing from "../components/LoginProcessing";
 
-const REST_API_KEY = process.env.REACT_APP_API_KEY;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL;
+const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e";
+const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
