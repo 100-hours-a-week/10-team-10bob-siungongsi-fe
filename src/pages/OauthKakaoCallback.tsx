@@ -60,7 +60,7 @@ export const OauthKakaoCallback = () => {
         }
       } catch (err) {
         console.error("카카오 로그인 처리 중 에러:", err);
-        toast.error("로그인에 실패했습니다.");
+
         navigate("/");
       } finally {
       }

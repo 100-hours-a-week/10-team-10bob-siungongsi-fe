@@ -30,6 +30,10 @@ export const SettingPage = () => {
   const [isIOSDevice, setIsIOSDevice] = useState<boolean>(false);
   const [showIOSModal, setShowIOSModal] = useState<boolean>(false);
 
+  const isInStandaloneMode = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true;
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const onClose = () => {
     setIsOpen(false);
@@ -380,7 +384,7 @@ export const SettingPage = () => {
       {isModalOn && <Modal modalContent={modalContent} />}
 
       {/* iOS 사용자를 위한 알림 설정 안내 모달 */}
-      {showIOSModal && (
+      {!isInStandaloneMode() && showIOSModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-sm w-full overflow-hidden">
             <div className="p-6">
