@@ -62,7 +62,7 @@ export const Regist = () => {
     } catch (error) {
       console.error("회원가입 오류 : ", error);
     } finally {
-      navigate("/");
+      // navigate('/');
     }
   };
 
