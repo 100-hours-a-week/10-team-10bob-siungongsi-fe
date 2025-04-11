@@ -49,7 +49,6 @@ export const Regist = () => {
       const oldToken = localStorage.getItem("fcmToken");
 
       if (newToken && newToken !== oldToken && !isIos()) {
-        console.log("qwe");
         await patchUserNotificationInfo(
           true,
           newToken,

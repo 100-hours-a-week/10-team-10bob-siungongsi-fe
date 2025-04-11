@@ -31,125 +31,131 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함
-  const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
 
-  useEffect(() => {
-    // 카카오 SDK 초기화
-    if (!window.Kakao.isInitialized()) {
-      console.log("카카오 SDK 초기화 시작");
-      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // JavaScript Key 입력
-      console.log("카카오 SDK 초기화 완료:", window.Kakao.isInitialized());
-    }
-
-    // 리다이렉트 후 처리
-    const handleKakaoCallback = async () => {
-      console.log("카카오 로그인 콜백 처리 중...");
-      try {
-        // getAuthInfo를 사용하여 인증 정보 확인
-        const authObj = window.Kakao.Auth.getAuthInfo();
-        if (!authObj) {
-          console.log("인증 정보가 없음, 로그인 프로세스 중단");
-          return;
-        }
-
-        console.log("카카오 인증 정보 확인:", authObj);
-        const accessToken = authObj.access_token;
-
-        console.log("백엔드 로그인 시도 중...");
-        const data = await login(accessToken);
-        console.log("백엔드 응답:", data);
-
-        if (data.data.isUser) {
-          console.log("로그인 성공, JWT 토큰 저장");
-          localStorage.setItem("jwtToken", data.data.accessToken);
-          setIsLoggedIn(true);
-          // 알림 토큰 처리
-          handleNotificationToken();
-          // URL에서 인증 코드 파라미터 제거 (선택사항)
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname,
-          );
-        } else {
-          console.log("신규 사용자, 회원가입 페이지로 이동");
-          navigate("/regist", { state: accessToken });
-        }
-      } catch (error: any) {
-        console.error("로그인 처리 중 에러:", error);
-        let errorMessage = "로그인 처리 중 오류가 발생했습니다";
-        setLoginError(errorMessage);
-        toast.error(errorMessage);
-      }
-    };
-
-    // URL에서 인증 코드 확인 (리다이렉트 되었는지 체크)
-    const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
-    if (code) {
-      console.log("인가 코드 감지:", code);
-      // 인가 코드가 있으면 이미 리다이렉트된 것이므로 인증 처리
-      window.Kakao.Auth.setAccessToken()
-        .then(() => {
-          console.log("액세스 토큰 설정 완료");
-          handleKakaoCallback();
-        })
-        .catch((err: any) => {
-          console.error("액세스 토큰 설정 실패:", err);
-          setLoginError("카카오 인증 처리 중 오류가 발생했습니다");
-          toast.error("인증 처리 중 오류가 발생했습니다");
-        });
-    }
-  }, [navigate, setIsLoggedIn]);
-
-  // 알림 토큰 처리 함수
-  const handleNotificationToken = async () => {
-    try {
-      console.log("FCM 토큰 처리 시작");
-      const newToken = await getPushToken();
-      const oldToken = localStorage.getItem("fcmToken");
-
-      if (newToken && newToken !== oldToken && !isIos()) {
-        console.log("FCM 토큰 업데이트 필요:", newToken);
-        const jwtToken = localStorage.getItem("jwtToken");
-
-        if (jwtToken) {
-          await patchUserNotificationInfo(true, newToken, jwtToken);
-          localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
-          console.log("✅ FCM 토큰 서버에 등록 완료");
-          toast.info("로그인 되었습니다");
-        } else {
-          console.log("JWT 토큰이 없어 FCM 토큰 업데이트를 건너뜁니다");
-        }
-      } else {
-        console.log(
-          "FCM 토큰 업데이트 불필요. iOS:",
-          isIos(),
-          "토큰 동일:",
-          newToken === oldToken,
-        );
-        toast.info("로그인 되었습니다");
-      }
-    } catch (fcmError) {
-      console.error("FCM 토큰 처리 중 오류:", fcmError);
-    }
+  const kakaoLoginRedirect = () => {
+    const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
+    const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    window.location.href = kakaoAuthUrl;
   };
 
-  // 카카오 로그인 리다이렉트 방식 구현
-  const loginWithKakao = () => {
-    console.log("카카오 로그인 리다이렉트 시작...");
-    try {
-      // 리다이렉트 방식으로 인증 시작 (팝업 대신)
-      window.Kakao.Auth.authorize({
-        redirectUri: REDIRECT_URI,
-        state: "kakao_login", // 선택적 상태 정보
-      });
-    } catch (error) {
-      console.error("카카오 리다이렉트 시작 중 오류:", error);
-      setLoginError("카카오 로그인을 시작할 수 없습니다");
-      toast.error("로그인을 시작할 수 없습니다");
-    }
-  };
+  // useEffect(() => {
+  //   // 카카오 SDK 초기화
+  //   if (!window.Kakao.isInitialized()) {
+  //     console.log('카카오 SDK 초기화 시작');
+  //     window.Kakao.init('dc0dfb49278efc7bde35eb001c7c4d5e'); // JavaScript Key 입력
+  //     console.log('카카오 SDK 초기화 완료:', window.Kakao.isInitialized());
+  //   }
+
+  //   // 리다이렉트 후 처리
+  //   const handleKakaoCallback = async () => {
+  //     console.log('카카오 로그인 콜백 처리 중...');
+  //     try {
+  //       // getAuthInfo를 사용하여 인증 정보 확인
+  //       const authObj = window.Kakao.Auth.getAuthInfo();
+  //       if (!authObj) {
+  //         console.log('인증 정보가 없음, 로그인 프로세스 중단');
+  //         return;
+  //       }
+
+  //       const accessToken = authObj.access_token;
+
+  //       console.log('백엔드 로그인 시도 중...');
+  //       const data = await login(accessToken);
+  //       console.log('백엔드 응답:', data);
+
+  //       if (data.data.isUser) {
+  //         console.log('로그인 성공, JWT 토큰 저장');
+  //         localStorage.setItem('jwtToken', data.data.accessToken);
+  //         setIsLoggedIn(true);
+  //         // 알림 토큰 처리
+  //         handleNotificationToken();
+  //         // URL에서 인증 코드 파라미터 제거 (선택사항)
+  //         window.history.replaceState(
+  //           {},
+  //           document.title,
+  //           window.location.pathname
+  //         );
+  //       } else {
+  //         console.log('신규 사용자, 회원가입 페이지로 이동');
+  //         navigate('/regist', { state: accessToken });
+  //       }
+  //     } catch (error: any) {
+  //       console.error('로그인 처리 중 에러:', error);
+  //       let errorMessage = '로그인 처리 중 오류가 발생했습니다';
+  //       setLoginError(errorMessage);
+  //       toast.error(errorMessage);
+  //     }
+  //   };
+
+  //   // URL에서 인증 코드 확인 (리다이렉트 되었는지 체크)
+  //   const url = new URL(window.location.href);
+  //   const code = url.searchParams.get('code');
+  //   if (code) {
+  //     console.log('인가 코드 감지:', code);
+  //     // 인가 코드가 있으면 이미 리다이렉트된 것이므로 인증 처리
+  //     window.Kakao.Auth.setAccessToken()
+  //       .then(() => {
+  //         console.log('액세스 토큰 설정 완료');
+  //         handleKakaoCallback();
+  //       })
+  //       .catch((err: any) => {
+  //         console.error('액세스 토큰 설정 실패:', err);
+  //         setLoginError('카카오 인증 처리 중 오류가 발생했습니다');
+  //         toast.error('인증 처리 중 오류가 발생했습니다');
+  //       });
+  //   }
+  // }, [navigate, setIsLoggedIn]);
+
+  // // 알림 토큰 처리 함수
+  // const handleNotificationToken = async () => {
+  //   try {
+  //     console.log('FCM 토큰 처리 시작');
+  //     const newToken = await getPushToken();
+  //     const oldToken = localStorage.getItem('fcmToken');
+
+  //     if (newToken && newToken !== oldToken && !isIos()) {
+  //       console.log('FCM 토큰 업데이트 필요:', newToken);
+  //       const jwtToken = localStorage.getItem('jwtToken');
+
+  //       if (jwtToken) {
+  //         await patchUserNotificationInfo(true, newToken, jwtToken);
+  //         localStorage.setItem('fcmToken', newToken); // 중복 호출 방지
+  //         console.log('✅ FCM 토큰 서버에 등록 완료');
+  //         toast.info('로그인 되었습니다');
+  //       } else {
+  //         console.log('JWT 토큰이 없어 FCM 토큰 업데이트를 건너뜁니다');
+  //       }
+  //     } else {
+  //       console.log(
+  //         'FCM 토큰 업데이트 불필요. iOS:',
+  //         isIos(),
+  //         '토큰 동일:',
+  //         newToken === oldToken
+  //       );
+  //       toast.info('로그인 되었습니다');
+  //     }
+  //   } catch (fcmError) {
+  //     console.error('FCM 토큰 처리 중 오류:', fcmError);
+  //   }
+  // };
+
+  // // 카카오 로그인 리다이렉트 방식 구현
+  // const loginWithKakao = () => {
+  //   console.log('카카오 로그인 리다이렉트 시작...');
+  //   try {
+  //     // 리다이렉트 방식으로 인증 시작 (팝업 대신)
+  //     window.Kakao.Auth.authorize({
+  //       redirectUri: REDIRECT_URI,
+
+  //       throughTalk: false,
+  //     });
+  //   } catch (error) {
+  //     console.error('카카오 리다이렉트 시작 중 오류:', error);
+  //     setLoginError('카카오 로그인을 시작할 수 없습니다');
+  //     toast.error('로그인을 시작할 수 없습니다');
+  //   }
+  // };
 
   if (!isOpen) return null;
 
@@ -219,7 +225,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
               )}
 
               <button
-                onClick={loginWithKakao}
+                onClick={kakaoLoginRedirect}
                 className="flex items-center justify-center w-full transition-transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <img
