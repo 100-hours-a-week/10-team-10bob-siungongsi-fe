@@ -69,16 +69,17 @@ export const OauthKakaoCallback = () => {
     const handleNotificationToken = async () => {
       try {
         const newToken = await getPushToken();
-        const oldToken = localStorage.getItem("fcmToken");
 
-        if (newToken && newToken !== oldToken) {
-          if (!isIos()) {
-            const jwtToken = localStorage.getItem("jwtToken");
-            if (jwtToken) {
-              await patchUserNotificationInfo(true, newToken, jwtToken);
-              localStorage.setItem("fcmToken", newToken);
-            }
-          }
+        if (!isIos()) {
+          await patchUserNotificationInfo(
+            true,
+            newToken,
+            localStorage.getItem("jwtToken"),
+          );
+
+          console.log("✅ FCM 토큰 서버에 등록 완료");
+        } else {
+          return;
         }
       } catch (err) {
         console.error("FCM 처리 오류:", err);

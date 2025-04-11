@@ -46,18 +46,15 @@ export const Regist = () => {
       setIsLoggedIn(true);
 
       const newToken = await getPushToken();
-      const oldToken = localStorage.getItem("fcmToken");
 
-      if (newToken && newToken !== oldToken) {
-        if (!isIos()) {
-          await patchUserNotificationInfo(
-            true,
-            newToken,
-            localStorage.getItem("jwtToken"),
-          );
-          localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
-          console.log("✅ FCM 토큰 서버에 등록 완료");
-        }
+      if (!isIos()) {
+        await patchUserNotificationInfo(
+          true,
+          newToken,
+          localStorage.getItem("jwtToken"),
+        );
+
+        console.log("✅ FCM 토큰 서버에 등록 완료");
       } else {
         return;
       }
