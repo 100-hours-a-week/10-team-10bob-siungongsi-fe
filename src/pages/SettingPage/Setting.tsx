@@ -20,15 +20,20 @@ import { isIos } from "../Iphone_main/InstallPWA";
 export const SettingPage = () => {
   const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
-  const [isNotificationEnabled, setIsNotificationEnabled] = useState(
-    Notification.permission === "granted",
-  );
-  const [token, setToken] = useState<string | undefined>(
-    "cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo",
-  );
+  // const [isNotificationEnabled, setIsNotificationEnabled] = useState(
+  //   Notification.permission === 'granted'
+  // );
+  // const [token, setToken] = useState<string | undefined>(
+  //   'cwkp2T0Ccn3rJs1aw0_Z3R:APA91bGiX4SQb7raYFApmaC-C6gI3FTLybcBqWFTmrblQZ_zwRBZcgsLxbMjL8CGBGatL7cUPMq5u4xs6XOwm0JREZj2n8zprYeh3zWZPohEUi_mkWW7CVo'
+  // );
   const [isModalOn, setIsModalOn] = useState<boolean>();
   const [isIOSDevice, setIsIOSDevice] = useState<boolean>(false);
   const [showIOSModal, setShowIOSModal] = useState<boolean>(false);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
@@ -44,25 +49,25 @@ export const SettingPage = () => {
     onSubmit: () => {},
   });
 
-  const sendTokenToServer = async (notiEnabled: boolean) => {
-    try {
-      if (notiEnabled) {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          token,
-          localStorage.getItem("jwtToken"),
-        );
-      } else {
-        await patchUserNotificationInfo(
-          notiEnabled,
-          "",
-          localStorage.getItem("jwtToken"),
-        );
-      }
-    } catch (error) {
-      console.error("❌ FCM 토큰 서버 전송 실패:", error);
-    }
-  };
+  // const sendTokenToServer = async (notiEnabled: boolean) => {
+  //   try {
+  //     if (notiEnabled) {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         token,
+  //         localStorage.getItem("jwtToken"),
+  //       );
+  //     } else {
+  //       await patchUserNotificationInfo(
+  //         notiEnabled,
+  //         "",
+  //         localStorage.getItem("jwtToken"),
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ FCM 토큰 서버 전송 실패:", error);
+  //   }
+  // };
 
   // iOS 디바이스 감지
   useEffect(() => {
@@ -71,42 +76,42 @@ export const SettingPage = () => {
       const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
       setIsIOSDevice(isIOS);
     };
-    
+
     checkIOSDevice();
   }, []);
 
   //모바일 환경이면 새로고침
-  useEffect(() => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // useEffect(() => {
+  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    const handleFocus = () => {
-      if (isMobile) {
-        window.location.reload(); // 📱 모바일일 때만 새로고침
-      }
-    };
+  //   const handleFocus = () => {
+  //     if (isMobile) {
+  //       window.location.reload(); // 📱 모바일일 때만 새로고침
+  //     }
+  //   };
 
-    window.addEventListener("focus", handleFocus);
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
-  }, []);
-  
+  //   window.addEventListener('focus', handleFocus);
+  //   return () => {
+  //     window.removeEventListener('focus', handleFocus);
+  //   };
+  // }, []);
+
   //Notification.permission 바뀌면 notiflag 변경
-  useEffect(() => {
-    sendTokenToServer(isNotificationEnabled);
-  }, [isNotificationEnabled]);
-  
+  // useEffect(() => {
+  //   sendTokenToServer(isNotificationEnabled);
+  // }, [isNotificationEnabled]);
+
   //토큰값 불러오기
-  useEffect(() => {
-    const getToken = async () => {
-      if (Notification.permission === "granted") {
-        const data = await getPushToken();
-        setToken(data);
-      }
-    };
-    getToken();
-  }, []);
-  
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     if (Notification.permission === "granted") {
+  //       const data = await getPushToken();
+  //       setToken(data);
+  //     }
+  //   };
+  //   getToken();
+  // }, []);
+
   const [subscribeOn, setSubscribeOn] = useState<boolean>(false);
 
   const handleToggle = async () => {
@@ -114,15 +119,15 @@ export const SettingPage = () => {
       setShowIOSModal(true);
       return;
     }
-    
+
     if (Notification.permission === "granted") {
-      setIsNotificationEnabled(true);
+      // setIsNotificationEnabled(true);
       setSubscribeOn((prev) => !prev);
       return;
     }
     if (Notification.permission === "denied") {
       alert("알림이 차단되었습니다. 브라우저 설정에서 허용해주세요.");
-      setIsNotificationEnabled(false);
+      // setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
     }
@@ -135,7 +140,7 @@ export const SettingPage = () => {
       }
     }
   };
-  
+
   //모달 내 내용 설정
   const onModal = (
     titleMessage: string,
@@ -153,15 +158,15 @@ export const SettingPage = () => {
     });
     setIsModalOn(true);
   };
-  
+
   const closeModal = () => {
     setIsModalOn(false);
   };
-  
+
   const closeIOSModal = () => {
     setShowIOSModal(false);
   };
-  
+
   //회원탈퇴
   const userWithDrawFunction = async () => {
     try {
@@ -363,7 +368,7 @@ export const SettingPage = () => {
               설정을 이용하시려면 로그인해주세요
             </p>
             <button
-              onClick={openLoginModal}
+              onClick={() => setIsOpen(true)}
               className="px-5 py-2.5 bg-primary text-white text-sm font-medium rounded-full shadow-sm hover:shadow-md transition-all"
             >
               로그인하기
@@ -382,14 +387,17 @@ export const SettingPage = () => {
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 iOS 알림 설정 안내
               </h3>
-              
+
               <div className="mb-5">
                 <p className="text-gray-600 mb-4">
-                  iOS에서는 웹 알림 기능이 제한됩니다. 더 나은 사용 경험을 위해 홈 화면에 앱을 추가해 보세요.
+                  iOS에서는 웹 알림 기능이 제한됩니다. 더 나은 사용 경험을 위해
+                  홈 화면에 앱을 추가해 보세요.
                 </p>
-                
+
                 <div className="bg-gray-100 rounded-lg p-4 mb-4">
-                  <h4 className="font-medium text-gray-900 mb-2">PWA 설치 방법</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    PWA 설치 방법
+                  </h4>
                   <ol className="list-decimal list-inside text-sm text-gray-600 space-y-2">
                     <li>Safari 브라우저에서 아래 공유 버튼을 탭하세요</li>
                     <li>'홈 화면에 추가' 옵션을 선택하세요</li>
@@ -397,7 +405,7 @@ export const SettingPage = () => {
                   </ol>
                 </div>
               </div>
-              
+
               <div className="flex justify-end">
                 <button
                   onClick={closeIOSModal}
@@ -410,7 +418,7 @@ export const SettingPage = () => {
           </div>
         </div>
       )}
-
+      {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
       <BottomNavigation />
     </div>
   );

@@ -3,6 +3,7 @@ import { LoginSlider } from "./LoginSlider";
 import back from "../assets/back.png";
 import { Modal } from "./Modal";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   isLogin: boolean;
@@ -10,6 +11,7 @@ interface Props {
 
 export const HeaderLoginBack = ({ isLogin }: Props) => {
   const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -68,7 +70,12 @@ export const HeaderLoginBack = ({ isLogin }: Props) => {
         </svg>
       </button>
 
-      <h1 className="text-xl font-bold">Siun</h1>
+      <h1
+        className="text-xl font-bold cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        Siun
+      </h1>
 
       <div className="flex justify-center min-w-[80px]">
         {isLoggedIn ? (

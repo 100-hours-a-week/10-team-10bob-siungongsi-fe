@@ -1,18 +1,24 @@
 // src/pages/OauthKakaoCallback.tsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { login } from "../services/authService";
+import { patchUserNotificationInfo } from "../services/usersService";
+import { getPushToken } from "../firebase";
+import { isIos } from "./Iphone_main/InstallPWA";
+import LoginProcessing from "../components/LoginProcessing";
 
-const REST_API_KEY = "dc0dfb49278efc7bde35eb001c7c4d5e";
-const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
+const REST_API_KEY = process.env.REACT_APP_API_KEY;
+const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL;
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
   const { setIsLoggedIn } = useAuth();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
+  const [isUser, setIsUser] = useState<boolean>();
+
   console.log("인가코드 : ", code);
 
   useEffect(() => {
@@ -28,9 +34,9 @@ export const OauthKakaoCallback = () => {
           "https://kauth.kakao.com/oauth/token",
           new URLSearchParams({
             grant_type: "authorization_code",
-            client_id: REST_API_KEY,
-            redirect_uri: REDIRECT_URI,
-            code: code,
+            client_id: REST_API_KEY as string,
+            redirect_uri: REDIRECT_URI as string,
+            code: code as string,
           }),
           {
             headers: {
@@ -47,14 +53,30 @@ export const OauthKakaoCallback = () => {
         // 2. 우리 백엔드 login API로 access token 전송 → JWT 발급
 
         const loginResponse = await login(kakaoAccessToken);
+        setIsUser(loginResponse.data.isUser);
+        if (isUser) {
+          localStorage.setItem("jwtToken", loginResponse.data.accessToken);
+          setIsLoggedIn(true);
+          const newToken = await getPushToken();
+          const oldToken = localStorage.getItem("fcmToken");
 
-        localStorage.setItem("jwtToken", loginResponse.data.accessToken);
-        setIsLoggedIn(true);
-
-        navigate(-1); // 로그인 완료 후 메인으로
+          if (newToken && newToken !== oldToken && !isIos()) {
+            await patchUserNotificationInfo(
+              true,
+              newToken,
+              localStorage.getItem("jwtToken"),
+            );
+            localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
+            console.log("✅ FCM 토큰 서버에 등록 완료");
+            navigate(-1);
+          }
+        } else {
+          navigate("/regist", { state: kakaoAccessToken, replace: true });
+        }
       } catch (error) {
         console.error("카카오 로그인 중 에러 발생:", error);
         navigate("/"); // 실패 시 홈으로
+      } finally {
       }
     };
 
@@ -63,7 +85,7 @@ export const OauthKakaoCallback = () => {
     }
   }, [code, navigate, setIsLoggedIn]);
 
-  return <div>로그인 처리 중입니다...</div>;
+  return <LoginProcessing />;
 };
 
 export default OauthKakaoCallback;

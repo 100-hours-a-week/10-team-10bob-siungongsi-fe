@@ -20,17 +20,23 @@ interface CalendarProps {
   ) => void;
   clearDate: () => void;
   clearModal: () => void;
+  initialStartDate?: Date; // ✅ 추가
+  initialEndDate?: Date; // ✅ 추가
 }
 
 export const Calendar = ({
   onSubmitDate,
   clearDate,
   clearModal,
+  initialStartDate,
+  initialEndDate,
 }: CalendarProps) => {
   const today = new Date(); // 현재 날짜
   const [currentMonth, setCurrentMonth] = useState(today); // 현재 달력의 월
-  const [startDate, setStartDate] = useState<Date | undefined>(); // 시작 날짜
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined); // 종료 날짜
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    initialStartDate,
+  ); // 시작 날짜
+  const [endDate, setEndDate] = useState<Date | undefined>(initialEndDate); // 종료 날짜
 
   // 현재 월의 시작과 끝을 구하기
   const monthStart = startOfMonth(currentMonth);

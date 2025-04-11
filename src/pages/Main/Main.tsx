@@ -13,6 +13,7 @@ import { ServiceButton } from "./ServiceButton";
 import { useNotificationToken } from "../../hooks/useNotificationToken";
 import { LoginSlider } from "../../components/LoginSlider";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
@@ -38,8 +39,8 @@ export const Main = () => {
           true,
           1,
           5,
-          today,
-          today,
+          "2025-04-10",
+          "2025-04-10",
         );
         setTodayGongsi(todayGongsiData.data);
       };
@@ -57,8 +58,8 @@ export const Main = () => {
           true,
           1,
           5,
-          today,
-          today,
+          "2025-04-10",
+          "2025-04-10",
         );
 
         setPopularGongsiList(popularGongsiData.data);
@@ -259,7 +260,7 @@ export const Main = () => {
               <h3 className="text-lg font-bold mb-1">사전</h3>
               <p className="text-sm font-medium opacity-90">용어 이해하기</p>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => toast.error("미구현 기능입니다")}
                 className="mt-4 px-3 py-1.5 bg-white text-purple-600 text-sm font-medium rounded-full"
               >
                 살펴보기

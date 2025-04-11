@@ -267,7 +267,8 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
       backgroundColor: "white",
       borderRadius: "0.5rem",
       boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-      padding: "1.5rem",
+      padding: "1.5rem 2rem",
+
       transition:
         "transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)",
     };
@@ -334,7 +335,7 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
 
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md flex items-center justify-center shadow-lg opacity-80 hover:opacity-100 hover:bg-white transition-all duration-200 z-40"
+          className="absolute left-0.5 top-1/2 opacity-30 transform -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center z-40"
           aria-label="이전 슬라이드"
         >
           <svg
@@ -356,7 +357,7 @@ export default function NewsSlider({ GongsiData }: NewsSliderProps) {
 
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md flex items-center justify-center shadow-lg opacity-80 hover:opacity-100 hover:bg-white transition-all duration-200 z-40"
+          className="absolute right-0.5 top-1/2 opacity-30 transform -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center z-40"
           aria-label="다음 슬라이드"
         >
           <svg

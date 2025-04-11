@@ -31,13 +31,13 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함
-  const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao"; // 필요에 따라 수정
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URL; // 필요에 따라 수정
 
   useEffect(() => {
     // 카카오 SDK 초기화
     if (!window.Kakao.isInitialized()) {
       console.log("카카오 SDK 초기화 시작");
-      window.Kakao.init("dc0dfb49278efc7bde35eb001c7c4d5e"); // JavaScript Key 입력
+      window.Kakao.init(process.env.REACT_APP_API_KEY); // JavaScript Key 입력
       console.log("카카오 SDK 초기화 완료:", window.Kakao.isInitialized());
     }
 
@@ -164,6 +164,14 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "100%", opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 100 }}
+        dragElastic={0.2}
+        onDragEnd={(e, info) => {
+          if (info.offset.y > 100) {
+            onClose(); // 아래로 많이 드래그하면 닫힘
+          }
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 상단 핸들 - iOS 스타일 */}

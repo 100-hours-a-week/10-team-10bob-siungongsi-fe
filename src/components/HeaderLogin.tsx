@@ -10,6 +10,7 @@ interface Props {
 
 export const HeaderLogin = ({ isLogin }: Props) => {
   const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   // 모달정보 입력
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
@@ -50,7 +51,12 @@ export const HeaderLogin = ({ isLogin }: Props) => {
 
   return (
     <div className="flex justify-between items-center p-4 bg-primary text-white shadow-sm">
-      <h1 className="text-xl font-bold">Siun</h1>
+      <h1
+        className="text-xl font-bold cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        Siun
+      </h1>
       <div className="flex items-center gap-2">
         {isLoggedIn ? (
           <button

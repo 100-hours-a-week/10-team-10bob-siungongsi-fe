@@ -210,6 +210,8 @@ export const GongsiSearch = () => {
                   <h3 className="text-lg font-bold text-gray-900">기간 선택</h3>
                 </div>
                 <Calendar
+                  initialStartDate={new Date(startDate)}
+                  initialEndDate={new Date(endDate)}
                   onSubmitDate={onSubmitDate}
                   clearDate={clearDate}
                   clearModal={clearModal}

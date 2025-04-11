@@ -105,7 +105,7 @@ export const GongsiPagination = ({
                     : ""
                 }`}
               >
-                <div className="font-medium text-gray-900 mb-2 line-clamp-2">
+                <div className="font-medium text-gray-900 mb-2 line-clamp-1">
                   {gongsi.gongsiTitle}
                 </div>
                 <div className="flex justify-between items-center">
@@ -121,7 +121,7 @@ export const GongsiPagination = ({
               </li>
             ))
           ) : (
-            <div className="flex h-[400px] items-center justify-center flex-col p-8 text-gray-500">
+            <div className="flex max-h-[400px] items-center justify-center flex-col p-8 text-gray-500">
               <svg
                 className="w-12 h-12 mb-3 text-gray-300"
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +143,7 @@ export const GongsiPagination = ({
             </div>
           )
         ) : (
-          <div className="flex h-[400px] items-center justify-center">
+          <div className="flex h-[800px] items-center justify-center">
             <LoadingSpinner />
           </div>
         )}
@@ -187,7 +187,7 @@ export const GongsiPagination = ({
                   key={currentGroupStart + index}
                   disabled={isLoading}
                   onClick={() => setCurrentPage(currentGroupStart + index)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-full font-medium transition-all ${
+                  className={`w-8 h-8 flex items-center justify-center rounded-full font-medium transition-all mx-2 ${
                     currentPage === currentGroupStart + index
                       ? "bg-primary text-white shadow-sm"
                       : "text-gray-700 hover:bg-white hover:shadow-sm"
