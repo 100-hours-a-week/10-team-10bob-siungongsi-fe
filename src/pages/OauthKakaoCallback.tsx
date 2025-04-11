@@ -17,7 +17,7 @@ export const OauthKakaoCallback = () => {
   const { setIsLoggedIn } = useAuth();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
-  const [isUser, setIsUser] = useState<boolean>();
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   console.log("인가코드 : ", code);
 
@@ -53,10 +53,11 @@ export const OauthKakaoCallback = () => {
         // 2. 우리 백엔드 login API로 access token 전송 → JWT 발급
 
         const loginResponse = await login(kakaoAccessToken);
-        setIsUser(loginResponse.data.isUser);
-        if (isUser) {
+
+        if (loginResponse.data.isUser) {
           localStorage.setItem("jwtToken", loginResponse.data.accessToken);
           setIsLoggedIn(true);
+          setIsUser(true);
           const newToken = await getPushToken();
           const oldToken = localStorage.getItem("fcmToken");
 
@@ -68,15 +69,16 @@ export const OauthKakaoCallback = () => {
             );
             localStorage.setItem("fcmToken", newToken); // 중복 호출 방지
             console.log("✅ FCM 토큰 서버에 등록 완료");
-            navigate(-1);
           }
         } else {
+          setIsUser(false);
           navigate("/regist", { state: kakaoAccessToken, replace: true });
         }
       } catch (error) {
         console.error("카카오 로그인 중 에러 발생:", error);
         navigate("/"); // 실패 시 홈으로
       } finally {
+        navigate(0);
       }
     };
 
