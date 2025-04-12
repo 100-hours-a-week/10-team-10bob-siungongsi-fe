@@ -47,6 +47,12 @@ export const OauthKakaoCallback = () => {
         );
 
         const kakaoAccessToken = tokenRes.data.access_token;
+
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
         localStorage.setItem("kakaoAccessToken", kakaoAccessToken);
 
         const loginRes = await login(kakaoAccessToken);
