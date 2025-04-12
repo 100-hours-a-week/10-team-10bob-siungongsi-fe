@@ -11,19 +11,19 @@ const api = axios.create({
 });
 
 // 요청 인터셉터 (Request Interceptor)
-api.interceptors.request.use(
-  (config) => {
-    // 🔹 예: 토큰이 필요한 경우 헤더에 추가
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+// api.interceptors.request.use(
+//   (config) => {
+//     // 🔹 예: 토큰이 필요한 경우 헤더에 추가
+//     const token = localStorage.getItem("jwtToken");
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   },
+// );
 
 // 응답 인터셉터 (Response Interceptor)
 // api.interceptors.response.use(

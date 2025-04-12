@@ -11,7 +11,10 @@ import LoginProcessing from "../components/LoginProcessing";
 import { toast } from "react-toastify";
 
 const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
-const REDIRECT_URI = "https://www.siungongsi.site/oauth/callback/kakao";
+const REDIRECT_URI =
+  process.env.NODE_ENV === "production"
+    ? "https://www.siungongsi.site/oauth/callback/kakao"
+    : "http://localhost:3000/oauth/callback/kakao";
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
