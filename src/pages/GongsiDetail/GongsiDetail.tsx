@@ -14,6 +14,7 @@ import {
 } from "../../services/notificationService";
 import { LoginSlider } from "../../components/LoginSlider";
 import { useManageNotifications } from "../../hooks/useNotificationList";
+import { IphoneWarn } from "../../components/IphoneWarn";
 
 export const GongsiDetail = () => {
   const { isLoggedIn } = useAuth();
@@ -24,6 +25,13 @@ export const GongsiDetail = () => {
   const onClose = () => {
     setIsOpen(false);
   };
+
+  const isInStandaloneMode = () =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true;
+
+  const [isIOSDevice, setIsIOSDevice] = useState<boolean>(false);
+  const [showIOSModal, setShowIOSModal] = useState<boolean>(false);
 
   const { id } = useParams();
   //상세정보 조회
@@ -48,6 +56,15 @@ export const GongsiDetail = () => {
       }
     };
     getCompaniesName();
+  }, []);
+  useEffect(() => {
+    const checkIOSDevice = () => {
+      const userAgent = navigator.userAgent;
+      const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+      setIsIOSDevice(isIOS);
+    };
+
+    checkIOSDevice();
   }, []);
 
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
@@ -80,8 +97,16 @@ export const GongsiDetail = () => {
   const closeModal = () => {
     setIsModalOn(false);
   };
+  const closeIOSModal = () => {
+    setShowIOSModal(false);
+  };
   const handleSubscribe = async (id: number | undefined) => {
     if (!id || !gongsiInfo) return;
+    if (isIOSDevice && !isInStandaloneMode()) {
+      setShowIOSModal(true);
+      return;
+    }
+
     try {
       setIsLoading(true);
       if (gongsiInfo?.company.isSubscribed) {
@@ -251,6 +276,7 @@ export const GongsiDetail = () => {
 
       {isOpen && <LoginSlider isOpen={isOpen} onClose={onClose} />}
       {isModalOn && <Modal modalContent={modalContent} />}
+      {showIOSModal && <IphoneWarn onClose={closeIOSModal} />}
 
       <BottomNavigation />
     </div>
