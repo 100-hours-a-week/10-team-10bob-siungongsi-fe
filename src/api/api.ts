@@ -26,14 +26,14 @@ api.interceptors.request.use(
 );
 
 // 응답 인터셉터 (Response Interceptor)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("jwtToken");
-    }
-    return Promise.reject(error);
-  },
-);
+// api.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       localStorage.removeItem("jwtToken");
+//     }
+//     return Promise.reject(error);
+//   },
+// );
 
 export default api;
