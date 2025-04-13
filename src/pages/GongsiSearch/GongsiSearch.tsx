@@ -204,20 +204,13 @@ export const GongsiSearch = () => {
         {/* 캘린더 모달 */}
         <div className="flex justify-center">
           {isCalendarModalOn && (
-            <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center backdrop-blur-sm">
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden max-w-md w-full mx-4">
-                <div className="p-4 border-b border-gray-100">
-                  <h3 className="text-lg font-bold text-gray-900">기간 선택</h3>
-                </div>
-                <Calendar
-                  initialStartDate={new Date(startDate)}
-                  initialEndDate={new Date(endDate)}
-                  onSubmitDate={onSubmitDate}
-                  clearDate={clearDate}
-                  clearModal={clearModal}
-                />
-              </div>
-            </div>
+            <Calendar
+              initialStartDate={new Date(startDate)}
+              initialEndDate={new Date(endDate)}
+              onSubmitDate={onSubmitDate}
+              clearDate={clearDate}
+              clearModal={clearModal}
+            />
           )}
         </div>
       </div>

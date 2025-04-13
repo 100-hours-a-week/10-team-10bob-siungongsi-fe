@@ -39,7 +39,7 @@ export const SelectAlarm = () => {
   };
   useEffect(() => {
     getRecommend();
-  }, []);
+  }, [recommendList]);
 
   const [isVibrating, setIsVibrating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

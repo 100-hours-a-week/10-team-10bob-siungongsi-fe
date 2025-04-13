@@ -39,8 +39,8 @@ export const Main = () => {
           true,
           1,
           5,
-          "2025-04-10",
-          "2025-04-10",
+          "2025-04-11",
+          "2025-04-11",
         );
         setTodayGongsi(todayGongsiData.data);
       };
@@ -58,8 +58,8 @@ export const Main = () => {
           true,
           1,
           5,
-          "2025-04-10",
-          "2025-04-10",
+          today,
+          today,
         );
 
         setPopularGongsiList(popularGongsiData.data);
@@ -87,12 +87,12 @@ export const Main = () => {
         .replace(".", "");
     }
   };
-  // const twoDaysAgo = new Date();
-  // twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
   const getAdjustedToday = () => {
     const now = new Date();
     const day = now.getDay();
     now.setDate(now.getDate() - (day === 6 ? 1 : day === 0 ? 2 : 0)); // 토요일이면 -1일, 일요일이면 -2일
+
     return now;
   };
 

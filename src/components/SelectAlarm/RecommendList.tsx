@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 interface RecommendListProps {
   company: {
     companyId: number;

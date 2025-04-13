@@ -136,12 +136,13 @@ export const SettingPage = () => {
       setSubscribeOn(false);
       return;
     }
-    if (!isIos() || isInStandaloneMode()) {
-      const newPermission = await Notification.requestPermission();
-      if (newPermission === "granted") {
-        setSubscribeOn(true);
-        // setIsNotificationEnabled(true);
-      }
+    //   const prevState = subscribeOn;
+    // setSubscribeOn(!prevState);
+
+    const newPermission = await Notification.requestPermission();
+    if (newPermission === "granted") {
+      setSubscribeOn(true);
+      // setIsNotificationEnabled(true);
     }
   };
 
@@ -252,7 +253,7 @@ export const SettingPage = () => {
                 </div>
               </div>
 
-              {subscribeOn && !isIOSDevice && (
+              {subscribeOn && (
                 <div className="bg-gray-50 p-4 border-t border-gray-100">
                   <SelectAlarm />
                 </div>
