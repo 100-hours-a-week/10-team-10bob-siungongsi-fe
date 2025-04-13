@@ -124,13 +124,6 @@ export const SettingPage = () => {
       setShowIOSModal(true);
       return;
     }
-    if (!isIos() || isInStandaloneMode()) {
-      const newPermission = await Notification.requestPermission();
-      if (newPermission === "granted") {
-        setSubscribeOn(true);
-        // setIsNotificationEnabled(true);
-      }
-    }
 
     if (Notification.permission === "granted") {
       // setIsNotificationEnabled(true);
@@ -142,6 +135,13 @@ export const SettingPage = () => {
       // setIsNotificationEnabled(false);
       setSubscribeOn(false);
       return;
+    }
+    if (!isIos() || isInStandaloneMode()) {
+      const newPermission = await Notification.requestPermission();
+      if (newPermission === "granted") {
+        setSubscribeOn(true);
+        // setIsNotificationEnabled(true);
+      }
     }
   };
 
