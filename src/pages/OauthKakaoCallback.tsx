@@ -63,7 +63,7 @@ export const OauthKakaoCallback = () => {
           setIsLoggedIn(true);
 
           await handleNotificationToken();
-          navigate(-1);
+          navigate(0);
         } else {
           navigate("/regist", { state: kakaoAccessToken });
         }
