@@ -24,8 +24,6 @@ export const OauthKakaoCallback = () => {
 
   useEffect(() => {
     if (!code) {
-      toast.error("인가 코드가 없습니다.");
-      navigate("/");
       return;
     }
 
@@ -63,7 +61,7 @@ export const OauthKakaoCallback = () => {
           setIsLoggedIn(true);
 
           await handleNotificationToken();
-          navigate(0);
+          navigate(-1);
         } else {
           navigate("/regist", { state: kakaoAccessToken });
         }
