@@ -38,6 +38,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
       process.env.NODE_ENV === "production"
         ? "https://www.siungongsi.site/oauth/callback/kakao"
         : "http://localhost:3000/oauth/callback/kakao";
+    localStorage.setItem("redirectAfterLogin", window.location.pathname);
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = kakaoAuthUrl;
   };

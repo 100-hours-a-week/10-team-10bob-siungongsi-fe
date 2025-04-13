@@ -61,7 +61,13 @@ export const Regist = () => {
     } catch (error) {
       console.error("회원가입 오류 : ", error);
     } finally {
-      navigate("/");
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+      if (redirectPath) {
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectPath, { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
     }
   };
 

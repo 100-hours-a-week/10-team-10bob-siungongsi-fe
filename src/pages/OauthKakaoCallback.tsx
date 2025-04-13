@@ -91,7 +91,13 @@ export const OauthKakaoCallback = () => {
       } catch (err) {
         console.error("FCM 처리 오류:", err);
       } finally {
-        navigate(-1);
+        const redirectPath = localStorage.getItem("redirectAfterLogin");
+        if (redirectPath) {
+          localStorage.removeItem("redirectAfterLogin");
+          navigate(redirectPath, { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       }
     };
 
