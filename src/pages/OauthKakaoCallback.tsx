@@ -61,7 +61,6 @@ export const OauthKakaoCallback = () => {
           setIsLoggedIn(true);
 
           await handleNotificationToken();
-          navigate(-1);
         } else {
           navigate("/regist", { state: kakaoAccessToken });
         }
@@ -69,27 +68,30 @@ export const OauthKakaoCallback = () => {
         console.error("카카오 로그인 처리 중 에러:", err);
 
         navigate("/");
-      } finally {
       }
     };
 
     const handleNotificationToken = async () => {
       try {
-        const newToken = await getPushToken();
+        if (Notification.permission === "granted") {
+          const newToken = await getPushToken();
 
-        if (!isIos()) {
-          await patchUserNotificationInfo(
-            true,
-            newToken,
-            localStorage.getItem("jwtToken"),
-          );
+          if (!isIos()) {
+            await patchUserNotificationInfo(
+              true,
+              newToken,
+              localStorage.getItem("jwtToken"),
+            );
 
-          console.log("✅ FCM 토큰 서버에 등록 완료");
+            console.log("✅ FCM 토큰 서버에 등록 완료");
+          }
         } else {
           return;
         }
       } catch (err) {
         console.error("FCM 처리 오류:", err);
+      } finally {
+        navigate(-1);
       }
     };
 
