@@ -9,7 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
-  environment: process.env.REACT_APP_STAGE || "development",
+  environment: process.env.REACT_APP_STAGE || "production",
   integrations: [
     Sentry.browserTracingIntegration(), // ✅ 최신 방식
   ],
