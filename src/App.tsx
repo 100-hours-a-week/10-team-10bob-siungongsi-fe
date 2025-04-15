@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 
+import SentryTest from "./Sentrytest.js";
+
 import { GongsiSearch } from "./pages/GongsiSearch/GongsiSearch";
 
 import { Regist } from "./pages/Regist/Regist_01";
@@ -71,6 +73,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         )}
+        <SentryTest />
       </Sentry.ErrorBoundary>
     </div>
   );
