@@ -8,8 +8,6 @@ import {
 } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 
-import SentryTest from "./Sentrytest.js";
-
 import { GongsiSearch } from "./pages/GongsiSearch/GongsiSearch";
 
 import { Regist } from "./pages/Regist/Regist_01";
@@ -30,6 +28,9 @@ function App() {
   const state = location.state as { backgroundLocation?: Location };
 
   useEffect(() => {
+    // 앱 시작 시 텍스트 로그 전송 (Sentry에 메시지로 표시)
+    Sentry.captureMessage("🚀 앱이 시작되었습니다 (captureMessage 테스트)");
+
     // 포그라운드에서 푸시 알림 수신
     const unsubscribe = onMessage(messaging, (payload) => {
       // 예시: 토스트 메시지로 표시
@@ -73,7 +74,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         )}
-        <SentryTest />
       </Sentry.ErrorBoundary>
     </div>
   );
