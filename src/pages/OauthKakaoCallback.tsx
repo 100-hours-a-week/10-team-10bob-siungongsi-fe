@@ -2,13 +2,14 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
+
 import { login } from "../services/authService";
 import { patchUserNotificationInfo } from "../services/usersService";
 import { getPushToken } from "../firebase";
 import { isIos } from "../pages/Iphone_main/InstallPWA";
 import LoginProcessing from "../components/LoginProcessing";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../store/authStore";
 
 const REST_API_KEY = "d43a4cbe49488a5f573822fc64ccd95e";
 const REDIRECT_URI =
@@ -18,7 +19,8 @@ const REDIRECT_URI =
 
 export const OauthKakaoCallback = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth();
+
+  const setLogin = useAuthStore((state) => state.login);
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
 
@@ -58,7 +60,8 @@ export const OauthKakaoCallback = () => {
 
         if (isUser) {
           localStorage.setItem("jwtToken", accessToken);
-          setIsLoggedIn(true);
+          // setIsLoggedIn(true);
+          setLogin(accessToken);
 
           await handleNotificationToken();
         } else {
@@ -102,7 +105,7 @@ export const OauthKakaoCallback = () => {
     };
 
     getKakaoAccessToken();
-  }, [code, navigate, setIsLoggedIn]);
+  }, [code, navigate, setLogin]);
 
   return <LoginProcessing />;
 };

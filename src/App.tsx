@@ -25,6 +25,7 @@ import { showCustomNotification } from "./components/CustomNotification";
 import { AuthProvider } from "./contexts/AuthContext";
 import InstallPWA, { isIos } from "./pages/Iphone_main/InstallPWA";
 import OauthKakaoCallback from "./pages/OauthKakaoCallback";
+import { MyPage } from "./pages/MyPage/MyPage";
 
 function App() {
   const location = useLocation();
@@ -75,6 +76,7 @@ function App() {
             />
             <Route path="/" element={<Main />} />
             <Route path="/search" element={<GongsiSearch />} />
+            <Route path="/mypage" element={<MyPage />} />
             <Route path="/regist" element={<Regist />} />
             <Route path="/regist_02" element={<Regist_02 />} />
             <Route path="/setting" element={<SettingPage />} />

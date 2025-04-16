@@ -1,23 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginSlider } from "./LoginSlider";
 import back from "../assets/back.png";
 import { Modal } from "./Modal";
-import { useAuth } from "../contexts/AuthContext";
+
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
-interface Props {
-  isLogin: boolean;
-}
-
-export const HeaderLoginBack = ({ isLogin }: Props) => {
-  const { isLoggedIn, logout } = useAuth();
+export const HeaderLoginBack = () => {
+  // const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const logout = useAuthStore((state) => state.logout);
+  const checkTokenValidity = useAuthStore((state) => state.checkTokenValidity);
   const closeModal = () => {
     setIsModalOn(false);
   };
+
+  useEffect(() => {
+    checkTokenValidity();
+  }, [checkTokenValidity]);
 
   const [modalContent, setModalContent] = useState<{
     titleMessage: string;
