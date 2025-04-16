@@ -111,7 +111,7 @@ export const GongsiSearch = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderLogin isLogin={false} />
+      <HeaderLogin />
 
       <div className="p-4">
         {/* 검색 섹션 타이틀 */}

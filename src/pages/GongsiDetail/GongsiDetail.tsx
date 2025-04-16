@@ -15,9 +15,11 @@ import {
 import { LoginSlider } from "../../components/LoginSlider";
 import { useManageNotifications } from "../../hooks/useNotificationList";
 import { IphoneWarn } from "../../components/IphoneWarn";
+import { useAuthStore } from "../../store/authStore";
 
 export const GongsiDetail = () => {
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { subscribe, unsubscribe } = useManageNotifications();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gongsiInfo, setGongsiInfo] = useState<GongsiInfo>();
@@ -122,6 +124,9 @@ export const GongsiDetail = () => {
         },
       });
     } catch (error: any) {
+      // if (error.status === 429) {
+      //   return;
+      // }
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +138,7 @@ export const GongsiDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderLoginBack isLogin={false} />
+      <HeaderLoginBack />
 
       {!isLoading ? (
         <div className="p-5">

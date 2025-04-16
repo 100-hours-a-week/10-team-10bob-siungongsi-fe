@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginSlider } from "./LoginSlider";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from "./Modal";
-import { useAuth } from "../contexts/AuthContext";
 
-interface Props {
-  isLogin: boolean;
-}
+import { useAuthStore } from "../store/authStore";
 
-export const HeaderLogin = ({ isLogin }: Props) => {
-  const { isLoggedIn, logout } = useAuth();
+export const HeaderLogin = () => {
+  // const { isLoggedIn, logout } = useAuth();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const logout = useAuthStore((state) => state.logout);
+  const checkTokenValidity = useAuthStore((state) => state.checkTokenValidity);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkTokenValidity();
+  }, [checkTokenValidity]);
 
   // 모달정보 입력
   const [isModalOn, setIsModalOn] = useState<boolean>(false);

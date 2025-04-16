@@ -2,12 +2,6 @@ import React, { useEffect, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import kakao from "../assets/kakao_login.png";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/authService";
-import { useAuth } from "../contexts/AuthContext";
-import { patchUserNotificationInfo } from "../services/usersService";
-import { isIos } from "../pages/Iphone_main/InstallPWA";
-import { getPushToken } from "../firebase";
-import { toast } from "react-toastify";
 
 interface Props {
   isOpen: boolean;
@@ -25,9 +19,7 @@ export const LoginSlider = ({ isOpen, onClose }: Props) => {
   useEffect(() => {
     y.set(0); // 매번 열릴 때 초기화
   }, [isOpen, y]);
-  const { setIsLoggedIn } = useAuth();
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  const navigate = useNavigate();
+
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // 리다이렉트 URI 설정 - 카카오 개발자 콘솔에 등록된 URI와 일치해야 함

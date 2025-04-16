@@ -188,7 +188,7 @@ export const SettingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderLogin isLogin={true} />
+      <HeaderLogin />
 
       <div className="p-4">
         {/* 설정 섹션 타이틀 */}

@@ -9,8 +9,10 @@ export const useManageNotifications = () => {
   const token = localStorage.getItem("jwtToken");
 
   const subscribe = async (companyId: number) => {
-    await postNotifications(companyId, token);
-    mutate("/notifications");
+    try {
+      await postNotifications(companyId, token);
+      mutate("/notifications");
+    } catch (error: any) {}
   };
 
   const unsubscribe = async (companyId: number) => {

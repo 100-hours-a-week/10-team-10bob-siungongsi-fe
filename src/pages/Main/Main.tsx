@@ -12,14 +12,16 @@ import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { ServiceButton } from "./ServiceButton";
 import { useNotificationToken } from "../../hooks/useNotificationToken";
 import { LoginSlider } from "../../components/LoginSlider";
-import { useAuth } from "../../contexts/AuthContext";
+
 import { toast } from "react-toastify";
+import { useAuthStore } from "../../store/authStore";
 
 export const Main = () => {
   const [popularGongsiList, setPopularGongsiList] = useState<GongsiData>();
   const [todayGongsi, setTodayGongsi] = useState<GongsiData>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { isLoggedIn } = useAuth();
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const onClose = () => {
     setIsOpen(false);
   };
@@ -39,8 +41,8 @@ export const Main = () => {
           true,
           1,
           5,
-          "2025-04-11",
-          "2025-04-11",
+          today,
+          today,
         );
         setTodayGongsi(todayGongsiData.data);
       };
@@ -100,7 +102,7 @@ export const Main = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderLogin isLogin={false} />
+      <HeaderLogin />
 
       <div className="p-4">
         <div className="mt-3 mb-6">
