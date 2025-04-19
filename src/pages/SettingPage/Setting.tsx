@@ -17,9 +17,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import { LoginSlider } from "../../components/LoginSlider";
 import { isIos } from "../Iphone_main/InstallPWA";
 import { IphoneWarn } from "../../components/IphoneWarn";
+import { useAuthStore } from "../../store/authStore";
 
 export const SettingPage = () => {
-  const { isLoggedIn, setIsLoggedIn, logout } = useAuth();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const logout = useAuthStore((state) => state.logout);
+
   const navigate = useNavigate();
   // const [isNotificationEnabled, setIsNotificationEnabled] = useState(
   //   Notification.permission === 'granted'
@@ -176,12 +179,10 @@ export const SettingPage = () => {
   const userWithDrawFunction = async () => {
     try {
       await userWithdraw(localStorage.getItem("jwtToken"));
-      setIsLoggedIn(false);
+      logout();
     } catch (error) {
       console.error("회원탈퇴 에러 : ", error);
     } finally {
-      localStorage.removeItem("jwtToken");
-
       navigate("/");
     }
   };

@@ -12,6 +12,8 @@ import { GongsiData, fetchGongsiList } from "../../services/gongsiService";
 import { ServiceButton } from "./ServiceButton";
 import { useNotificationToken } from "../../hooks/useNotificationToken";
 import { LoginSlider } from "../../components/LoginSlider";
+// 1. 동적 import
+import { lazy, Suspense } from "react";
 
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../store/authStore";
