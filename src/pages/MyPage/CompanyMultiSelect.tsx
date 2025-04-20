@@ -22,14 +22,6 @@ export const CompanyMultiSelect = ({
 
   return (
     <div className="relative w-full">
-      <div className="mb-6 mt-2">
-        <span className="text-xs font-medium text-primary uppercase tracking-wide">
-          My Page
-        </span>
-        <h2 className="text-2xl font-bold text-gray-900 mt-1 mb-4">
-          마이페이지
-        </h2>
-      </div>
       <div className="bg-white rounded-2xl shadow-sm p-4">
         <h3 className="text-base font-semibold text-gray-900 mb-3">
           구독 목록
