@@ -8,6 +8,7 @@ interface Props {
   selectedCompany: number;
 }
 export const MyGongsiList = ({ selectedCompany }: Props) => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const navigate = useNavigate();
   const [myGongsi, setMyGongsi] = useState<GongsiData>();
   useEffect(() => {
@@ -18,7 +19,7 @@ export const MyGongsiList = ({ selectedCompany }: Props) => {
           selectedCompany,
           "latest",
           false,
-          1,
+          currentPage,
           null,
           undefined,
           undefined,
@@ -32,8 +33,11 @@ export const MyGongsiList = ({ selectedCompany }: Props) => {
     };
 
     getMyGongsi();
+  }, [selectedCompany, currentPage]);
+  useEffect(() => {
+    setCurrentPage(1); // ✅ 기업이 변경되면 페이지 1로 초기화
   }, [selectedCompany]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+
   const [isLoading, setIsLoading] = useState<boolean>();
   const totalPages = myGongsi?.pagination.totalPages;
   const maxVisibleButton = 5;
