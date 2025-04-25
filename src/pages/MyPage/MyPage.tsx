@@ -28,7 +28,10 @@ export const MyPage = () => {
     setIsOpen(false);
   };
 
-  const [selected, setSelected] = useState<number>();
+  const [selected, setSelected] = useState<number | undefined>(() => {
+    const stored = localStorage.getItem("selectedCompany");
+    return stored ? Number(stored) : undefined;
+  });
 
   useEffect(() => {
     const fetchSub = async () => {
@@ -44,6 +47,11 @@ export const MyPage = () => {
 
   const handleToggle = (company: number | undefined) => {
     setSelected(company);
+    if (company !== undefined) {
+      localStorage.setItem("selectedCompany", String(company));
+    } else {
+      localStorage.removeItem("selectedCompany");
+    }
   };
   return (
     <div className="min-h-screen bg-gray-50">
