@@ -62,8 +62,10 @@ export const OauthKakaoCallback = () => {
           localStorage.setItem("jwtToken", accessToken);
           // setIsLoggedIn(true);
           setLogin(accessToken);
+          console.time("kakaoTokenRequest");
 
           await handleNotificationToken();
+          console.timeEnd("kakaoTokenRequest");
         } else {
           navigate("/regist", { state: kakaoAccessToken });
         }

@@ -253,7 +253,7 @@ export const Main = () => {
               </div>
             )}
 
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-sm p-5 text-white">
+            {/* <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-sm p-5 text-white">
               <div className="mb-4">
                 <img
                   src="./images/dictionary_1.png"
@@ -269,7 +269,7 @@ export const Main = () => {
               >
                 살펴보기
               </button>
-            </div>
+            </div> */}
           </div>
         </section>
       </div>
